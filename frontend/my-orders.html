@@ -64,7 +64,7 @@
     }
 
     function fetchOrders() {
-        fetch(`http://10.219.28.1:5000/my-orders/${user.id}`)
+        fetch(`https://cityshop-w45k.onrender.com/my-orders/${user.id}`)
         .then(res => res.json())
         .then(data => {
             const list = document.getElementById("ordersList");
@@ -83,7 +83,7 @@ data.orders.forEach(order => {
 
     list.innerHTML += `
         <div class="order-card">
-            <img src="http://10.219.28.1:5000/uploads/${order.image || 'no-image.png'}" alt="Product">
+            <img src="https://cityshop-w45k.onrender.com/uploads/${order.image || 'no-image.png'}" alt="Product">
             <div class="order-info">
                 <h3>${order.product_name}</h3>
                 <p><strong>Order ID:</strong> #${order.id}</p>

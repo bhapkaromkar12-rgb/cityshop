@@ -7,7 +7,7 @@
 <script>
     function loadAdminProducts() {
         const admin = JSON.parse(localStorage.getItem("user"));
-        fetch(`http://10.219.28.1:5000/admin-products/${admin.id}`)
+        fetch(`https://cityshop-w45k.onrender.com/${admin.id}`)
         .then(res => res.json())
         .then(data => {
             let html = '';

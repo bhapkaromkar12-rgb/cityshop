@@ -54,7 +54,7 @@
             password: document.getElementById("editPassword").value
         };
 
-        fetch(`http://10.219.28.1:5000/update-profile/${user.id}`, {
+        fetch(`https://cityshop-w45k.onrender.com/update-profile/${user.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedData)

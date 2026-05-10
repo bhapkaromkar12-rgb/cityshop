@@ -123,7 +123,7 @@
 
     // 3. Products Load karein
     function loadProducts() {
-        fetch(`http://10.219.28.1:5000/get-products?city=All`)
+        fetch(`https://cityshop-w45k.onrender.com`)
         .then(res => res.json())
         .then(data => {
             const container = document.getElementById("productContainer");
@@ -137,7 +137,7 @@
             data.products.forEach(product => {
                 container.innerHTML += `
                     <div class="card">
-                        <img src="http://10.219.28.1:5000/uploads/${product.image || 'no-image.png'}" alt="${product.name}">
+                        <img src="https://cityshop-w45k.onrender.com/uploads/${product.image || 'no-image.png'}" alt="${product.name}">
                         <h4>${product.name}</h4>
                         <div class="price">₹${product.price}</div>
                         <p>City: ${product.city}</p>

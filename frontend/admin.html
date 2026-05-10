@@ -81,7 +81,7 @@ document.getElementById("productForm").addEventListener("submit", function(e){
 
     let formData = new FormData(this);
 
-    fetch("http://10.219.28.1:5000/add-product", {
+    fetch("https://cityshop-w45k.onrender.com/add-product", {
         method: "POST",
         body: formData
     })

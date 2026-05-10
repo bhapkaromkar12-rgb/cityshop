@@ -111,7 +111,7 @@
             phone: document.getElementById("custPhone").value
         };
 
-        fetch("http://10.219.28.1:5000/place-order", {
+        fetch("https://cityshop-w45k.onrender.com/place-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
