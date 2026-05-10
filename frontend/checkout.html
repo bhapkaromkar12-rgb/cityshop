@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment - City Shop</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+        .payment-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center; }
+        .order-summary { background: #e8f5e9; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 5px solid #31b862; }
+        .qr-section { margin: 20px 0; display: none; } /* Pehle hidden rahega */
+        .qr-section img { width: 200px; border: 1px solid #ddd; padding: 10px; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-pay { background: #31b862; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
+        .payment-apps { display: flex; justify-content: space-around; margin-top: 15px; font-size: 12px; color: #666; }
+        .payment-apps img { width: 30px; height: 30px; display: block; margin: 0 auto 5px; }
+    </style>
+</head>
+<body>
+
+<div class="payment-box">
+    <h2>Confirm & Pay</h2>
+    
+    <div id="summary" class="order-summary">
+        <p>Loading product details...</p>
+    </div>
+
+    <form id="orderForm">
+        <input type="text" id="custName" placeholder="Full Name" required>
+        <input type="text" id="custAddress" placeholder="Delivery Address" required>
+        <input type="text" id="custPhone" placeholder="Phone Number" required>
+        
+        <div id="qrContainer" class="qr-section">
+            <p style="font-weight: bold; color: #2e7d32;">Scan to Pay via UPI</p>
+            <img id="qrCodeImg" src="" alt="Payment QR">
+         <div class="payment-apps">
+    <div onclick="payViaApp('gpay')" style="cursor:pointer;">
+        <img src="https://img.icons8.com/color/48/google-pay-india.png">GPay
+    </div>
+    <div onclick="payViaApp('phonepe')" style="cursor:pointer;">
+        <img src="https://img.icons8.com/color/48/phonepe.png">PhonePe
+    </div>
+    <div onclick="payViaApp('paytm')" style="cursor:pointer;">
+        <img src="https://img.icons8.com/color/48/paytm.png">Paytm
+    </div>
+</div>
+        </div>
+
+        <button type="submit" id="mainBtn" class="btn-pay">Pay Now & Place Order</button>
+    </form>
+</div>
+
+<script>
+    const productId = localStorage.getItem("selectedProductId");
+    const user = JSON.parse(localStorage.getItem("user"));
+    let productPrice = 0;
+
+    // 1. Fetch Product Details
+    fetch(`http://10.219.28.1:5000/get-products?city=All`)
+    .then(res => res.json())
+    .then(data => {
+        const product = data.products.find(p => p.id == productId);
+        if(product) {
+            productPrice = product.price;
+            document.getElementById("summary").innerHTML = `
+                <strong>Product:</strong> ${product.name}<br>
+                <strong>Price:</strong> ₹${product.price}<br>
+                <strong>City:</strong> ${product.city}
+            `;
+            generateQR(product.price);
+        }
+    });
+
+    // 2. Generate UPI QR Code
+    function generateQR(amount) {
+        // Aapka UPI ID yahan dalna hai
+        const upiId = "9699214024@ybl"; 
+        const name = "City Shop";
+        const upiUrl = `upi://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR`;
+        
+        // QR API ka use karke dynamic QR image banana
+        const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+        
+        document.getElementById("qrCodeImg").src = qrImg;
+        document.getElementById("qrContainer").style.display = "block";
+    }
+
+    function payViaApp(app) {
+    const upiId = "9699214024@ybl"; // Yahan apni asli UPI ID daalein
+    const name = "City Shop";
+    const amount = productPrice; // Jo price humne load ki hai
+    
+    // Standard UPI URI format
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+    // Mobile apps ko trigger karne ke liye
+    if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        window.location.href = upiUrl;
+    } else {
+        alert("Only phone use this. Scan QR for Desktop.");
+    }
+}
+    // 3. Place Order Logic
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const orderData = {
+            user_id: user.id,
+            product_id: productId,
+            name: document.getElementById("custName").value,
+            address: document.getElementById("custAddress").value,
+            phone: document.getElementById("custPhone").value
+        };
+
+        fetch("http://10.219.28.1:5000/place-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert("Payment Confirmed & Order Placed!");
+                window.location.href = "my-orders.html";
+            }
+        });
+    });
+</script>
+</body>
+</html>

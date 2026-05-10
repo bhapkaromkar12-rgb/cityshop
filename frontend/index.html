@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+        }
+
+        .box {
+            width: 320px;
+            margin: 100px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #5b86e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Login</h2>
+
+    <form id="loginForm">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <select name="role">
+            <option value="admin">Admin</option>
+            <option value="customer">Customer</option>
+        </select>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <a href="register.html">Create Account</a>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let data = {
+        email: this.email.value,
+        password: this.password.value,
+        role: this.role.value
+    };
+
+    fetch("http://10.219.28.1:5000/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        if(res.success){
+            localStorage.setItem("user", JSON.stringify(res.user));
+
+            if(res.user.role === "admin"){
+                window.location.href = "admin.html"; // add product page
+            } else {
+                window.location.href = "view.html"; // customer view
+            }
+        } else {
+            alert("Invalid Login");
+        }
+    });
+});
+</script>
+
+</body>
+</html>

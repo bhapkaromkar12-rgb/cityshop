@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - City Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+        .navbar { background: #31b862; color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; }
+        
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        h2 { color: #333; border-bottom: 2px solid #31b862; padding-bottom: 10px; margin-bottom: 25px; }
+
+        .order-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px; border-left: 5px solid #31b862; }
+        .order-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; background: #eee; }
+        
+        .order-info { flex-grow: 1; }
+        .order-info h3 { margin: 0 0 8px 0; color: #2e7d32; }
+        .order-info p { margin: 4px 0; color: #666; font-size: 14px; }
+        
+        .status-badge { background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 8px; }
+        
+        .empty-msg { text-align: center; padding: 50px; color: #888; }
+        .back-btn { display: inline-block; margin-top: 15px; color: #31b862; text-decoration: none; font-weight: bold; }
+   .status-badge { 
+    padding: 5px 12px; 
+    border-radius: 15px; 
+    font-size: 12px; 
+    font-weight: bold; 
+    display: inline-block; 
+    margin-top: 8px;
+}
+/* Alag-alag status ke liye colors */
+.status-pending { background: #fff3cd; color: #856404; }
+.status-delivered { background: #d4edda; color: #155724; }
+   
+   </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="view.html" class="logo">🌾 City Shop</a>
+    <div id="userName">User Panel</div>
+</div>
+
+<div class="container">
+    <h2>Your Orders History</h2>
+    <div id="ordersList">
+        <p class="empty-msg">Loading your orders...</p>
+    </div>
+    <a href="view.html" class="back-btn">← Continue Shopping</a>
+</div>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    // Security Check
+    if(!user) {
+        window.location.href = "index.html";
+    } else {
+        document.getElementById("userName").innerText = "Hi, " + user.username;
+    }
+
+    function fetchOrders() {
+        fetch(`http://10.219.28.1:5000/my-orders/${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById("ordersList");
+            list.innerHTML = "";
+
+            if(!data.orders || data.orders.length === 0) {
+                list.innerHTML = `<div class="empty-msg">
+                    <i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 10px;"></i>
+                    <p>Aapne abhi tak koi order nahi kiya hai.</p>
+                </div>`;
+                return;
+            }
+data.orders.forEach(order => {
+    // Status ke hisab se class choose karein
+    const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
+
+    list.innerHTML += `
+        <div class="order-card">
+            <img src="http://10.219.28.1:5000/uploads/${order.image || 'no-image.png'}" alt="Product">
+            <div class="order-info">
+                <h3>${order.product_name}</h3>
+                <p><strong>Order ID:</strong> #${order.id}</p>
+                <p><strong>Amount:</strong> ₹${order.price}</p>
+                <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
+                <span class="status-badge ${statusClass}">${order.status}</span>
+            </div>
+        </div>
+    `;
+});
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            document.getElementById("ordersList").innerHTML = "<p>Orders load karne mein error aayi.</p>";
+        });
+    }
+
+    // Initialize
+    fetchOrders();
+</script>
+
+</body>
+</html>

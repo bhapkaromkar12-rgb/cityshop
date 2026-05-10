@@ -1,0 +1,23 @@
+<!-- View Products Section inside Admin Dash -->
+<div id="adminProducts">
+    <h3>Your Products</h3>
+    <div id="list"></div>
+</div>
+
+<script>
+    function loadAdminProducts() {
+        const admin = JSON.parse(localStorage.getItem("user"));
+        fetch(`http://10.219.28.1:5000/admin-products/${admin.id}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            data.products.forEach(p => {
+                html += `<div>
+                    ${p.name} - ₹${p.price} 
+                    <button onclick="editProduct(${p.id})">Edit</button>
+                </div>`;
+            });
+            document.getElementById("list").innerHTML = html;
+        });
+    }
+</script>

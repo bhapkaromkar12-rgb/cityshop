@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #8d3eb5, #764ba2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 350px;
+            margin: 80px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+    </style>
+
+</head>
+<body>
+    <script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+if(!user || user.role !== "admin"){
+    alert("Access Denied");
+    window.location.href = "index.html";
+
+    
+}
+</script>
+
+<div class="container">
+    <h2>Add Product</h2>
+
+    <form id="productForm" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Product Name" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="text" name="city" placeholder="City" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+        <input type="file" name="image" required>
+        <button type="submit">Add Product</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("productForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    fetch("http://10.219.28.1:5000/add-product", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert(data);
+    });
+});
+</script>
+
+</body>
+</html>

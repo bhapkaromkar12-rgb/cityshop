@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - City Shop</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f9; margin: 0; }
+        .navbar { background: #31b862; color: white; padding: 15px; display: flex; justify-content: space-between; }
+        .box { width: 350px; margin: 50px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #31b862; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #31b862; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div style="font-weight: bold;">🌾 City Shop</div>
+</div>
+
+<div class="box">
+    <h2>Edit Profile</h2>
+    <form id="editProfileForm">
+        <label>Username:</label>
+        <input type="text" id="editUsername" required>
+        
+        <label>Email:</label>
+        <input type="email" id="editEmail" required>
+        
+        <label>Password:</label>
+        <input type="password" id="editPassword" required>
+        
+        <button type="submit">Update Profile</button>
+    </form>
+    <a href="view.html" class="back-link">Back to Home</a>
+</div>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user) window.location.href = "login.html";
+
+    // Pehle se save data dikhao
+    document.getElementById("editUsername").value = user.username;
+    document.getElementById("editEmail").value = user.email;
+    document.getElementById("editPassword").value = user.password;
+
+    document.getElementById("editProfileForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const updatedData = {
+            username: document.getElementById("editUsername").value,
+            email: document.getElementById("editEmail").value,
+            password: document.getElementById("editPassword").value
+        };
+
+        fetch(`http://10.219.28.1:5000/update-profile/${user.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedData)
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.success) {
+                // LocalStorage update karein taaki profile mein naya naam dikhe
+                const newUser = { ...user, ...updatedData };
+                localStorage.setItem("user", JSON.stringify(newUser));
+                alert("Profile Updated!");
+                window.location.href = "view.html";
+            } else {
+                alert("Error: " + res.message);
+            }
+        });
+    });
+</script>
+</body>
+</html>
