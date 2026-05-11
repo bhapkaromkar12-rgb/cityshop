@@ -1,95 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Product</title>
-
+    <meta charset="UTF-8">
+    <title>Admin - Add Product</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial;
-           background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
-            margin: 0;
-            padding: 0;
+        body { margin:0; font-family:sans-serif; background: linear-gradient(135deg, #2ae7bb, #ff7eb3); }
+        
+        /* Navbar Styling */
+        .navbar { 
+            background:#26d7c5; 
+            color:white; 
+            padding:10px 25px; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+            position:sticky; 
+            top:0; 
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .container {
-            width: 350px;
-            margin: 80px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .logo { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        
+        .container { 
+            width: 350px; 
+            margin: 50px auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        h2 { text-align: center; margin-bottom: 20px; color: #333; }
+
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-sizing: border-box; /* Isse padding layout kharab nahi karegi */
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        button.submit-btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #667eea; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        button.submit-btn:hover { background: #5a67d8; }
 
-        button:hover {
-            background: #5a67d8;
+        /* Profile/Dropdown Styling */
+        .profile-container { position: relative; display: inline-block; }
+        .profile-btn { 
+            background: white; 
+            color: #31b862; 
+            border: none; 
+            padding: 8px 18px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        
+        .dropdown-content {
+            display: none; 
+            position: absolute; 
+            right: 0; 
+            background-color: white;
+            min-width: 180px; 
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1; 
+            border-radius: 8px; 
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content p { margin: 0; padding: 12px; background: #f9f9f9; font-size: 12px; color: #666; border-bottom: 1px solid #eee; }
+        .dropdown-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; }
+        .dropdown-content a:hover { background-color: #f1f1f1; }
+        .show { display: block; }
     </style>
-
 </head>
 <body>
-    <script>
 
-const user = JSON.parse(localStorage.getItem("user"));
-if(!user || user.role !== "admin"){
-    alert("Access Denied");
-    window.location.href = "index.html";
-
+<div class="navbar">
+    <div class="logo">🌾 City Shop (Admin)</div>
     
-}
-</script>
+    <div class="profile-container">
+        <button class="profile-btn" onclick="toggleDropdown()">
+            <i class="fas fa-user-shield" style="font-size: 20px;"></i> 
+            <span id="adminNameDisplay">Admin</span>
+        </button>
+        <div id="profileDropdown" class="dropdown-content">
+            <p id="adminEmail"></p>
+            <a href="admin-dashboard.html">Dashboard</a> 
+            <a href="all-orders.html" style="font-weight: bold; color: #26d7c5;">Manage Orders</a> 
+            <a href="#" onclick="logout()" style="color: red;">Logout</a>
+        </div>
+    </div>
+</div>
 
 <div class="container">
-    <h2>Add Product</h2>
-
+    <h2>Add New Product</h2>
     <form id="productForm" enctype="multipart/form-data">
         <input type="text" name="name" placeholder="Product Name" required>
         <input type="number" name="price" placeholder="Price" required>
         <input type="text" name="city" placeholder="City" required>
         <input type="number" name="quantity" placeholder="Quantity" required>
-        <input type="file" name="image" required>
-        <button type="submit">Add Product</button>
+        <label style="font-size: 12px; color: #666; margin-left: 5px;">Product Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit" class="submit-btn">Add Product</button>
     </form>
 </div>
 
 <script>
-document.getElementById("productForm").addEventListener("submit", function(e){
-    e.preventDefault();
+    // 1. Admin Auth Check
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user || user.role !== "admin"){
+        alert("Access Denied! Admins only.");
+        window.location.href = "index.html";
+    } else {
+        document.getElementById("adminNameDisplay").innerText = "Hi, " + user.username;
+        document.getElementById("adminEmail").innerText = user.email;
+    }
 
-    let formData = new FormData(this);
+    // 2. Dropdown Toggle
+    function toggleDropdown() {
+        document.getElementById("profileDropdown").classList.toggle("show");
+    }
 
-    fetch("https://cityshobackend.onrender.com/add-product", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.text())
-    .then(data => {
-        alert(data);
+    // 3. Logout
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    }
+
+    // Close dropdown on click outside
+    window.onclick = function(event) {
+        if (!event.target.closest('.profile-container')) {
+            document.getElementById("profileDropdown").classList.remove("show");
+        }
+    }
+
+    // 4. Form Submit Logic
+    document.getElementById("productForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        fetch("https://cityshobackend.onrender.com/add-product", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            if(data.includes("success") || data.includes("added")) {
+                this.reset(); // Form clear kar dega success ke baad
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error adding product. Check console.");
+        });
     });
-});
 </script>
 
 </body>

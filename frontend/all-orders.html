@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Orders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { margin:0; font-family:sans-serif; background: #f4f7f6; }
+        .navbar { background:#26d7c5; color:white; padding:10px 25px; display:flex; justify-content:space-between; align-items:center; }
+        .container { padding: 30px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #667eea; color: white; }
+        .status-badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .pending { background: #fff3cd; color: #856404; }
+        .delivered { background: #d4edda; color: #155724; }
+        .cancelled { background: #f8d7da; color: #721c24; }
+        
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-size: 12px; margin-right: 5px; }
+        .btn-receive { background: #17a2b8; }
+        .btn-deliver { background: #28a745; }
+        .btn-cancel { background: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">🌾 Admin Panel - Orders</div>
+    <a href="add-product.html" style="color: white; text-decoration: none;">Back to Add Product</a>
+</div>
+
+<div class="container">
+    <h2>All Customer Orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product ID</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="orderTableBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    function loadOrders() {
+        fetch('https://cityshobackend.onrender.com/get-all-orders')
+        .then(res => res.json())
+        .then(orders => {
+            const tbody = document.getElementById("orderTableBody");
+            tbody.innerHTML = "";
+            orders.forEach(order => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer_name || 'User'}</td>
+                        <td>${order.product_id}</td>
+                        <td>₹${order.total_price}</td>
+                        <td><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td>
+                            ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
+                                <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
+                                <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
+                                <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
+                            ` : 'No Actions'}
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
+    function updateStatus(orderId, newStatus) {
+        if(!confirm(`Are you sure you want to mark this order as ${newStatus}?`)) return;
+
+        fetch('https://cityshobackend.onrender.com/update-order-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId, status: newStatus })
+        })
+        .then(res => res.text())
+        .then(msg => {
+            alert(msg);
+            loadOrders(); // List refresh karein
+        });
+    }
+
+    loadOrders();
+</script>
+</body>
+</html>
