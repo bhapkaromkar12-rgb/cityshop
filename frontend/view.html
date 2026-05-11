@@ -137,10 +137,7 @@
             data.products.forEach(product => {
                 container.innerHTML += `
                     <div class="card">
-                       // Image tag ko aise replace karo
-<img src="https://cityshobackend.onrender.com/uploads/${product.image}" 
-     onerror="this.src='https://via.placeholder.com/150?text=No+Image'" 
-     alt="${product.name}">
+                     <img src="https://cityshobackend.onrender.com/uploads/${product.image}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'" alt="${product.name}">
                         <h4>${product.name}</h4>
                         <div class="price">₹${product.price}</div>
                         <p>City: ${product.city}</p>
