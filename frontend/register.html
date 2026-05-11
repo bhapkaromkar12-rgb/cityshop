@@ -1,46 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - City Shop</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .box {
-            width: 320px;
-            margin: 100px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         h2 {
             text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            background: #f9f9f9;
+        }
+
+        input:focus, select:focus {
+            border-color: #2ae7bb;
+            background: #fff;
+            box-shadow: 0 0 8px rgba(42, 231, 187, 0.3);
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
+            margin-top: 20px;
             background: #5f232d;
             color: white;
             border: none;
+            border-radius: 12px;
             cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #7a2d39;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         a {
             display: block;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 25px;
+            color: #555;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            color: #5f232d;
+            font-weight: bold;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .box {
+                padding: 30px 20px;
+            }
+            h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -50,19 +118,19 @@
     <h2>Register</h2>
 
     <form id="registerForm">
-        <input type="text" name="username" placeholder="username" required>
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email Address" required>
         <input type="password" name="password" placeholder="Password" required>
 
         <select name="role">
             <option value="admin">Admin</option>
-            <option value="customer">Customer</option>
+            <option value="customer" selected>Customer</option>
         </select>
 
         <button type="submit">Register</button>
     </form>
 
-    <a href="index.html">Already have account?</a>
+    <a href="index.html">Already have an account? Login</a>
 </div>
 
 <script>
@@ -81,10 +149,18 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
     })
-    .then(res => res.text())
-    .then(data => {
-        alert(data);
-        window.location.href = "index.html";
+    .then(res => res.json()) // JSON handling for better connection
+    .then(result => {
+        if(result.success) {
+            alert(result.message);
+            window.location.href = "index.html";
+        } else {
+            alert("Error: " + result.message);
+        }
+    })
+    .catch(err => {
+        console.error("Register Error:", err);
+        alert("Server error. Please try again.");
     });
 });
 </script>
