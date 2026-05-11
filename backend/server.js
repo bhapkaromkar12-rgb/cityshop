@@ -9,14 +9,17 @@ const app = express();
 
 // --- MYSQL CONNECTION ---
 // --- CLOUD MYSQL CONNECTION (Aiven) ---
+require('dotenv').config();
+
+// 2. Connection details ko process.env se connect karein
 const db = mysql.createConnection({
-    host: 'mysql-321539ba-bhapkaromkar12-56d9.b.aivencloud.com',
-    user: 'avnadmin',
-    password: 'AVNS_R_YwvT1talaWsmzwP5K',
-    database: 'defaultdb', // Aiven par default name yahi hota hai
-    port: '22436',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
     multipleStatements: true,
-    ssl: { rejectUnauthorized: false } // Cloud DB ke liye ye line zaroori hai
+    ssl: { rejectUnauthorized: false }
 });
 db.connect((err) => {
     if (err) {
