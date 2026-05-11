@@ -54,7 +54,7 @@
             password: document.getElementById("editPassword").value
         };
 
-        fetch(`https://myshop-mloa.onrender.com/update-profile/${user.id}`, {
+        fetch(`https://citysho.onrender.com/update-profile/${user.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedData)
