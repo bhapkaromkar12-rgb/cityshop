@@ -64,8 +64,9 @@ db.connect((err) => {
 });
 // --- MIDDLEWARES ---
 app.use(cors());
+
 app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Multer for Images
 const storage = multer.diskStorage({
