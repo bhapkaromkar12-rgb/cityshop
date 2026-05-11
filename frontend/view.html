@@ -123,7 +123,7 @@
 
     // 3. Products Load karein
     function loadProducts() {
-        fetch(`https://citysho.onrender.com`)
+        fetch(`https://cityshobackend.onrender.com`)
         .then(res => res.json())
         .then(data => {
             const container = document.getElementById("productContainer");
@@ -137,7 +137,7 @@
             data.products.forEach(product => {
                 container.innerHTML += `
                     <div class="card">
-                        <img src="https://citysho.onrender.com/uploads/${product.image || 'no-image.png'}" alt="${product.name}">
+                        <img src="https://cityshobackend.onrender.com/uploads/${product.image || 'no-image.png'}" alt="${product.name}">
                         <h4>${product.name}</h4>
                         <div class="price">₹${product.price}</div>
                         <p>City: ${product.city}</p>
