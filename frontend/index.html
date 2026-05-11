@@ -1,46 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - City Shop</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial;
-             background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
+            height: 100 vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .box {
-            width: 320px;
-            margin: 100px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         h2 {
             text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            background: #f9f9f9;
+        }
+
+        input:focus, select:focus {
+            border-color: #2ae7bb;
+            background: #fff;
+            box-shadow: 0 0 8px rgba(42, 231, 187, 0.3);
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
+            margin-top: 20px;
             background: #07101e;
             color: white;
             border: none;
+            border-radius: 12px;
             cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #1a2a44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         a {
             display: block;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 25px;
+            color: #555;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            color: #ff7eb3;
+            font-weight: bold;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .box {
+                padding: 30px 20px;
+                margin-top: 20px;
+            }
+            h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -50,7 +119,7 @@
     <h2>Login</h2>
 
     <form id="loginForm">
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" placeholder="Email Address" required>
         <input type="password" name="password" placeholder="Password" required>
 
         <select name="role">
@@ -61,7 +130,7 @@
         <button type="submit">Login</button>
     </form>
 
-    <a href="register.html">Create Account</a>
+    <a href="register.html">New User? Create Account</a>
 </div>
 
 <script>
@@ -85,13 +154,17 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
             localStorage.setItem("user", JSON.stringify(res.user));
 
             if(res.user.role === "admin"){
-                window.location.href = "admin.html"; // add product page
+                window.location.href = "admin.html"; 
             } else {
-                window.location.href = "view.html"; // customer view
+                window.location.href = "view.html"; 
             }
         } else {
-            alert("Invalid Login");
+            alert("Invalid Login. Please check your credentials.");
         }
+    })
+    .catch(err => {
+        console.error("Login Error:", err);
+        alert("Server error. Please try again later.");
     });
 });
 </script>
