@@ -122,31 +122,43 @@
     }
 
     // 3. Products Load karein
-    function loadProducts() {
-        fetch(`https://cityshobackend.onrender.com/get-products`)
-        .then(res => res.json())
-        .then(data => {
-            const container = document.getElementById("productContainer");
-            container.innerHTML = ""; 
+function loadProducts() {
+    fetch(`https://cityshobackend.onrender.com/get-products`)
+    .then(res => res.json())
+    .then(data => {
+        const container = document.getElementById("productContainer");
+        container.innerHTML = ""; 
 
-            if(data.products.length === 0) {
-                container.innerHTML = "<h3>No products found.</h3>";
-                return;
-            }
+        // Check karo ki products array kahan hai
+        const products = data.products || data; 
 
-            data.products.forEach(product => {
-                container.innerHTML += `
-                    <div class="card">
-                     <img src="https://cityshobackend.onrender.com/uploads/${product.image}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'" alt="${product.name}">
-                        <h4>${product.name}</h4>
-                        <div class="price">₹${product.price}</div>
-                        <p>City: ${product.city}</p>
-                        <button class="btn-select" onclick="addToCart(${product.id})">Add to Cart</button>
-                    </div>
-                `;
-            });
+        if(!products || products.length === 0) {
+            container.innerHTML = "<h3 style='text-align:center; width:100%;'>No products found.</h3>";
+            return;
+        }
+
+        products.forEach(product => {
+            // Image URL ko variable mein rakhte hain clean code ke liye
+            const imageUrl = `https://cityshobackend.onrender.com/uploads/${product.image}`;
+            
+            container.innerHTML += `
+                <div class="card">
+                    <img src="${imageUrl}" 
+                         onerror="this.src='https://via.placeholder.com/150?text=No+Photo'" 
+                         alt="${product.name}">
+                    <h4>${product.name}</h4>
+                    <div class="price">₹${parseFloat(product.price).toFixed(2)}</div>
+                    <p>City: ${product.city}</p>
+                    <button class="btn-select" onclick="addToCart(${product.id})">Add to Cart</button>
+                </div>
+            `;
         });
-    }
+    })
+    .catch(err => {
+        console.error("Error loading products:", err);
+        document.getElementById("productContainer").innerHTML = "<h3>Server error. Please try again later.</h3>";
+    });
+}
 
     function addToCart(id) {
         localStorage.setItem("selectedProductId", id);
