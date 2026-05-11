@@ -1,184 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - City Shop</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { margin:0; font-family: sans-serif; background: #f4f7f6; color: #333; }
-        
-        /* Navbar */
-        .navbar { 
-            background:#26d7c5; 
-            color:white; 
-            padding:12px 20px; 
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        /* Dashboard Layout */
-        .container { padding: 20px; max-width: 800px; margin: auto; }
-        
-        .header-section { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 20px; 
-        }
-
-        .btn-add { 
-            background: #667eea; 
-            color: white; 
-            padding: 10px 15px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* Product Card Design */
-        .product-item { 
-            background: white; 
-            margin-bottom: 12px; 
-            padding: 15px; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .product-info { display: flex; align-items: center; gap: 15px; }
-        
-        .product-img { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 8px; 
-            object-fit: cover; 
-            background: #eee;
-        }
-
-        .product-details h4 { margin: 0; font-size: 16px; }
-        .product-details p { margin: 4px 0 0; color: #23bd2b; font-weight: bold; }
-
-        .actions { display: flex; gap: 10px; }
-        
-        .btn-edit { 
-            background: #ffc107; 
-            color: #333; 
-            border: none; 
-            padding: 8px 12px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 13px;
-        }
-
-        .btn-delete { 
-            background: #ff4d4d; 
-            color: white; 
-            border: none; 
-            padding: 8px 12px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 13px;
-        }
-
-        @media (max-width: 480px) {
-            .product-item { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .actions { width: 100%; justify-content: flex-end; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="navbar">
-    <div style="font-weight: bold; font-size: 20px;">City Shop Admin</div>
-    <a href="#" onclick="logout()" style="color: white; font-size: 14px;">Logout</a>
-</div>
-
-<div class="container">
-    <div class="header-section">
-        <h3>Your Products</h3>
-        <a href="add-product.html" class="btn-add"><i class="fas fa-plus"></i> Add New</a>
-    </div>
-
-    <div id="list">
-        <p style="text-align: center; color: #888;">Loading products...</p>
-    </div>
+<!-- View Products Section inside Admin Dash -->
+<div id="adminProducts">
+    <h3>Your Products</h3>
+    <div id="list"></div>
 </div>
 
 <script>
     function loadAdminProducts() {
         const admin = JSON.parse(localStorage.getItem("user"));
-        if(!admin) { window.location.href = "index.html"; return; }
-
-        // Note: Check karo ki endpoint yahi hai ya /get-products?
-        // Agar aapko specific admin ke products chahiye toh ye sahi hai
-        fetch(`https://cityshobackend.onrender.com/get-products`) 
+        fetch(`https://cityshobackend.onrender.com/${admin.id}`)
         .then(res => res.json())
         .then(data => {
-            const listContainer = document.getElementById("list");
-            listContainer.innerHTML = '';
-            
-            const products = data.products || data;
-
-            if(products.length === 0) {
-                listContainer.innerHTML = "<p>No products found. Start adding!</p>";
-                return;
-            }
-
-            products.forEach(p => {
-                listContainer.innerHTML += `
-                    <div class="product-item">
-                        <div class="product-info">
-                            <img src="https://cityshobackend.onrender.com/uploads/${p.image}" 
-                                 class="product-img" 
-                                 onerror="this.src='https://via.placeholder.com/50'"
-                                 alt="img">
-                            <div class="product-details">
-                                <h4>${p.name}</h4>
-                                <p>₹${p.price}</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <button class="btn-edit" onclick="editProduct(${p.id})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn-delete" onclick="deleteProduct(${p.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>`;
+            let html = '';
+            data.products.forEach(p => {
+                html += `<div>
+                    ${p.name} - ₹${p.price} 
+                    <button onclick="editProduct(${p.id})">Edit</button>
+                </div>`;
             });
-        })
-        .catch(err => {
-            document.getElementById("list").innerHTML = "Error loading products.";
+            document.getElementById("list").innerHTML = html;
         });
     }
-
-    function deleteProduct(id) {
-        if(confirm("Bhai, pakka delete karna hai?")) {
-            // Yahan delete ki fetch API call aayegi
-            console.log("Deleting product:", id);
-            alert("Delete functionality backend mein add karni hogi!");
-        }
-    }
-
-    function editProduct(id) {
-        window.location.href = `edit-product.html?id=${id}`;
-    }
-
-    function logout() {
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-    }
-
-    // Load products on start
-    loadAdminProducts();
 </script>
-
-</body>
-</html>
