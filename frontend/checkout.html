@@ -55,7 +55,7 @@
     let productPrice = 0;
 
     // 1. Fetch Product Details
-    fetch(`http://10.219.28.1:5000/get-products?city=All`)
+    fetch(`https://myshop-mloa.onrender.com/get-products?city=All`)
     .then(res => res.json())
     .then(data => {
         const product = data.products.find(p => p.id == productId);
@@ -111,7 +111,7 @@
             phone: document.getElementById("custPhone").value
         };
 
-        fetch("https://cityshop-w45k.onrender.com/place-order", {
+        fetch("https://myshop-mloa.onrender.com/place-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)

@@ -74,7 +74,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
         role: this.role.value
     };
 
-    fetch("https://cityshop-w45k.onrender.com", {
+    fetch("https://myshop-mloa.onrender.com/login", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
