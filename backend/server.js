@@ -134,8 +134,8 @@ app.post('/add-product', upload.single('image'), (req, res) => {
     });
 });
 const PORT = process.env.PORT || 5000; 
-app.listen(5000, '0.0.0.0', () => {
-    console.log("Server is running on network!");
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 // Products fetch karne ka route
 app.get('/get-products', (req, res) => {
