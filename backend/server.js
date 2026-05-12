@@ -300,12 +300,39 @@ app.get('/get-product/:id', (req, res) => {
 });
 
 // 2. Product update karne ka route
-app.put('/update-product/:id', (req, res) => {
-    const { name, price, city, quantity } = req.body;
+const fs = require('fs');
+
+
+// Product update karne ka route (With Image)
+app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
-    
-    const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
-    db.query(sql, [name, price, city, quantity, productId], (err, result) => {
+    const { name, price, city, quantity } = req.body;
+    let sql = "";
+    let params = [];
+
+    // Agar nayi image upload hui hai
+    if (req.file) {
+        const newImage = req.file.filename;
+
+        // Purani image ka naam nikalenge taaki use delete kar sakein
+        db.query("SELECT image FROM products WHERE id = ?", [productId], (err, results) => {
+            if (!err && results.length > 0) {
+                const oldImagePath = path.join(__dirname, 'uploads', results[0].image);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath); // Purani photo delete
+                }
+            }
+        });
+
+        sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
+        params = [name, price, city, quantity, newImage, productId];
+    } else {
+        // Agar image change nahi karni hai
+        sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
+        params = [name, price, city, quantity, productId];
+    }
+
+    db.query(sql, params, (err, result) => {
         if (err) return res.status(500).send(err);
         res.send("Product updated successfully!");
     });
