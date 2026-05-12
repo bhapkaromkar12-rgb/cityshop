@@ -160,12 +160,21 @@
     }
 
     function deleteProduct(id) {
-        if(confirm("Bhai, pakka delete karna hai?")) {
-            // Yahan delete ki fetch API call aayegi
-            console.log("Deleting product:", id);
-            alert("Delete functionality backend mein add karni hogi!");
-        }
+    if (confirm("Bhai, kya aap sach mein is product ko nikalna chahte ho?")) {
+        fetch(`https://cityshobackend.onrender.com/delete-product/${id}`, {
+            method: 'DELETE',
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            loadAdminProducts(); // List refresh karne ke liye taaki deleted item gayab ho jaye
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert("Kuch gadbad ho gayi delete karte waqt!");
+        });
     }
+}
 
     function editProduct(id) {
         window.location.href = `edit-product.html?id=${id}`;
