@@ -338,8 +338,8 @@ app.put('/update-product/:id', upload.single('image'), (req, res) => {
     });
 });
 // Profile Update karne ka Route
-app.put('/update-profile/:id', (req, res) => {
-    const userId = req.params.id;
+app.put('/update-profile/:adminid', (req, res) => {
+    const userId = req.params.adminid;
     const { username, email, phone, password } = req.body;
 
     // Agar password change karna hai toh query thodi alag hogi
