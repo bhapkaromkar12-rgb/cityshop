@@ -15,36 +15,38 @@
 
 <div class="container">
     <h2 style="text-align: center;">Edit Product</h2>
-    <form id="editForm">
+    <form id="editForm" enctype="multipart/form-data">
         <input type="hidden" id="productId">
+        
         <label>Product Name</label>
-        <input type="text" id="name" required>
+        <input type="text" id="name" name="name" required>
         
         <label>Price (₹)</label>
-        <input type="number" id="price" required>
+        <input type="number" id="price" name="price" required>
         
         <label>City</label>
-        <input type="text" id="city" required>
+        <input type="text" id="city" name="city" required>
         
         <label>Quantity</label>
-        <input type="number" id="quantity" required>
+        <input type="number" id="quantity" name="quantity" required>
         
-        <button type="submit" class="update-btn">Update Details</button>
+        <label>Update Photo (Optional)</label>
+        <input type="file" id="image" name="image" accept="image/*">
+        
+        <button type="submit" class="update-btn">Save Changes</button>
         <p style="text-align: center;"><a href="admin_dash.html" style="color: #666;">Cancel</a></p>
     </form>
 </div>
 
 <script>
-    // 1. URL se ID nikalna (e.g., edit-product.html?id=5)
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
-    // 2. Purana data load karna
+    // Purana data load karne ka function wahi rahega...
     function loadExistingData() {
         fetch(`https://cityshobackend.onrender.com/get-product/${productId}`)
         .then(res => res.json())
         .then(p => {
-            document.getElementById("productId").value = p.id;
             document.getElementById("name").value = p.name;
             document.getElementById("price").value = p.price;
             document.getElementById("city").value = p.city;
@@ -52,26 +54,30 @@
         });
     }
 
-    // 3. Form Submit (Update) karna
+    // UPDATE Function (Naya logic)
     document.getElementById("editForm").addEventListener("submit", function(e) {
         e.preventDefault();
         
-        const updatedData = {
-            name: document.getElementById("name").value,
-            price: document.getElementById("price").value,
-            city: document.getElementById("city").value,
-            quantity: document.getElementById("quantity").value
-        };
+        // FormData use karenge kyunki file bhejni hai
+        let formData = new FormData();
+        formData.append("name", document.getElementById("name").value);
+        formData.append("price", document.getElementById("price").value);
+        formData.append("city", document.getElementById("city").value);
+        formData.append("quantity", document.getElementById("quantity").value);
+        
+        const imageFile = document.getElementById("image").files[0];
+        if(imageFile) {
+            formData.append("image", imageFile);
+        }
 
         fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData)
+            body: formData // No headers needed for FormData
         })
         .then(res => res.text())
         .then(msg => {
             alert(msg);
-            window.location.href = "admin_dash.html"; // Wapas dashboard bhejo
+            window.location.href = "admin_dash.html";
         })
         .catch(err => alert("Update failed!"));
     });
