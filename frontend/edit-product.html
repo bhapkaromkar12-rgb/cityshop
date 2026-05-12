@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - City Shop</title>
+    <style>
+        body { font-family: sans-serif; background: linear-gradient(135deg, #2ae7bb, #ff7eb3); min-height: 100vh; margin: 0; padding: 20px; }
+        .container { width: 90%; max-width: 400px; margin: 50px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .update-btn { width: 100%; padding: 15px; background: #26d7c5; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center;">Edit Product</h2>
+    <form id="editForm">
+        <input type="hidden" id="productId">
+        <label>Product Name</label>
+        <input type="text" id="name" required>
+        
+        <label>Price (₹)</label>
+        <input type="number" id="price" required>
+        
+        <label>City</label>
+        <input type="text" id="city" required>
+        
+        <label>Quantity</label>
+        <input type="number" id="quantity" required>
+        
+        <button type="submit" class="update-btn">Update Details</button>
+        <p style="text-align: center;"><a href="admin_dash.html" style="color: #666;">Cancel</a></p>
+    </form>
+</div>
+
+<script>
+    // 1. URL se ID nikalna (e.g., edit-product.html?id=5)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    // 2. Purana data load karna
+    function loadExistingData() {
+        fetch(`https://cityshobackend.onrender.com/get-product/${productId}`)
+        .then(res => res.json())
+        .then(p => {
+            document.getElementById("productId").value = p.id;
+            document.getElementById("name").value = p.name;
+            document.getElementById("price").value = p.price;
+            document.getElementById("city").value = p.city;
+            document.getElementById("quantity").value = p.quantity;
+        });
+    }
+
+    // 3. Form Submit (Update) karna
+    document.getElementById("editForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const updatedData = {
+            name: document.getElementById("name").value,
+            price: document.getElementById("price").value,
+            city: document.getElementById("city").value,
+            quantity: document.getElementById("quantity").value
+        };
+
+        fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
+        })
+        .then(res => res.text())
+        .then(msg => {
+            alert(msg);
+            window.location.href = "admin_dash.html"; // Wapas dashboard bhejo
+        })
+        .catch(err => alert("Update failed!"));
+    });
+
+    if(productId) loadExistingData();
+</script>
+</body>
+</html>
