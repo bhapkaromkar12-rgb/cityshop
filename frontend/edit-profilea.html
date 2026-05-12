@@ -189,7 +189,7 @@
             password: document.getElementById("password").value
         };
 
-        fetch(`https://cityshobackend.onrender.com/update-profile/${user.id}`, {
+        fetch(`https://cityshobackend.onrender.com/update-profile/${admin.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData)
