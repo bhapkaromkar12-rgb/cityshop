@@ -238,3 +238,54 @@ function handleDisconnect() {
     });
 }
 handleDisconnect();
+// 1. Saare orders fetch karne ke liye
+app.get('/get-all-orders', (req, res) => {
+    const sql = "SELECT * FROM orders ORDER BY id DESC";
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.json(results);
+    });
+});
+
+// 2. Order ka status update karne ke liye (Receive/Cancel/Deliver)
+app.post('/update-order-status', (req, res) => {
+    const { orderId, status } = req.body;
+    const sql = "UPDATE orders SET status = ? WHERE id = ?";
+    db.query(sql, [status, orderId], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.send(`Order ${status} successfully!`);
+    });
+});
+
+// Product delete karne ka route
+app.delete('/delete-product/:id', (req, res) => {
+    const productId = req.params.id;
+
+    // Pehle hum database se image ka naam nikalenge taaki use folder se bhi delete kar sakein
+    const getImgSql = "SELECT image FROM products WHERE id = ?";
+    
+    db.query(getImgSql, [productId], (err, results) => {
+        if (err) return res.status(500).send(err);
+
+        if (results.length > 0) {
+            const imageName = results[0].image;
+            const fs = require('fs');
+            const path = require('path');
+
+            // Folder se image delete karna (Optional par acchi practice hai)
+            const filePath = path.join(__dirname, 'uploads', imageName);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+
+            // Ab database se product delete karenge
+            const deleteSql = "DELETE FROM products WHERE id = ?";
+            db.query(deleteSql, [productId], (err, result) => {
+                if (err) return res.status(500).send(err);
+                res.send("Product deleted successfully!");
+            });
+        } else {
+            res.status(404).send("Product not found");
+        }
+    });
+});
