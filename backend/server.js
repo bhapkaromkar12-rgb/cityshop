@@ -289,3 +289,24 @@ app.delete('/delete-product/:id', (req, res) => {
         }
     });
 });
+
+// 1. Specific product ka data lane ke liye (Edit form bharne ke liye)
+app.get('/get-product/:id', (req, res) => {
+    const sql = "SELECT * FROM products WHERE id = ?";
+    db.query(sql, [req.params.id], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json(result[0]);
+    });
+});
+
+// 2. Product update karne ka route
+app.put('/update-product/:id', (req, res) => {
+    const { name, price, city, quantity } = req.body;
+    const productId = req.params.id;
+    
+    const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
+    db.query(sql, [name, price, city, quantity, productId], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.send("Product updated successfully!");
+    });
+});
