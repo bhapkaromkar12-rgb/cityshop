@@ -337,3 +337,26 @@ app.put('/update-product/:id', upload.single('image'), (req, res) => {
         res.send("Product updated successfully!");
     });
 });
+// Profile Update karne ka Route
+app.put('/update-profile/:id', (req, res) => {
+    const userId = req.params.id;
+    const { username, email, phone, password } = req.body;
+
+    // Agar password change karna hai toh query thodi alag hogi
+    let sql = "UPDATE users SET username=?, email=?, phone=? WHERE id=?";
+    let params = [username, email, phone, userId];
+
+    if (password && password.trim() !== "") {
+        sql = "UPDATE users SET username=?, email=?, phone=?, password=? WHERE id=?";
+        params = [username, email, phone, password, userId];
+    }
+
+    db.query(sql, params, (err, result) => {
+        if (err) return res.status(500).send(err);
+        
+        // Naya data fetch karke bhejenge taaki localStorage update ho sake
+        db.query("SELECT * FROM users WHERE id = ?", [userId], (err, user) => {
+            res.json({ message: "Profile Updated!", user: user[0] });
+        });
+    });
+});
