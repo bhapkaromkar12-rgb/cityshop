@@ -2,167 +2,189 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Admin - Add Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Agro City Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #74c947;
+            --dark-card: rgba(15, 15, 15, 0.85);
+            --border-glow: rgba(116, 201, 71, 0.3);
+        }
+
         body { 
             margin:0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #2ae7bb, #ff7eb3); 
+            font-family: 'Inter', sans-serif; 
+            /* Aapki mangi hui background setting */
             min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            color: white;
         }
         
-        /* Navbar - Phone optimized */
+        /* Glassmorphism Navbar */
         .navbar { 
-            background:#26d7c5; 
-            color:white; 
-            padding:12px 15px; 
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center; 
-            position:sticky; 
-            top:0; 
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 15px 6%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        
-        /* Container - Mobile Responsive */
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--primary); }
+        .logo span { font-size: 12px; background: var(--primary); color: black; padding: 2px 8px; border-radius: 4px; margin-left: 5px; }
+
+        /* Form Container */
         .container { 
             width: 90%; 
-            max-width: 400px; 
-            margin: 30px auto; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            max-width: 450px; 
+            margin: auto; 
+            background: var(--dark-card); 
+            backdrop-filter: blur(20px);
+            padding: 40px; 
+            border-radius: 25px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
 
-        h2 { text-align: center; margin-bottom: 20px; color: #333; font-size: 22px; }
+        h2 { text-align: center; margin-bottom: 30px; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Inputs - Large for mobile touch */
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group i { position: absolute; left: 15px; top: 16px; color: var(--primary); }
+
         input { 
             width: 100%; 
-            padding: 14px; 
-            margin: 12px 0; 
-            border: 1px solid #eee; 
+            padding: 15px 15px 15px 45px; 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px; 
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
             box-sizing: border-box;
-            background: #f9f9f9;
-            font-size: 16px; /* 16px se niche iOS zoom nahi karega */
         }
 
-        input:focus {
-            outline: none;
-            border-color: #26d7c5;
-            background: #fff;
-        }
+        input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
 
         .file-label {
-            display: block;
-            font-size: 13px;
-            color: #666;
-            margin: 10px 0 5px 5px;
-            font-weight: 600;
+            display: block; font-size: 13px; color: #bbb; margin: 15px 0 8px 5px; font-weight: 600;
         }
 
-        button.submit-btn { 
+        input[type="file"] {
+            padding: 12px; background: rgba(116, 201, 71, 0.05); border: 1px dashed var(--primary); cursor: pointer;
+        }
+
+        .submit-btn { 
             width: 100%; 
-            padding: 15px; 
-            background: #667eea; 
+            padding: 16px; 
+            background: var(--primary); 
             color: white; 
             border: none; 
             border-radius: 12px; 
             cursor: pointer; 
             font-size: 18px; 
-            font-weight: bold;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            transition: 0.3s;
+            font-weight: 800;
+            margin-top: 20px;
+            transition: 0.4s;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
         }
 
-        button.submit-btn:active { transform: scale(0.98); }
+        .submit-btn:hover { background: #5ea33a; transform: translateY(-3px); box-shadow: 0 15px 25px rgba(116, 201, 71, 0.4); }
 
-        /* Dropdown - Mobile positioning */
+        /* Admin Profile Dropdown */
         .profile-container { position: relative; }
         .profile-btn { 
-            background: rgba(255,255,255,0.2); 
+            background: rgba(255,255,255,0.1); 
             color: white; 
-            border: 1px solid rgba(255,255,255,0.4); 
-            padding: 6px 12px; 
-            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            padding: 10px 18px; 
+            border-radius: 30px; 
             cursor: pointer; 
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 13px;
+            display: flex; align-items: center; gap: 8px;
         }
         
         .dropdown-content {
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            background-color: white;
-            min-width: 160px; 
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-            z-index: 1; 
-            border-radius: 12px; 
-            margin-top: 8px;
-            overflow: hidden;
+            display: none; position: absolute; right: 0; background: #1a1a1a; min-width: 200px; 
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5); z-index: 100; border-radius: 15px; 
+            margin-top: 10px; overflow: hidden; border: 1px solid #333;
         }
         
-        .dropdown-content p { margin: 0; padding: 12px; background: #f4f4f4; font-size: 11px; color: #888; border-bottom: 1px solid #eee; }
-        .dropdown-content a { color: #333; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; border-bottom: 1px solid #f9f9f9; }
+        .dropdown-content p { margin: 0; padding: 15px; background: #222; font-size: 12px; color: #888; border-bottom: 1px solid #333; }
+        .dropdown-content a { color: #eee; padding: 12px 20px; text-decoration: none; display: block; font-size: 14px; transition: 0.3s; }
+        .dropdown-content a:hover { background: #252525; color: var(--primary); }
         .show { display: block; }
-
-        @media (max-width: 360px) {
-            .container { padding: 15px; }
-            .logo { font-size: 16px; }
-        }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo">🌾 City Shop <span style="font-weight:300; font-size: 12px;">Admin</span></div>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-tools"></i> AGRO SHOP <span>ADMIN</span></div>
     
     <div class="profile-container">
         <button class="profile-btn" onclick="toggleDropdown()">
             <i class="fas fa-user-shield"></i> 
-            <span id="adminNameDisplay">Admin</span>
+            <span id="adminNameDisplay">Master</span>
         </button>
         <div id="profileDropdown" class="dropdown-content">
-            <p id="adminEmail"></p>
-            <a href="admin_dash.html"><i class="fas fa-th-large"></i> Dashboard</a> 
-            <a href="all-orders.html" style="color: #1f7ecd;"><i class="fas fa-shopping-cart"></i> Orders</a> 
-            <a href="edit-profilea.html" style="color: #1d2b2a;"><i class="fas fa-user-edit"></i> Edit Profile</a> 
-            <a href="#" onclick="logout()" style="color: #ff4d4d;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <p id="adminEmail">admin@cityshop.com</p>
+            <a href="admin_dash.html"><i class="fas fa-chart-line"></i> Dashboard</a> 
+            <a href="all-orders.html"><i class="fas fa-shopping-basket"></i> View Orders</a> 
+            <a href="edit-profile.html"><i class="fas fa-user-cog"></i> Settings</a> 
+            <a href="#" onclick="logout()" style="color: #ff5f5f;"><i class="fas fa-power-off"></i> Logout</a>
         </div>
     </div>
-</div>
+</nav>
 
 <div class="container">
     <h2>Add New Product</h2>
     <form id="productForm">
-        <input type="text" name="name" placeholder="Product Name" required>
-        <input type="number" name="price" placeholder="Price (₹)" required>
-        <input type="text" name="city" placeholder="City Name" required>
-        <input type="number" name="quantity" placeholder="Quantity Available" required>
+        <div class="input-group">
+            <i class="fas fa-tag"></i>
+            <input type="text" name="name" placeholder="Product Name" required>
+        </div>
         
-        <span class="file-label">Product Image</span>
-        <input type="file" name="image" accept="image/*" required style="padding: 10px; background: #fff; border: 1px dashed #ccc;">
+        <div class="input-group">
+            <i class="fas fa-rupee-sign"></i>
+            <input type="number" name="price" placeholder="Price (₹)" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" name="city" placeholder="City Name" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-boxes"></i>
+            <input type="number" name="quantity" placeholder="Stock Quantity" required>
+        </div>
         
-        <button type="submit" class="submit-btn">Add Product</button>
+        <label class="file-label">Product Showcase Image</label>
+        <input type="file" name="image" accept="image/*" required>
+        
+        <button type="submit" class="submit-btn">Publish Product</button>
     </form>
 </div>
 
 <script>
-    // Logic Same Rahega Jo Aapne Likha Tha
     const user = JSON.parse(localStorage.getItem("user"));
     if(!user || user.role !== "admin"){
-        alert("Access Denied!");
+        alert("Admin Access Required!");
         window.location.href = "index1.html";
     } else {
         document.getElementById("adminNameDisplay").innerText = user.username;
@@ -186,6 +208,10 @@
 
     document.getElementById("productForm").addEventListener("submit", function(e){
         e.preventDefault();
+        const btn = this.querySelector('.submit-btn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
         let formData = new FormData(this);
 
         fetch("https://cityshobackend.onrender.com/add-product", {
@@ -195,9 +221,15 @@
         .then(res => res.text())
         .then(data => {
             alert(data);
+            btn.innerText = "Publish Product";
+            btn.disabled = false;
             if(data.toLowerCase().includes("success")) this.reset();
         })
-        .catch(err => alert("Server Error!"));
+        .catch(err => {
+            alert("Server Error!");
+            btn.innerText = "Publish Product";
+            btn.disabled = false;
+        });
     });
 </script>
 
