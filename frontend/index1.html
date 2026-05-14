@@ -3,139 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - City Shop</title>
-
+    <title>Login - City Shop Agro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --primary: #74c947;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(25, 25, 25, 0.9);
+            --text-gray: #a0a0a0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
-            height: 100 vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1495107333279-99457c6753e0?auto=format&fit=crop&q=80&w=1500');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            color: white;
         }
 
-        .box {
-            width: 100%;
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            width: 90%;
             max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-area i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 10px;
         }
 
         h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
             font-size: 28px;
-            font-weight: 700;
+            margin: 0;
             letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        p.subtitle {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
         }
 
         input, select {
             width: 100%;
-            padding: 14px 18px;
-            margin: 12px 0;
-            border: 2px solid #eee;
+            padding: 14px 15px 14px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            outline: none;
+            color: white;
             font-size: 16px;
             transition: 0.3s;
-            background: #f9f9f9;
+            outline: none;
         }
 
         input:focus, select:focus {
-            border-color: #2ae7bb;
-            background: #fff;
-            box-shadow: 0 0 8px rgba(42, 231, 187, 0.3);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(116, 201, 71, 0.2);
+        }
+
+        select option {
+            background: #1a1a1a;
+            color: white;
         }
 
         button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: #07101e;
+            background: var(--primary);
             color: white;
+            padding: 16px;
             border: none;
             border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            transition: 0.4s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: 0.4s;
+            margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
         }
 
         button:hover {
-            background: #1a2a44;
+            background: #5ea33a;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 25px rgba(116, 201, 71, 0.4);
         }
 
-        button:active {
-            transform: translateY(0);
-        }
-
-        a {
-            display: block;
+        .footer-links {
             text-align: center;
             margin-top: 25px;
-            color: #555;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            color: var(--primary);
             text-decoration: none;
-            font-size: 15px;
-            transition: 0.3s;
+            font-weight: 600;
         }
 
-        a:hover {
-            color: #ff7eb3;
-            font-weight: bold;
-        }
-
-        /* Mobile specific adjustments */
-        @media (max-width: 480px) {
-            .box {
-                padding: 30px 20px;
-                margin-top: 20px;
-            }
-            h2 {
-                font-size: 24px;
-            }
+        .footer-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Login</h2>
+<div class="login-card">
+    <div class="logo-area">
+        <i class="fas fa-leaf"></i>
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Access your Agro account</p>
+    </div>
 
     <form id="loginForm">
-        <input type="email" name="email" placeholder="Email Address" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" name="email" placeholder="Email Address" required>
+        </div>
 
-        <select name="role">
-            <option value="admin">Admin</option>
-            <option value="customer">Customer</option>
-        </select>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
 
-        <button type="submit">Login</button>
+        <div class="input-group">
+            <i class="fas fa-user-tag"></i>
+            <select name="role">
+                <option value="customer">Customer / Farmer</option>
+                <option value="admin">Admin Panel</option>
+            </select>
+        </div>
+
+        <button type="submit">Sign In</button>
     </form>
 
-    <a href="register.html">New User? Create Account</a>
+    <div class="footer-links">
+        New User? <a href="register.html">Create Account</a>
+    </div>
 </div>
 
 <script>
 document.getElementById("loginForm").addEventListener("submit", function(e){
     e.preventDefault();
+    const btn = this.querySelector('button');
+    btn.innerText = "Verifying...";
+    btn.disabled = true;
 
     let data = {
         email: this.email.value,
@@ -152,19 +207,19 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     .then(res => {
         if(res.success){
             localStorage.setItem("user", JSON.stringify(res.user));
-
-            if(res.user.role === "admin"){
-                window.location.href = "admin.html"; 
-            } else {
-                window.location.href = "view.html"; 
-            }
+            // User role check karke redirect
+            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
         } else {
-            alert("Invalid Login. Please check your credentials.");
+            alert("Invalid Credentials. Please try again.");
+            btn.innerText = "Sign In";
+            btn.disabled = false;
         }
     })
     .catch(err => {
         console.error("Login Error:", err);
-        alert("Server error. Please try again later.");
+        alert("Server connection failed!");
+        btn.innerText = "Sign In";
+        btn.disabled = false;
     });
 });
 </script>
