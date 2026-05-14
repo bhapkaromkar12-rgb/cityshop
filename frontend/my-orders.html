@@ -6,61 +6,145 @@
     <title>My Orders - City Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif;background: linear-gradient(135deg, #2ae7bb, #ff7eb3); margin: 0; padding: 0; }
-        .navbar { background: #31b862; color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; }
-        
-        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
-        h2 { color: #333; border-bottom: 2px solid #31b862; padding-bottom: 10px; margin-bottom: 25px; }
+        :root {
+            --primary: #74c947;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(22, 22, 22, 0.9);
+            --text-gray: #a0a0a0;
+        }
 
-        .order-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px; border-left: 5px solid #31b862; }
-        .order-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; background: #eee; }
+        body { 
+            margin: 0; 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh; 
+            color: white;
+        }
+
+        /* Floating Back Icon (Top Left) */
+        .btn-back-top {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 80px 15px 30px; 
+        }
+
+        h2 { 
+            text-align: center; 
+            font-size: 22px; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        /* Order Card - Phone Optimized */
+        .order-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        .order-card img { 
+            width: 80px; 
+            height: 80px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 1px solid #333;
+        }
         
         .order-info { flex-grow: 1; }
-        .order-info h3 { margin: 0 0 8px 0; color: #2e7d32; }
-        .order-info p { margin: 4px 0; color: #666; font-size: 14px; }
+        .order-info h3 { margin: 0 0 5px 0; font-size: 16px; color: #fff; }
+        .order-info p { margin: 2px 0; color: var(--text-gray); font-size: 13px; }
         
-        .status-badge { background: #e8f5e9; color: #2e7d32; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 8px; }
+        /* Status Badges */
+        .status-badge { 
+            padding: 4px 10px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            display: inline-block; 
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+        .status-pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
+        .status-delivered { background: rgba(116, 201, 71, 0.2); color: var(--primary); border: 1px solid rgba(116, 201, 71, 0.3); }
         
-        .empty-msg { text-align: center; padding: 50px; color: #888; }
-        .back-btn { display: inline-block; margin-top: 15px; color: #31b862; text-decoration: none; font-weight: bold; }
-   .status-badge { 
-    padding: 5px 12px; 
-    border-radius: 15px; 
-    font-size: 12px; 
-    font-weight: bold; 
-    display: inline-block; 
-    margin-top: 8px;
-}
-/* Alag-alag status ke liye colors */
-.status-pending { background: #fff3cd; color: #856404; }
-.status-delivered { background: #d4edda; color: #155724; }
-   
-   </style>
+        .empty-msg { 
+            text-align: center; 
+            padding: 50px 20px; 
+            background: var(--card-bg);
+            border-radius: 20px;
+            color: var(--text-gray); 
+        }
+
+        .continue-btn { 
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="navbar">
-    <a href="view.html" class="logo">🌾 City Shop</a>
-    <div id="userName">User Panel</div>
-</div>
+<a href="view.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
 
 <div class="container">
-    <h2>Your Orders History</h2>
+    <h2><i class="fas fa-history"></i> My Orders</h2>
+    
     <div id="ordersList">
-        <p class="empty-msg">Loading your orders...</p>
+        <div class="empty-msg">
+            <i class="fas fa-circle-notch fa-spin" style="font-size: 30px; color: var(--primary);"></i>
+            <p>Fetching your orders...</p>
+        </div>
     </div>
-    <a href="view.html" class="back-btn">← Continue Shopping</a>
+
+    <a href="view.html" class="continue-btn">Continue Shopping</a>
 </div>
 
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
     
-    // Security Check
     if(!user) {
         window.location.href = "index1.html";
-    } else {
-        document.getElementById("userName").innerText = "Hi, " + user.username;
     }
 
     function fetchOrders() {
@@ -70,38 +154,40 @@
             const list = document.getElementById("ordersList");
             list.innerHTML = "";
 
-            if(!data.orders || data.orders.length === 0) {
-                list.innerHTML = `<div class="empty-msg">
-                    <i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 10px;"></i>
-                    <p>You haven't placed an order yet.</p>
-                </div>`;
+            const orders = data.orders || data;
+
+            if(!orders || orders.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-msg">
+                        <i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 15px; color: #444;"></i>
+                        <p>No orders found yet.</p>
+                    </div>`;
                 return;
             }
-data.orders.forEach(order => {
-    // Status ke hisab se class choose karein
-    const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
 
-    list.innerHTML += `
-        <div class="order-card">
-            <img src="https://citysho.onrender.com/uploads/${order.image || 'no-image.png'}" alt="Product">
-            <div class="order-info">
-                <h3>${order.product_name}</h3>
-                <p><strong>Order ID:</strong> #${order.id}</p>
-                <p><strong>Amount:</strong> ₹${order.price}</p>
-                <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
-                <span class="status-badge ${statusClass}">${order.status}</span>
-            </div>
-        </div>
-    `;
-});
+            orders.forEach(order => {
+                const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
+                const imgPath = order.image ? `https://citysho.onrender.com/uploads/${order.image}` : 'https://via.placeholder.com/80?text=Agro';
+
+                list.innerHTML += `
+                    <div class="order-card">
+                        <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
+                        <div class="order-info">
+                            <h3>${order.product_name}</h3>
+                            <p><strong>ID:</strong> #${order.id}</p>
+                            <p><strong>Total:</strong> ₹${parseFloat(order.price).toFixed(2)}</p>
+                            <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
+                            <span class="status-badge ${statusClass}">${order.status}</span>
+                        </div>
+                    </div>
+                `;
+            });
         })
         .catch(err => {
-            console.error("Error:", err);
-            document.getElementById("ordersList").innerHTML = "<p>Orders load karne mein error aayi.</p>";
+            document.getElementById("ordersList").innerHTML = "<div class='empty-msg'>Connection Error!</div>";
         });
     }
 
-    // Initialize
     fetchOrders();
 </script>
 
