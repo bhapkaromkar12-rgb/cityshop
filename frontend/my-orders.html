@@ -143,17 +143,26 @@
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
     
+    // Base URL ko payment page wale URL se match kiya hai
+    const BASE_URL = "https://cityshobackend.onrender.com";
+
     if(!user) {
         window.location.href = "index1.html";
     }
 
     function fetchOrders() {
-        fetch(`https://citysho.onrender.com/my-orders/${user.id}`)
-        .then(res => res.json())
+        const list = document.getElementById("ordersList");
+
+        // URL theek kiya: cityshobackend use kiya hai
+        fetch(`${BASE_URL}/my-orders/${user.id}`)
+        .then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+        })
         .then(data => {
-            const list = document.getElementById("ordersList");
             list.innerHTML = "";
 
+            // Check if data is an array or contains an orders property
             const orders = data.orders || data;
 
             if(!orders || orders.length === 0) {
@@ -167,27 +176,37 @@
 
             orders.forEach(order => {
                 const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
-                const imgPath = order.image ? `https://citysho.onrender.com/uploads/${order.image}` : 'https://via.placeholder.com/80?text=Agro';
+                
+                // Image path ko bhi BASE_URL se connect kiya
+                const imgPath = order.image ? 
+                    `${BASE_URL}/uploads/${order.image}` : 
+                    'https://via.placeholder.com/80?text=Agro';
 
                 list.innerHTML += `
                     <div class="order-card">
                         <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
                         <div class="order-info">
-                            <h3>${order.product_name}</h3>
+                            <h3>${order.product_name || 'Product'}</h3>
                             <p><strong>ID:</strong> #${order.id}</p>
-                            <p><strong>Total:</strong> ₹${parseFloat(order.price).toFixed(2)}</p>
+                            <p><strong>Total:</strong> ₹${parseFloat(order.price || 0).toFixed(2)}</p>
                             <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
-                            <span class="status-badge ${statusClass}">${order.status}</span>
+                            <span class="status-badge ${statusClass}">${order.status || 'Pending'}</span>
                         </div>
                     </div>
                 `;
             });
         })
         .catch(err => {
-            document.getElementById("ordersList").innerHTML = "<div class='empty-msg'>Connection Error!</div>";
+            console.error("Fetch error:", err);
+            list.innerHTML = `
+                <div class='empty-msg'>
+                    <i class="fas fa-exclamation-triangle" style="color: #ffc107; font-size: 30px;"></i>
+                    <p>Connection Error!<br><small style="font-size:10px; color:gray;">Check if backend is awake at ${BASE_URL}</small></p>
+                </div>`;
         });
     }
 
+    // Initialize fetch
     fetchOrders();
 </script>
 
