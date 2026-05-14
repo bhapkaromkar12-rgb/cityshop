@@ -2,52 +2,187 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - City Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: Arial; background: linear-gradient(135deg, #2ae7bb, #ff7eb3); }
-        .navbar { background: #31b862; color: white; padding: 15px; display: flex; justify-content: space-between; }
-        .box { width: 350px; margin: 50px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #31b862; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        .back-link { display: block; text-align: center; margin-top: 15px; color: #31b862; text-decoration: none; }
+        :root {
+            --primary: #74c947;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(22, 22, 22, 0.9);
+            --text-gray: #a0a0a0;
+        }
+
+        body { 
+            margin: 0; 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white;
+        }
+
+        /* Floating Back Icon (Top Left) */
+        .btn-back-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .btn-back-top:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Card Design - Same as Main Page */
+        .profile-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            width: 90%; 
+            max-width: 400px; 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #222;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { 
+            text-align: center; 
+            font-size: 22px; 
+            margin-bottom: 25px; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .input-group { margin-bottom: 18px; }
+
+        label { 
+            display: block; 
+            font-size: 12px; 
+            color: var(--text-gray); 
+            margin-bottom: 8px; 
+            font-weight: 600;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid #333; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            color: white;
+            font-size: 16px; /* Phone zoom fix */
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Button Style - Same as "Add to Cart" */
+        .btn-update { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-update:hover { 
+            background: #5ea33a; 
+            box-shadow: 0 5px 15px rgba(116, 201, 71, 0.3);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { color: var(--primary); }
+
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div style="font-weight: bold;">🌾 City Shop</div>
-</div>
+<a href="view.html" id="backIcon" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
 
-<div class="box">
-    <h2>Edit Profile</h2>
+<div class="profile-card">
+    <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+    
     <form id="editProfileForm">
-        <label>Username:</label>
-        <input type="text" id="editUsername" required>
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="editUsername" placeholder="Enter name" required>
+        </div>
         
-        <label>Email:</label>
-        <input type="email" id="editEmail" required>
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="editEmail" placeholder="Enter email" required>
+        </div>
         
-        <label>Password:</label>
-        <input type="password" id="editPassword" required>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="editPassword" placeholder="Enter password" required>
+        </div>
         
-        <button type="submit">Update Profile</button>
+        <button type="submit" class="btn-update">Update Profile</button>
     </form>
-    <a href="view.html" class="back-link">Back to Home</a>
+    
+    <a href="view.html" id="backText" class="back-link">Cancel</a>
 </div>
 
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
     if(!user) window.location.href = "login.html";
 
-    // Pehle se save data dikhao
+    // Dynamic Back Navigation
+    const backPath = user.role === 'admin' ? 'add-product.html' : 'view.html';
+    document.getElementById("backIcon").href = backPath;
+    document.getElementById("backText").href = backPath;
+
+    // Load Data
     document.getElementById("editUsername").value = user.username;
     document.getElementById("editEmail").value = user.email;
     document.getElementById("editPassword").value = user.password;
 
     document.getElementById("editProfileForm").addEventListener("submit", function(e) {
         e.preventDefault();
-
+        
         const updatedData = {
             username: document.getElementById("editUsername").value,
             email: document.getElementById("editEmail").value,
@@ -62,15 +197,15 @@
         .then(res => res.json())
         .then(res => {
             if(res.success) {
-                // LocalStorage update karein taaki profile mein naya naam dikhe
                 const newUser = { ...user, ...updatedData };
                 localStorage.setItem("user", JSON.stringify(newUser));
                 alert("Profile Updated!");
-                window.location.href = "view.html";
+                window.location.href = backPath;
             } else {
                 alert("Error: " + res.message);
             }
-        });
+        })
+        .catch(err => alert("Server Error!"));
     });
 </script>
 </body>
