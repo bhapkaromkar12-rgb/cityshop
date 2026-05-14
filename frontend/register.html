@@ -5,76 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Agro City Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
+<style>
     :root {
         --primary: #74c947;
-        --dark-card: rgba(15, 15, 15, 0.9);
+        --dark-card: rgba(18, 18, 18, 0.88);
         --text-gray: #b0b0b0;
     }
 
     body {
         margin: 0;
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
-                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+                    url('https://images.unsplash.com/photo-1495107333279-99457c6753e0?auto=format&fit=crop&q=80&w=1500');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
         min-height: 100vh;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         color: white;
         overflow-x: hidden;
     }
 
-    /* Navbar - Mobile Optimized */
-    .navbar { 
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(15px);
-        padding: 12px 5%; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-        position: fixed; 
-        top: 0; 
-        width: 100%;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-sizing: border-box;
-    }
-
-    .logo { 
-        font-size: 18px; 
-        font-weight: 800; 
-        display: flex; 
-        align-items: center; 
-        gap: 8px; 
-        text-transform: uppercase;
-    }
-    .logo i { color: var(--primary); }
-
-    /* Register Container - Handling long forms on mobile */
-    .register-container {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px 15px;
-        margin-top: 60px; /* Space for Navbar */
-        margin-bottom: 20px;
-    }
-
+    /* Mobile Responsive Card */
     .register-card {
         background: var(--dark-card);
-        backdrop-filter: blur(25px);
-        width: 100%;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        width: 90%;
         max-width: 400px;
         padding: 30px 20px;
-        border-radius: 20px; 
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        box-sizing: border-box;
         animation: slideUp 0.6s ease-out;
+        box-sizing: border-box;
     }
 
     @keyframes slideUp {
@@ -88,22 +54,42 @@
     }
 
     .logo-area i {
-        font-size: 38px;
+        font-size: 40px;
         color: var(--primary);
         margin-bottom: 8px;
+        filter: drop-shadow(0 0 10px rgba(116, 201, 71, 0.3));
     }
 
-    h2 { font-size: 22px; margin: 0; letter-spacing: 0.5px; }
-    p.subtitle { color: var(--text-gray); font-size: 13px; margin-top: 4px; }
+    h2 {
+        font-size: 22px;
+        margin: 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-weight: 800;
+    }
 
-    form { gap: 12px; margin-top: 18px; display: flex; flex-direction: column; }
+    p.subtitle {
+        color: var(--text-gray);
+        font-size: 13px;
+        margin-top: 5px;
+    }
 
-    .input-group { position: relative; }
-    .input-group i { 
-        position: absolute; 
-        left: 15px; 
-        top: 50%; 
-        transform: translateY(-50%); 
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* Tight gap for mobile screens */
+        margin-top: 15px;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
         color: var(--primary);
         font-size: 15px;
     }
@@ -111,23 +97,37 @@
     input, select {
         width: 100%;
         padding: 13px 15px 13px 45px;
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.07);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 16px; /* Important for Mobile Typing zoom fix */
+        font-size: 16px; /* Prevents auto-zoom on mobile */
+        transition: 0.3s;
         outline: none;
         box-sizing: border-box;
-        transition: 0.3s;
+        appearance: none;
     }
 
     input:focus, select:focus {
         border-color: var(--primary);
         background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 10px rgba(116, 201, 71, 0.1);
+    }
+
+    /* Custom dropdown arrow */
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2374c947' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+    }
+
+    select option {
+        background: #1a1a1a;
+        color: white;
     }
 
     button {
-        width: 100%;
         background: var(--primary);
         color: white;
         padding: 14px;
@@ -137,11 +137,15 @@
         font-weight: 700;
         cursor: pointer;
         text-transform: uppercase;
-        margin-top: 8px;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        margin-top: 10px;
         box-shadow: 0 8px 15px rgba(116, 201, 71, 0.3);
     }
 
-    button:active { transform: scale(0.98); }
+    button:active {
+        transform: scale(0.97);
+    }
 
     .footer-links {
         text-align: center;
@@ -154,13 +158,24 @@
         color: var(--primary);
         text-decoration: none;
         font-weight: 700;
-        margin-left: 5px;
     }
 
-    /* Viewport Height Fix for Mobile Browsers */
-    @media (max-height: 700px) {
-        .register-container { align-items: flex-start; }
-        .register-card { padding: 25px 15px; }
+    /* Adjust for very small phones */
+    @media (max-width: 360px) {
+        .register-card {
+            padding: 20px 15px;
+        }
+        h2 { font-size: 20px; }
+    }
+
+    /* Handling landscape mode / short screens */
+    @media (max-height: 650px) {
+        body {
+            align-items: flex-start;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+        .register-card { margin-top: 10px; }
     }
 </style>
 </head>
