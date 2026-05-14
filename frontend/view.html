@@ -41,11 +41,51 @@
         .logo i { color: var(--primary); }
         
         /* Container Setup */
+       /* Container Setup - Optimized for 2 per row on Mobile */
         .container { 
             display: grid; 
+            /* Desktop par auto-fill rahega */
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
-            gap: 25px; 
-            padding: 40px 6%; 
+            gap: 15px; /* Mobile par gap thoda kam kar diya taaki space bache */
+            padding: 20px 4%; 
+        }
+
+        /* Mobile Specific Adjustment */
+        @media (max-width: 600px) {
+            .container {
+                /* Exact 2 columns in one row */
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 12px;
+                padding: 15px 3%;
+            }
+            
+            .card {
+                padding: 10px;
+                border-radius: 15px;
+            }
+
+            .card img {
+                height: 140px; /* Choti screen par image height thodi kam taaki 4 product screen par fit ho jayein */
+                border-radius: 10px;
+            }
+
+            .card h4 {
+                font-size: 14px; /* Text size thoda chota */
+            }
+
+            .price {
+                font-size: 18px;
+            }
+
+            .btn-select {
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .city-tag {
+                font-size: 10px;
+                padding: 2px 8px;
+            }
         }
         
         /* Premium Card Design */
