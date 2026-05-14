@@ -215,7 +215,12 @@
             phone: document.getElementById("phone").value,
             password: document.getElementById("password").value
         };
-
+       
+         
+        const backIcon = document.getElementById("backBtnIcon");
+if(backIcon) {
+    backIcon.href =backBtn.href = user.role === 'admin' ? 'add-product.html' : 'view.html';
+}
         fetch(`https://cityshobackend.onrender.com/update-profile/${admin.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
