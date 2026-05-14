@@ -5,149 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - City Shop Agro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #74c947;
-            --dark-bg: #0a0a0a;
-            --card-bg: rgba(25, 25, 25, 0.9);
-            --text-gray: #a0a0a0;
-        }
+   <style>
+    :root {
+        --primary: #74c947;
+        --dark-card: rgba(15, 15, 15, 0.9);
+        --text-gray: #b0b0b0;
+    }
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1495107333279-99457c6753e0?auto=format&fit=crop&q=80&w=1500');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
+                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        overflow-x: hidden; /* Phone par side scroll na aaye */
+    }
 
-        .login-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            width: 90%;
-            max-width: 400px;
-            padding: 40px;
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            animation: fadeIn 0.8s ease-out;
-        }
+    /* Mobile Responsive Navbar */
+    .navbar { 
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        padding: 12px 5%; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        position: fixed; 
+        top: 0; 
+        width: 100%;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-sizing: border-box;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .logo { 
+        font-size: 18px; 
+        font-weight: 800; 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+        letter-spacing: 0.5px;
+    }
 
-        .logo-area {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .logo i { color: var(--primary); }
 
-        .logo-area i {
-            font-size: 40px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
+    /* Login Container - Mobile Centering */
+    .login-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px; /* Kam padding taaki card bada dikhe */
+        margin-top: 60px; 
+    }
 
-        h2 {
-            font-size: 28px;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+    .login-card {
+        background: var(--dark-card);
+        backdrop-filter: blur(25px);
+        width: 100%;
+        max-width: 380px; /* Mobile par width perfect fit hogi */
+        padding: 30px 20px; /* Padding kam ki phone ke liye */
+        border-radius: 20px; 
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        box-sizing: border-box;
+    }
 
-        p.subtitle {
-            color: var(--text-gray);
-            font-size: 14px;
-            margin-top: 5px;
-        }
+    .header-area {
+        text-align: center;
+        margin-bottom: 25px;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 25px;
-        }
+    .header-area i {
+        font-size: 40px;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
 
-        .input-group {
-            position: relative;
-        }
+    h2 { font-size: 22px; margin: 0; letter-spacing: 0.5px; }
+    p.subtitle { color: var(--text-gray); font-size: 13px; margin-top: 5px; }
 
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-gray);
-        }
+    form { gap: 15px; margin-top: 20px; }
 
-        input, select {
-            width: 100%;
-            padding: 14px 15px 14px 45px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            transition: 0.3s;
-            outline: none;
-        }
+    .input-group { position: relative; }
+    .input-group i { 
+        position: absolute; 
+        left: 15px; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        color: var(--primary);
+        font-size: 16px;
+    }
 
-        input:focus, select:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 10px rgba(116, 201, 71, 0.2);
-        }
+    input, select {
+        width: 100%;
+        padding: 14px 15px 14px 45px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white;
+        font-size: 16px; /* 16px se niche iOS zoom nahi karega */
+        outline: none;
+        box-sizing: border-box;
+        transition: 0.3s ease;
+    }
 
-        select option {
-            background: #1a1a1a;
-            color: white;
-        }
+    input:focus, select:focus {
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.12);
+    }
 
-        button {
-            background: var(--primary);
-            color: white;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.4s;
-            margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
-        }
+    button {
+        width: 100%;
+        background: var(--primary);
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        margin-top: 10px;
+        box-shadow: 0 8px 15px rgba(116, 201, 71, 0.3);
+        transition: 0.3s;
+    }
 
-        button:hover {
-            background: #5ea33a;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(116, 201, 71, 0.4);
-        }
+    button:active { transform: scale(0.98); } /* Phone par click effect */
 
-        .footer-links {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 14px;
-        }
+    .footer-links {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 13px;
+        color: var(--text-gray);
+    }
 
-        .footer-links a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
+    .footer-links a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+        margin-left: 5px;
+    }
 
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    /* Small Screen Adjustment */
+    @media (max-width: 360px) {
+        .login-card { padding: 20px 15px; }
+        h2 { font-size: 18px; }
+    }
+</style>
 </head>
 <body>
 
