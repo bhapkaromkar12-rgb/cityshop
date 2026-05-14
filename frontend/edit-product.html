@@ -4,12 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product - City Shop</title>
-    <style>
-        body { font-family: sans-serif; background: linear-gradient(135deg, #2ae7bb, #ff7eb3); min-height: 100vh; margin: 0; padding: 20px; }
-        .container { width: 90%; max-width: 400px; margin: 50px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .update-btn { width: 100%; padding: 15px; background: #26d7c5; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
+  <style>
+    :root {
+        --primary: #74c947;
+        --dark-card: rgba(18, 18, 18, 0.9);
+        --text-gray: #b0b0b0;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        /* Custom Background jo tumne mangi thi */
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
+                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        padding: 20px 0;
+    }
+
+    .container {
+        background: var(--dark-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        width: 90%;
+        max-width: 400px;
+        padding: 30px 25px;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        animation: slideUp 0.6s ease-out;
+        box-sizing: border-box;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--primary);
+    }
+
+    label {
+        font-size: 13px;
+        color: var(--text-gray);
+        margin-left: 5px;
+        margin-bottom: 5px;
+        display: block;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white;
+        font-size: 16px; /* Phone auto-zoom fix */
+        margin-bottom: 15px;
+        outline: none;
+        transition: 0.3s;
+        box-sizing: border-box;
+    }
+
+    input:focus {
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 10px rgba(116, 201, 71, 0.2);
+    }
+
+    /* Style for File Input */
+    input[type="file"] {
+        padding: 10px;
+        font-size: 14px;
+        background: rgba(116, 201, 71, 0.05);
+    }
+
+    .update-btn {
+        width: 100%;
+        padding: 15px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.4s;
+        margin-top: 10px;
+        box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
+    }
+
+    .update-btn:active {
+        transform: scale(0.97);
+    }
+
+    .cancel-link {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .cancel-link a {
+        color: var(--text-gray);
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .cancel-link a:hover {
+        color: #ff4d4d; /* Red on hover for cancel */
+    }
+
+    /* Tablet/Phone responsiveness */
+    @media (max-height: 700px) {
+        body { align-items: flex-start; }
+        .container { margin-top: 10px; margin-bottom: 10px; }
+    }
+</style>
 </head>
 <body>
 
