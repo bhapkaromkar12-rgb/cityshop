@@ -3,171 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - City Shop</title>
-
+    <title>AgroTech - Growing the Future</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --primary-green: #74c947;
+            --dark-bg: #0a0a0a;
+            --card-bg: #161616;
+            --text-gray: #a0a0a0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2ae7bb, #ff7eb3);
-            height: 100 vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .box {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px 18px;
-            margin: 12px 0;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            outline: none;
-            font-size: 16px;
-            transition: 0.3s;
-            background: #f9f9f9;
-        }
-
-        input:focus, select:focus {
-            border-color: #2ae7bb;
-            background: #fff;
-            box-shadow: 0 0 8px rgba(42, 231, 187, 0.3);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: #07101e;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
             color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            transition: 0.4s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            line-height: 1.6;
         }
 
-        button:hover {
-            background: #1a2a44;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        /* --- Navbar --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 6%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
         }
 
-        button:active {
-            transform: translateY(0);
-        }
+        .logo { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--primary-green); }
 
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 25px;
-            color: #555;
-            text-decoration: none;
-            font-size: 15px;
+        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary-green); }
+
+        /* Login & Contact Buttons (Right Side) */
+        .nav-actions { display: flex; align-items: center; gap: 15px; }
+
+        .login-link { 
+            text-decoration: none; 
+            color: white; 
+            font-size: 14px; 
+            font-weight: 600; 
+            margin-right: 10px;
             transition: 0.3s;
         }
+        .login-link:hover { color: var(--primary-green); }
 
-        a:hover {
-            color: #ff7eb3;
-            font-weight: bold;
+        .contact-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .contact-btn:hover { background: white; color: black; border-color: white; }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8%;
         }
 
-        /* Mobile specific adjustments */
-        @media (max-width: 480px) {
-            .box {
-                padding: 30px 20px;
-                margin-top: 20px;
-            }
-            h2 {
-                font-size: 24px;
-            }
+        .hero h1 { font-size: 56px; margin: 0; line-height: 1.1; font-weight: 900; max-width: 700px; text-transform: uppercase; }
+        .hero p { color: #ccc; margin: 25px 0; font-size: 18px; max-width: 500px; }
+        
+        .btn-green {
+            background: var(--primary-green);
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
+            width: fit-content;
+        }
+
+        /* --- Section Titles --- */
+        section { padding: 80px 8%; text-align: center; }
+        .section-title { font-size: 32px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .section-subtitle { color: var(--text-gray); font-size: 14px; margin-bottom: 50px; display: block; }
+
+        /* --- Grid Layout --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            text-align: left;
+            transition: 0.4s;
+            border: 1px solid #222;
+        }
+        .service-card:hover { transform: translateY(-10px); border-color: var(--primary-green); }
+        .service-card img { width: 100%; height: 200px; object-fit: cover; }
+        .service-content { padding: 25px; }
+        .service-content h3 { margin: 0 0 12px; font-size: 20px; }
+        .service-content p { color: var(--text-gray); font-size: 14px; line-height: 1.5; }
+
+        /* --- Crops/Products Grid --- */
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .product-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 140px;
+            cursor: pointer;
+        }
+        .product-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover img { transform: scale(1.1); }
+        .product-card .label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-weight: bold;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 36px; }
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Login</h2>
+    <nav>
+        <div class="logo"><i class="fas fa-leaf"></i> AGROTECH</div>
+        
+        <ul class="nav-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Our Services</a></li>
+            <li><a href="#">Our Crops</a></li>
+            <li><a href="#">Sustainability</a></li>
+        </ul>
 
-    <form id="loginForm">
-        <input type="email" name="email" placeholder="Email Address" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <div class="nav-actions">
+            <a href="index1.html" class="login-link">Login</a>
+            <button class="contact-btn">Contact Us</button>
+        </div>
+    </nav>
 
-        <select name="role">
-            <option value="admin">Admin</option>
-            <option value="customer">Customer</option>
-        </select>
+    <header class="hero">
+        <h1>Growing the Future <br> of Agriculture</h1>
+        <p>Innovative Solutions for Modern Farming and Sustainable Growth.</p>
+        <button class="btn-green">Get Started</button>
+    </header>
 
-        <button type="submit">Login</button>
-    </form>
+    <section>
+        <h2 class="section-title">Our Services</h2>
+        <span class="section-subtitle">Leading the Way in Agriculture</span>
+        
+        <div class="grid">
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&q=80&w=600" alt="Precision">
+                <div class="service-content">
+                    <h3>Precision Farming</h3>
+                    <p>Advanced GPS & AI technology for optimized crop management.</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&q=80&w=600" alt="Consulting">
+                <div class="service-content">
+                    <h3>Crop Consulting</h3>
+                    <p>Expert advice and support to maximize your yields.</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=600" alt="Solutions">
+                <div class="service-content">
+                    <h3>Agri Solutions</h3>
+                    <p>Innovative technologies for smarter farming.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <a href="register.html">New User? Create Account</a>
-</div>
-
-<script>
-document.getElementById("loginForm").addEventListener("submit", function(e){
-    e.preventDefault();
-
-    let data = {
-        email: this.email.value,
-        password: this.password.value,
-        role: this.role.value
-    };
-
-    fetch("https://cityshobackend.onrender.com/login", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => {
-        if(res.success){
-            localStorage.setItem("user", JSON.stringify(res.user));
-
-            if(res.user.role === "admin"){
-                window.location.href = "admin.html"; 
-            } else {
-                window.location.href = "view.html"; 
-            }
-        } else {
-            alert("Invalid Login. Please check your credentials.");
-        }
-    })
-    .catch(err => {
-        console.error("Login Error:", err);
-        alert("Server error. Please try again later.");
-    });
-});
-</script>
+    <section style="background-color: #0d0d0d;">
+        <h2 class="section-title">Our Crops & Products</h2>
+        
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=400" alt="Corn">
+                <div class="label">Corn</div>
+            </div>
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1501430654243-c93f767b2ee9?auto=format&fit=crop&q=80&w=400" alt="Wheat">
+                <div class="label">Wheat</div>
+            </div>
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=400" alt="Vegetables">
+                <div class="label">Vegetables</div>
+            </div>
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=400" alt="Soybeans">
+                <div class="label">Soybeans</div>
+            </div>
+        </div>
+    </section>
 
 </body>
 </html>

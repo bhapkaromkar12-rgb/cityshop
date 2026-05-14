@@ -92,7 +92,7 @@
     // 1. User check & Profile Display
     const user = JSON.parse(localStorage.getItem("user"));
     if(!user) {
-        window.location.href = "index.html";
+        window.location.href = "index1.html";
     } else {
         document.getElementById("userNameDisplay").innerText = "Hi, " + user.username;
         document.getElementById("userEmail").innerText = user.email;
@@ -106,7 +106,7 @@
     // Logout Logic
     function logout() {
         localStorage.removeItem("user");
-        window.location.href = "index.html";
+        window.location.href = "index1.html";
     }
 
     // Dropdown close on outside click

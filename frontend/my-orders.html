@@ -58,7 +58,7 @@
     
     // Security Check
     if(!user) {
-        window.location.href = "index.html";
+        window.location.href = "index1.html";
     } else {
         document.getElementById("userName").innerText = "Hi, " + user.username;
     }
@@ -73,7 +73,7 @@
             if(!data.orders || data.orders.length === 0) {
                 list.innerHTML = `<div class="empty-msg">
                     <i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 10px;"></i>
-                    <p>Aapne abhi tak koi order nahi kiya hai.</p>
+                    <p>You haven't placed an order yet.</p>
                 </div>`;
                 return;
             }

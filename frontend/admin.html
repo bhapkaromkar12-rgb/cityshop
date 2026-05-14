@@ -163,7 +163,7 @@
     const user = JSON.parse(localStorage.getItem("user"));
     if(!user || user.role !== "admin"){
         alert("Access Denied!");
-        window.location.href = "index.html";
+        window.location.href = "index1.html";
     } else {
         document.getElementById("adminNameDisplay").innerText = user.username;
         document.getElementById("adminEmail").innerText = user.email;
@@ -175,7 +175,7 @@
 
     function logout() {
         localStorage.removeItem("user");
-        window.location.href = "index.html";
+        window.location.href = "index1.html";
     }
 
     window.onclick = function(event) {
