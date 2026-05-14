@@ -2,86 +2,178 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>City Shop - Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Shop - Premium Products</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { margin:0; font-family:sans-serif; background: linear-gradient(135deg, #2ae7bb, #ff7eb3); }
-        
-        /* Combined Navbar Design */
-        .navbar { 
-            background:#26d7c5; 
-            color:white; 
-            padding:10px 25px; 
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center; 
-            position:sticky; 
-            top:0; 
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        :root {
+            --primary: #74c947;
+            --dark-bg: #0a0a0a;
+            --card-bg: #161616;
+            --text-gray: #a0a0a0;
         }
 
-        .logo { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        body { 
+            margin:0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--dark-bg); 
+            color: white;
+        }
         
-        .container { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:20px; padding:20px; }
-        
-        .card { background:white; border-radius:15px; padding:15px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-        .card img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
-        
-        .price { color:#23bd2b; font-weight:bold; font-size:20px; margin:10px 0; }
-        .btn-select { width:100%; padding:10px; background:#3cb742; color:white; border:none; border-radius:8px; cursor:pointer; font-weight: bold; }
-        .btn-select:hover { background: #2e7d32; }
+        /* Modern Glassmorphism Navbar */
+        .navbar { 
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            color: white; 
+            padding: 15px 6%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+        }
 
-        /* Profile Styling */
-        .profile-container { position: relative; display: inline-block; }
-        .profile-btn { 
-            background: white; 
-            color: #31b862; 
+        .logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
+        .logo i { color: var(--primary); }
+        
+        /* Container Setup */
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+            gap: 25px; 
+            padding: 40px 6%; 
+        }
+        
+        /* Premium Card Design */
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 15px; 
+            text-align: center; 
+            transition: 0.4s; 
+            border: 1px solid #222;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(116, 201, 71, 0.1);
+        }
+
+        .card img { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            margin-bottom: 15px;
+        }
+        
+        .card h4 { margin: 10px 0 5px; font-size: 18px; color: #fff; }
+
+        .city-tag {
+            font-size: 12px;
+            color: var(--text-gray);
+            background: #222;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .price { 
+            color: var(--primary); 
+            font-weight: 800; 
+            font-size: 22px; 
+            margin: 10px 0; 
+        }
+
+        .btn-select { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--primary); 
+            color: white; 
             border: none; 
-            padding: 8px 18px; 
-            border-radius: 25px; 
+            border-radius: 12px; 
             cursor: pointer; 
-            font-weight: bold;
+            font-weight: bold; 
+            font-size: 15px;
+            transition: 0.3s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
+
+        .btn-select:hover { 
+            background: #5ea33a; 
+            box-shadow: 0 5px 15px rgba(116, 201, 71, 0.3);
+        }
+
+        /* Profile Dropdown Styling */
+        .profile-container { position: relative; }
+        .profile-btn { 
+            background: rgba(255,255,255,0.05); 
+            color: white; 
+            border: 1px solid #333; 
+            padding: 10px 20px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .profile-btn:hover { border-color: var(--primary); background: rgba(255,255,255,0.1); }
         
         .dropdown-content {
             display: none; 
             position: absolute; 
             right: 0; 
-            background-color: white;
-            min-width: 180px; 
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1; 
-            border-radius: 8px; 
-            margin-top: 10px;
+            background-color: #1a1a1a;
+            min-width: 200px; 
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            z-index: 100; 
+            border-radius: 15px; 
+            margin-top: 15px;
             overflow: hidden;
+            border: 1px solid #333;
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .dropdown-content p { margin: 0; padding: 12px; background: #f9f9f9; font-size: 13px; color: #666; border-bottom: 1px solid #eee; }
-        .dropdown-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; }
-        .dropdown-content a:hover { background-color: #f1f1f1; }
+        .dropdown-content p { margin: 0; padding: 15px; background: #222; font-size: 12px; color: var(--text-gray); border-bottom: 1px solid #333; }
+        .dropdown-content a { color: #eee; padding: 12px 20px; text-decoration: none; display: block; font-size: 14px; transition: 0.3s; }
+        .dropdown-content a:hover { background-color: #252525; color: var(--primary); }
         .show { display: block; }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 10px 4%; }
+            .logo span { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <div class="navbar">
-    <div class="logo">🌾 City Shop</div>
+    <div class="logo"><i class="fas fa-leaf"></i> <span>City Shop</span></div>
     
     <div class="profile-container">
         <button class="profile-btn" onclick="toggleDropdown()">
-            <i class="fas fa-user-circle" style="font-size: 20px;"></i> 
-            <span id="userNameDisplay">Profile</span>
+            <i class="fas fa-user-circle" style="font-size: 20px; color: var(--primary);"></i> 
+            <span id="userNameDisplay">Account</span>
         </button>
-      <div id="profileDropdown" class="dropdown-content">
-    <p id="userEmail" style="font-size: 12px; color: #666; padding: 10px; border-bottom: 1px solid #eee;"></p>
-    <a href="edit-profile.html">Edit Profile</a> 
-    <a href="my-orders.html">My Orders</a>
-    <a href="#" onclick="logout()" style="color: red;">Logout</a>
-</div>
+        <div id="profileDropdown" class="dropdown-content">
+            <p id="userEmail">Loading...</p>
+            <a href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a> 
+            <a href="my-orders.html"><i class="fas fa-box-open"></i> My Orders</a>
+            <a href="#" onclick="logout()" style="color: #ff5f5f;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
     </div>
 </div>
 
@@ -89,76 +181,66 @@
     </div>
 
 <script>
-    // 1. User check & Profile Display
+    // 1. Auth Check
     const user = JSON.parse(localStorage.getItem("user"));
     if(!user) {
         window.location.href = "index1.html";
     } else {
-        document.getElementById("userNameDisplay").innerText = "Hi, " + user.username;
+        document.getElementById("userNameDisplay").innerText = user.username;
         document.getElementById("userEmail").innerText = user.email;
     }
 
-    // 2. Dropdown Logic
     function toggleDropdown() {
         document.getElementById("profileDropdown").classList.toggle("show");
     }
 
-    // Logout Logic
     function logout() {
         localStorage.removeItem("user");
         window.location.href = "index1.html";
     }
 
-    // Dropdown close on outside click
     window.onclick = function(event) {
         if (!event.target.closest('.profile-container')) {
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                if (dropdowns[i].classList.contains('show')) {
-                    dropdowns[i].classList.remove('show');
-                }
-            }
+            document.getElementById("profileDropdown").classList.remove('show');
         }
     }
 
-    // 3. Products Load karein
-  function loadProducts() {
-    fetch(`https://cityshobackend.onrender.com/get-products`)
-    .then(res => res.json())
-    .then(data => {
-        const container = document.getElementById("productContainer");
-        container.innerHTML = ""; 
+    // 2. Load Products Logic
+    function loadProducts() {
+        fetch(`https://cityshobackend.onrender.com/get-products`)
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById("productContainer");
+            container.innerHTML = ""; 
+            const products = data.products || data; 
 
-        // Check karo ki products array kahan hai
-        const products = data.products || data; 
+            if(!products || products.length === 0) {
+                container.innerHTML = "<h3 style='grid-column: 1/-1;'>No products available right now.</h3>";
+                return;
+            }
 
-        if(!products || products.length === 0) {
-            container.innerHTML = "<h3 style='text-align:center; width:100%;'>No products found.</h3>";
-            return;
-        }
-
-        products.forEach(product => {
-            // Image URL ko variable mein rakhte hain clean code ke liye
-            const imageUrl = `https://cityshobackend.onrender.com/uploads/${product.image}`;
-            
-            container.innerHTML += `
-                <div class="card">
-                    <img src="${imageUrl}" 
-                         onerror="this.src='https://via.placeholder.com/150?text=No+Photo'" 
-                         alt="${product.name}">
-                    <h4>${product.name}</h4>
-                    <div class="price">₹${parseFloat(product.price).toFixed(2)}</div>
-                    <p>City: ${product.city}</p>
-                    <button class="btn-select" onclick="addToCart(${product.id})">Add to Cart</button>
-                </div>
-            `;
+            products.forEach(product => {
+                const imageUrl = `https://cityshobackend.onrender.com/uploads/${product.image}`;
+                
+                container.innerHTML += `
+                    <div class="card">
+                        <img src="${imageUrl}" 
+                             onerror="this.src='https://via.placeholder.com/240x180?text=No+Image'" 
+                             alt="${product.name}">
+                        <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${product.city}</div>
+                        <h4>${product.name}</h4>
+                        <div class="price">₹${parseFloat(product.price).toFixed(2)}</div>
+                        <button class="btn-select" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                `;
+            });
+        })
+        .catch(err => {
+            document.getElementById("productContainer").innerHTML = "<h3>Unable to connect to server.</h3>";
         });
-    })
-    .catch(err => {
-        console.error("Error loading products:", err);
-        document.getElementById("productContainer").innerHTML = "<h3>Server error. Please try again later.</h3>";
-    });
-}
+    }
 
     function addToCart(id) {
         localStorage.setItem("selectedProductId", id);
