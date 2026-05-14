@@ -182,7 +182,8 @@
         </div>
         
         <button type="submit" class="save-btn">Update Profile</button>
-       <a href="#" id="backBtn" class="back-link"><i class="fas fa-arrow-left"></i> Cancel</a>
+       <a href="admin.html" class="back-link"><i class="fas fa-arrow-left"></i> Cancel</a>
+
     </form>
 </div>
 
@@ -217,10 +218,7 @@
         };
        
          
-        const backIcon = document.getElementById("backBtnIcon");
-if(backIcon) {
-    backIcon.href =backBtn.href = user.role === 'admin' ? 'add-product.html' : 'view.html';
-}
+        
         fetch(`https://cityshobackend.onrender.com/update-profile/${admin.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
