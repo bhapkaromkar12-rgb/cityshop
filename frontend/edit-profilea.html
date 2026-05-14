@@ -129,10 +129,24 @@
     .save-btn:active { transform: scale(0.96); }
 
     /* Footer link */
-    .cancel-link {
-        text-align: center;
-        margin-top: 20px;
-    }
+   .back-link { 
+    display: block; 
+    text-align: center; /* Isse link center mein aa jayega */
+    margin-top: 20px; 
+    color: var(--text-gray); 
+    text-decoration: none; 
+    font-size: 14px; 
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.back-link i {
+    margin-right: 8px; /* Icon aur text ke beech gap */
+}
+
+.back-link:hover { 
+    color: var(--primary); 
+}
     .cancel-link a {
         color: var(--text-gray);
         text-decoration: none;
@@ -168,7 +182,7 @@
         </div>
         
         <button type="submit" class="save-btn">Update Profile</button>
-       <a href="#" id="backBtn" class="back-link"><i class="fas fa-arrow-left"></i>Cancel</a>
+       <a href="#" id="backBtn" class="back-link"><i class="fas fa-arrow-left"></i> Cancel</a>
     </form>
 </div>
 
