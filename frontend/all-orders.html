@@ -4,24 +4,142 @@
     <meta charset="UTF-8">
     <title>Admin - Manage Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { margin:0; font-family:sans-serif; background: #f4f7f6; }
-        .navbar { background:#26d7c5; color:white; padding:10px 25px; display:flex; justify-content:space-between; align-items:center; }
-        .container { padding: 30px; }
-        h2 { color: #333; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #667eea; color: white; }
-        .status-badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
-        .pending { background: #fff3cd; color: #856404; }
-        .delivered { background: #d4edda; color: #155724; }
-        .cancelled { background: #f8d7da; color: #721c24; }
-        
-        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-size: 12px; margin-right: 5px; }
-        .btn-receive { background: #17a2b8; }
-        .btn-deliver { background: #28a745; }
-        .btn-cancel { background: #dc3545; }
-    </style>
+<style>
+    :root {
+        --primary: #74c947;
+        --dark-card: rgba(18, 18, 18, 0.9);
+        --text-gray: #b0b0b0;
+        --pending: #ffc107;
+        --delivered: #74c947;
+        --cancelled: #ff4d4d;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
+                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+    }
+
+    /* Premium Navbar */
+    .navbar { 
+        background: rgba(0, 0, 0, 0.8); 
+        backdrop-filter: blur(15px);
+        padding: 15px 20px; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .container { padding: 20px 15px; max-width: 800px; margin: auto; }
+    
+    h2 { 
+        font-size: 22px; 
+        color: var(--primary); 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Table ko Mobile par hide karke Cards dikhayenge */
+    table { width: 100%; border-collapse: collapse; display: none; } /* Desktop table hidden for mobile feel */
+
+    /* Card Layout for Orders */
+    #orderTableBody {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Har order ek card ban jayega */
+    tr { 
+        display: flex; 
+        flex-direction: column; 
+        background: var(--dark-card); 
+        padding: 20px; 
+        border-radius: 20px; 
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        position: relative;
+    }
+
+    td { padding: 5px 0; border: none; display: block; font-size: 14px; }
+
+    /* Label positioning */
+    td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: var(--text-gray);
+        display: inline-block;
+        width: 100px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    /* Status Badges */
+    .status-badge { 
+        padding: 4px 12px; 
+        border-radius: 8px; 
+        font-size: 11px; 
+        font-weight: bold; 
+        text-transform: uppercase;
+    }
+    .received { background: rgba(23, 162, 184, 0.2); color: #17a2b8; border: 1px solid #17a2b8; }
+    .delivered { background: rgba(116, 201, 71, 0.2); color: var(--delivered); border: 1px solid var(--delivered); }
+    .cancelled { background: rgba(255, 77, 77, 0.2); color: var(--cancelled); border: 1px solid var(--cancelled); }
+    .pending { background: rgba(255, 193, 7, 0.2); color: var(--pending); border: 1px solid var(--pending); }
+
+    /* Action Buttons */
+    .btn-group {
+        display: flex;
+        gap: 8px;
+        margin-top: 15px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn { 
+        flex: 1;
+        padding: 10px; 
+        border: none; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        color: white; 
+        font-size: 12px; 
+        font-weight: bold;
+        transition: 0.3s;
+        min-width: 80px;
+    }
+
+    .btn-receive { background: #17a2b8; }
+    .btn-deliver { background: var(--primary); }
+    .btn-cancel { background: #dc3545; }
+    
+    .btn:active { transform: scale(0.95); }
+
+    /* Remove table headers for mobile */
+    thead { display: none; }
+
+    @media (min-width: 600px) {
+        table { display: table; background: var(--dark-card); border-radius: 15px; overflow: hidden; }
+        thead { display: table-header-group; }
+        tr { display: table-row; background: none; }
+        td { display: table-cell; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td::before { display: none; }
+        .btn-group { border: none; padding: 0; margin: 0; }
+    }
+</style>
 </head>
 <body>
 
@@ -56,22 +174,25 @@
             const tbody = document.getElementById("orderTableBody");
             tbody.innerHTML = "";
             orders.forEach(order => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>#${order.id}</td>
-                        <td>${order.customer_name || 'User'}</td>
-                        <td>${order.product_id}</td>
-                        <td>₹${order.total_price}</td>
-                        <td><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
-                        <td>
-                            ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
-                                <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
-                                <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
-                                <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
-                            ` : 'No Actions'}
-                        </td>
-                    </tr>
-                `;
+               // loadOrders ke andar ise replace karein:
+tbody.innerHTML += `
+    <tr>
+        <td data-label="Order ID">#${order.id}</td>
+        <td data-label="Customer">${order.customer_name || 'User'}</td>
+        <td data-label="Product ID">${order.product_id}</td>
+        <td data-label="Amount">₹${order.total_price}</td>
+        <td data-label="Status"><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
+        <td data-label="Actions">
+            <div class="btn-group">
+                ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
+                    <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
+                    <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
+                    <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
+                ` : '<span style="color:#666">Order Closed</span>'}
+            </div>
+        </td>
+    </tr>
+`;
             });
         });
     }
