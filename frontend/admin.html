@@ -6,135 +6,122 @@
     <title>Admin - Agro City Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #74c947;
-            --dark-card: rgba(15, 15, 15, 0.85);
-            --border-glow: rgba(116, 201, 71, 0.3);
-        }
+    :root {
+        --primary: #74c947;
+        --dark-card: rgba(15, 15, 15, 0.85);
+        --border-glow: rgba(116, 201, 71, 0.3);
+    }
 
-        body { 
-            margin:0; 
-            font-family: 'Inter', sans-serif; 
-            /* Aapki mangi hui background setting */
-            min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-        
-        /* Glassmorphism Navbar */
-        .navbar { 
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            padding: 15px 0%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky; 
-            top: 0; 
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            box-sizing: border-box;
-        }
+    body { 
+        margin:0; 
+        font-family: 'Inter', sans-serif; 
+        min-height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), 
+                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+    
+    /* Glassmorphism Navbar - Optimized for Mobile */
+    .navbar { 
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        padding: 12px 5%; /* Mobile par side gap dene ke liye 5% kiya */
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        position: sticky; 
+        top: 0; 
+        width: 100%;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-sizing: border-box;
+    }
 
-        .logo { font-size: 20px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-        .logo i { color: var(--primary); }
-        .logo span { font-size: 12px; background: var(--primary); color: black; padding: 2px 8px; border-radius: 4px; margin-left: 5px; }
+    .logo { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .logo i { color: var(--primary); }
+    .logo span { font-size: 10px; background: var(--primary); color: black; padding: 1px 6px; border-radius: 4px; }
 
-        /* Form Container */
-        .container { 
-            width: 90%; 
-            max-width: 450px; 
-            margin: auto; 
-            background: var(--dark-card); 
-            backdrop-filter: blur(20px);
-            padding: 40px; 
-            border-radius: 25px; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
+    /* Form Container - Mobile Padding Fix */
+    .container { 
+        width: 92%; 
+        max-width: 450px; 
+        margin: 30px auto; 
+        background: var(--dark-card); 
+        backdrop-filter: blur(20px);
+        padding: 30px 20px; /* Mobile par padding kam ki */
+        border-radius: 20px; 
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-sizing: border-box;
+    }
 
-        h2 { text-align: center; margin-bottom: 30px; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
+    h2 { text-align: center; margin-bottom: 25px; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .input-group { position: relative; margin-bottom: 15px; }
-        .input-group i { position: absolute; left: 15px; top: 16px; color: var(--primary); }
+    .input-group { position: relative; margin-bottom: 15px; }
+    .input-group i { position: absolute; left: 15px; top: 16px; color: var(--primary); }
 
-        input { 
-            width: 100%; 
-            padding: 15px 15px 15px 45px; 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; 
-            color: white;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
-        }
+    input { 
+        width: 100%; 
+        padding: 14px 15px 14px 45px; 
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px; 
+        color: white;
+        font-size: 16px; /* iOS zoom issue fix */
+        outline: none;
+        transition: 0.3s;
+        box-sizing: border-box;
+    }
 
-        input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+    input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
 
-        .file-label {
-            display: block; font-size: 13px; color: #bbb; margin: 15px 0 8px 5px; font-weight: 600;
-        }
+    .file-label { display: block; font-size: 12px; color: #bbb; margin: 15px 0 8px 5px; font-weight: 600; }
 
-        input[type="file"] {
-            padding: 12px; background: rgba(116, 201, 71, 0.05); border: 1px dashed var(--primary); cursor: pointer;
-        }
+    input[type="file"] { padding: 10px; background: rgba(116, 201, 71, 0.05); border: 1px dashed var(--primary); }
 
-        .submit-btn { 
-            width: 100%; 
-            padding: 16px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 18px; 
-            font-weight: 800;
-            margin-top: 20px;
-            transition: 0.4s;
-            text-transform: uppercase;
-            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
-        }
+    .submit-btn { 
+        width: 100%; 
+        padding: 15px; 
+        background: var(--primary); 
+        color: white; 
+        border: none; 
+        border-radius: 12px; 
+        cursor: pointer; 
+        font-size: 16px; 
+        font-weight: 800;
+        margin-top: 15px;
+        transition: 0.4s;
+        text-transform: uppercase;
+    }
 
-        .submit-btn:hover { background: #5ea33a; transform: translateY(-3px); box-shadow: 0 15px 25px rgba(116, 201, 71, 0.4); }
-
-        /* Admin Profile Dropdown */
-        .profile-container { 
-    position: relative;
-    margin-right: 10px; /* Thoda sa gap edge se */
-}
-        .profile-btn { 
-            background: rgba(255,255,255,0.1); 
-            color: white; 
-            border: 1px solid rgba(255,255,255,0.2); 
-            padding: 10px 18px; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            font-weight: bold;
-            display: flex; align-items: center; gap: 8px;
-        }
-        
-        .dropdown-content {
-            display: none; position: absolute; right: 0; background: #1a1a1a; min-width: 200px; 
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.5); z-index: 100; border-radius: 15px; 
-            margin-top: 10px; overflow: hidden; border: 1px solid #333;
-        }
-        
-        .dropdown-content p { margin: 0; padding: 15px; background: #222; font-size: 12px; color: #888; border-bottom: 1px solid #333; }
-        .dropdown-content a { color: #eee; padding: 12px 20px; text-decoration: none; display: block; font-size: 14px; transition: 0.3s; }
-        .dropdown-content a:hover { background: #252525; color: var(--primary); }
-        .show { display: block; }
-    </style>
+    /* Mobile Dropdown Fix */
+    .profile-container { position: relative; }
+    .profile-btn { 
+        background: rgba(255,255,255,0.1); 
+        color: white; 
+        border: 1px solid rgba(255,255,255,0.2); 
+        padding: 8px 12px; 
+        border-radius: 20px; 
+        font-size: 13px; /* Mobile par chota button */
+        cursor: pointer; 
+        font-weight: bold;
+        display: flex; align-items: center; gap: 6px;
+    }
+    
+    .dropdown-content {
+        display: none; position: absolute; right: 0; background: #1a1a1a; min-width: 180px; 
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.5); z-index: 100; border-radius: 12px; 
+        margin-top: 10px; overflow: hidden; border: 1px solid #333;
+    }
+    
+    .dropdown-content a { color: #eee; padding: 12px 15px; text-decoration: none; display: block; font-size: 13px; }
+    .show { display: block; }
+</style>
 </head>
 <body>
 
