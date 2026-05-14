@@ -2,180 +2,164 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Manage Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-    :root {
-        --primary: #74c947;
-        --dark-card: rgba(18, 18, 18, 0.92);
-        --text-gray: #b0b0b0;
-        --pending: #ffc107;
-        --delivered: #74c947;
-        --cancelled: #ff4d4d;
-    }
+    <style>
+        :root {
+            --primary: #74c947;
+            --dark-card: rgba(22, 22, 22, 0.95);
+            --text-gray: #a0a0a0;
+            --pending: #ffc107;
+            --delivered: #74c947;
+            --cancelled: #ff4d4d;
+        }
 
-    body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
-                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        min-height: 100vh;
-        color: white;
-        -webkit-tap-highlight-color: transparent;
-    }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* Navbar Fix for Mobile */
-    .navbar { 
-        background: rgba(0, 0, 0, 0.85); 
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 12px 15px; 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
+        /* Floating Back Icon (Top Left) */
+        .btn-back-top {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
+            z-index: 1001;
+        }
 
-    .navbar .logo { font-size: 16px; font-weight: 700; color: var(--primary); }
-    .navbar a { font-size: 13px; font-weight: 500; }
+        .container { padding: 80px 15px 30px; max-width: 600px; margin: auto; }
+        
+        h2 { 
+            font-size: 22px; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 800;
+        }
 
-    .container { padding: 15px; max-width: 600px; margin: auto; }
-    
-    h2 { 
-        font-size: 20px; 
-        color: #fff; 
-        text-transform: uppercase; 
-        letter-spacing: 1px;
-        margin: 10px 0 20px 0;
-        text-align: center;
-    }
+        #orderTableBody {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-    /* Card Layout for Orders - Full Mobile Optimization */
-    #orderTableBody {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+        /* Mobile Optimized Cards */
+        tr { 
+            display: flex; 
+            flex-direction: column; 
+            background: var(--dark-card); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px; 
+            border-radius: 25px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+        }
 
-    /* Mobile Card Style */
-    tr { 
-        display: flex; 
-        flex-direction: column; 
-        background: var(--dark-card); 
-        padding: 18px; 
-        border-radius: 20px; 
-        border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.4);
-        position: relative;
-    }
+        td { 
+            padding: 8px 0; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 14px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        td:last-of-type { border-bottom: none; }
 
-    td { 
-        padding: 6px 0; 
-        border: none; 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center;
-        font-size: 14px; 
-    }
+        td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--text-gray);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
 
-    /* Label positioning - Left side gray labels */
-    td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: var(--text-gray);
-        font-size: 11px;
-        text-transform: uppercase;
-    }
+        /* Status Badges */
+        .status-badge { 
+            padding: 5px 12px; 
+            border-radius: 8px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+        }
+        .received { background: rgba(23, 162, 184, 0.15); color: #17a2b8; border: 1px solid rgba(23, 162, 184, 0.3); }
+        .delivered { background: rgba(116, 201, 71, 0.15); color: var(--delivered); border: 1px solid rgba(116, 201, 71, 0.3); }
+        .cancelled { background: rgba(255, 77, 77, 0.15); color: var(--cancelled); border: 1px solid rgba(255, 77, 77, 0.3); }
+        .pending { background: rgba(255, 193, 7, 0.15); color: var(--pending); border: 1px solid rgba(255, 193, 7, 0.3); }
 
-    /* Status Badges - Sleek Design */
-    .status-badge { 
-        padding: 4px 10px; 
-        border-radius: 6px; 
-        font-size: 10px; 
-        font-weight: 800; 
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .received { background: rgba(23, 162, 184, 0.15); color: #17a2b8; border: 1px solid rgba(23, 162, 184, 0.3); }
-    .delivered { background: rgba(116, 201, 71, 0.15); color: var(--delivered); border: 1px solid rgba(116, 201, 71, 0.3); }
-    .cancelled { background: rgba(255, 77, 77, 0.15); color: var(--cancelled); border: 1px solid rgba(255, 77, 77, 0.3); }
-    .pending { background: rgba(255, 193, 7, 0.15); color: var(--pending); border: 1px solid rgba(255, 193, 7, 0.3); }
+        /* Action Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
-    /* Action Buttons Group */
-    .btn-group {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3 buttons in one row */
-        gap: 8px;
-        margin-top: 15px;
-        border-top: 1px solid rgba(255,255,255,0.08);
-        padding-top: 15px;
-        width: 100%;
-    }
+        .btn { 
+            padding: 12px 5px; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            color: white; 
+            font-size: 10px; 
+            font-weight: 800;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
 
-    .btn { 
-        padding: 12px 5px; 
-        border: none; 
-        border-radius: 10px; 
-        cursor: pointer; 
-        color: white; 
-        font-size: 11px; 
-        font-weight: 700;
-        transition: 0.2s;
-        text-transform: uppercase;
-    }
+        .btn-receive { background: #17a2b8; box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3); }
+        .btn-deliver { background: var(--primary); box-shadow: 0 4px 15px rgba(116, 201, 71, 0.3); }
+        .btn-cancel { background: #dc3545; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3); }
+        
+        .btn:active { transform: scale(0.9); }
 
-    .btn-receive { background: #17a2b8; }
-    .btn-deliver { background: var(--primary); }
-    .btn-cancel { background: #dc3545; }
-    
-    .btn:active { transform: scale(0.92); opacity: 0.8; }
+        .order-closed {
+            text-align: center;
+            width: 100%;
+            color: var(--text-gray);
+            font-size: 12px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
 
-    /* For Closed Orders */
-    .order-closed {
-        text-align: center;
-        width: 100%;
-        color: var(--text-gray);
-        font-size: 12px;
-        font-style: italic;
-    }
-
-    /* Hide Desktop Table Headers */
-    thead { display: none; }
-    table { width: 100%; display: block; }
-
-    /* Desktop View Adjustments */
-    @media (min-width: 600px) {
-        .btn-group { display: flex; }
-        .btn { padding: 8px 15px; font-size: 12px; }
-    }
-</style>
+        thead { display: none; }
+        table { width: 100%; display: block; }
+    </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo">🌾 Admin Panel - Orders</div>
-    <a href="admin.html" style="color: white; text-decoration: none;">Back to Add Product</a>
-</div>
+<a href="admin.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
 
 <div class="container">
-    <h2>All Customer Orders</h2>
+    <h2><i class="fas fa-tasks"></i> Manage Orders</h2>
     <table>
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Product ID</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
         <tbody id="orderTableBody">
             </tbody>
     </table>
@@ -188,32 +172,31 @@
         .then(orders => {
             const tbody = document.getElementById("orderTableBody");
             tbody.innerHTML = "";
-            orders.forEach(order => {
-               // loadOrders ke andar ise replace karein:
-tbody.innerHTML += `
-    <tr>
-        <td data-label="Order ID">#${order.id}</td>
-        <td data-label="Customer">${order.customer_name || 'User'}</td>
-        <td data-label="Product ID">${order.product_id}</td>
-        <td data-label="Amount">₹${order.total_price}</td>
-        <td data-label="Status"><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
-        <td data-label="Actions">
-            <div class="btn-group">
-                ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
-                    <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
-                    <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
-                    <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
-                ` : '<span style="color:#666">Order Closed</span>'}
-            </div>
-        </td>
-    </tr>
-`;
+            orders.reverse().forEach(order => { // Reverse to show latest first
+                tbody.innerHTML += `
+                    <tr>
+                        <td data-label="Order ID">#${order.id}</td>
+                        <td data-label="Customer">${order.customer_name || 'User'}</td>
+                        <td data-label="Product">#${order.product_id}</td>
+                        <td data-label="Amount">₹${order.total_price}</td>
+                        <td data-label="Status"><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td data-label="Actions">
+                            <div class="btn-group">
+                                ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
+                                    <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
+                                    <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
+                                    <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
+                                ` : '<div class="order-closed"><i class="fas fa-check-circle"></i> Order Completed</div>'}
+                            </div>
+                        </td>
+                    </tr>
+                `;
             });
         });
     }
 
     function updateStatus(orderId, newStatus) {
-        if(!confirm(`Are you sure you want to mark this order as ${newStatus}?`)) return;
+        if(!confirm(`Mark order #${orderId} as ${newStatus}?`)) return;
 
         fetch('https://cityshobackend.onrender.com/update-order-status', {
             method: 'POST',
@@ -222,8 +205,7 @@ tbody.innerHTML += `
         })
         .then(res => res.text())
         .then(msg => {
-            alert(msg);
-            loadOrders(); // List refresh karein
+            loadOrders(); 
         });
     }
 
