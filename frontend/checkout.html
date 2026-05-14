@@ -176,10 +176,13 @@
     const user = JSON.parse(localStorage.getItem("user"));
     let productPrice = 0;
 
+    // Base URL ko ek variable mein rakh lo taaki galti na ho
+    const BASE_URL = "https://cityshobackend.onrender.com";
+
     if(!user) window.location.href = "index1.html";
 
     // 1. Fetch Product Details
-    fetch(`https://cityshobackend.onrender.com/get-products`)
+    fetch(`${BASE_URL}/get-products`)
     .then(res => res.json())
     .then(data => {
         const products = data.products || data;
@@ -193,7 +196,8 @@
             `;
             generateQR(product.price);
         }
-    });
+    })
+    .catch(err => console.error("Product fetch error:", err));
 
     function generateQR(amount) {
         const upiId = "9699214024@ybl"; 
@@ -219,6 +223,12 @@
 
     document.getElementById("orderForm").addEventListener("submit", function(e) {
         e.preventDefault();
+        
+        if(!productId) {
+            alert("No product selected!");
+            return;
+        }
+
         const btn = document.getElementById("mainBtn");
         btn.innerText = "Processing...";
         btn.disabled = true;
@@ -228,10 +238,12 @@
             product_id: productId,
             name: document.getElementById("custName").value,
             address: document.getElementById("custAddress").value,
-            phone: document.getElementById("custPhone").value
+            phone: document.getElementById("custPhone").value,
+            price: productPrice // Backend ko price bhi bhej rahe hain security ke liye
         };
 
-        fetch("https://citysho.onrender.com/place-order", {
+        // Yahan URL check karo: cityshobackend.onrender.com hona chahiye
+        fetch(`${BASE_URL}/place-order`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
@@ -240,19 +252,22 @@
         .then(data => {
             if(data.success) {
                 alert("Order Placed Successfully!");
+                localStorage.removeItem("selectedProductId"); // Order ke baad clean up
                 window.location.href = "my-orders.html";
             } else {
-                alert("Error placing order.");
+                alert("Error: " + (data.message || "Something went wrong"));
                 btn.innerText = "Confirm Order";
                 btn.disabled = false;
             }
         })
         .catch(err => {
-            alert("Server Error!");
+            console.error("Order error:", err);
+            alert("Server Error! Make sure your backend is running.");
             btn.innerText = "Confirm Order";
             btn.disabled = false;
         });
     });
 </script>
+
 </body>
 </html>
