@@ -307,35 +307,47 @@ const fs = require('fs');
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
     const { name, price, city, quantity } = req.body;
-    let sql = "";
-    let params = [];
 
-    // Agar nayi image upload hui hai
+    // 1. Pehle check karo ki naya data update kaise karna hai
     if (req.file) {
         const newImage = req.file.filename;
 
-        // Purani image ka naam nikalenge taaki use delete kar sakein
+        // Purani image delete karne ka kaam pehle finalize karo
         db.query("SELECT image FROM products WHERE id = ?", [productId], (err, results) => {
-            if (!err && results.length > 0) {
+            if (err) {
+                console.error("Select Error:", err);
+            } else if (results.length > 0 && results[0].image) {
                 const oldImagePath = path.join(__dirname, 'uploads', results[0].image);
+                // File delete handle karo safely
                 if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath); // Purani photo delete
+                    try {
+                        fs.unlinkSync(oldImagePath);
+                    } catch (unlinkErr) {
+                        console.error("File Delete Error:", unlinkErr);
+                    }
                 }
             }
+
+            // Purani image delete hone ke baad (ya koshish ke baad) UPDATE chalao
+            const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
+            const params = [name, price, city, quantity, newImage, productId];
+            
+            db.query(sql, params, (err, result) => {
+                if (err) return res.status(500).send("Database Update Error: " + err.message);
+                res.send("Product updated with new image!");
+            });
         });
 
-        sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
-        params = [name, price, city, quantity, newImage, productId];
     } else {
-        // Agar image change nahi karni hai
-        sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
-        params = [name, price, city, quantity, productId];
-    }
+        // 2. Agar image change nahi hui, toh simple update
+        const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
+        const params = [name, price, city, quantity, productId];
 
-    db.query(sql, params, (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.send("Product updated successfully!");
-    });
+        db.query(sql, params, (err, result) => {
+            if (err) return res.status(500).send("Database Update Error: " + err.message);
+            res.send("Product updated successfully!");
+        });
+    }
 });
 // Profile Update karne ka Route
 app.put('/update-profile/:adminid', (req, res) => {
