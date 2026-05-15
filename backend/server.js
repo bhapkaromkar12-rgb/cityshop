@@ -172,13 +172,7 @@ app.get('/admin-products/:adminId', (req, res) => {
 });
 
 // --- ADMIN: UPDATE PRODUCT ---
-app.put('/update-product/:id', (req, res) => {
-    const { name, price } = req.body;
-    const sql = "UPDATE products SET name = ?, price = ? WHERE id = ?";
-    db.query(sql, [name, price, req.params.id], (err, result) => {
-        res.json({ success: !err });
-    });
-});
+
 
 
 // --- USER: PLACE ORDER ---
@@ -307,59 +301,44 @@ const fs = require('fs');
 
 
 // Product update karne ka route (With Image)
+// Product update karne ka route
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
 
-    // --- EDIT 1: Check karo ki req.body khali toh nahi hai ---
+    // Check if body is received
     if (!req.body || Object.keys(req.body).length === 0) {
-        console.error("Error: Backend received empty body!");
-        return res.status(400).send("Form data not received. Check frontend headers.");
+        return res.status(400).send("Form data empty! Check frontend headers.");
     }
 
     const { name, price, city, quantity } = req.body;
 
-    // --- EDIT 2: Agar Nayi Image upload hui hai ---
     if (req.file) {
         const newImage = req.file.filename;
 
-        // Purani image delete karne ka logic
+        // Old image deletion logic
         db.query("SELECT image FROM products WHERE id = ?", [productId], (err, results) => {
-            if (err) {
-                console.error("Select Error:", err);
-            } else if (results.length > 0 && results[0].image) {
+            if (!err && results.length > 0 && results[0].image) {
                 const oldImagePath = path.join(__dirname, 'uploads', results[0].image);
                 if (fs.existsSync(oldImagePath)) {
-                    try {
-                        fs.unlinkSync(oldImagePath);
-                    } catch (unlinkErr) {
-                        console.error("File Delete Error:", unlinkErr);
-                    }
+                    fs.unlinkSync(oldImagePath);
                 }
             }
 
-            // Database Update with Image
             const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
             const params = [name, price, city, quantity, newImage, productId];
             
             db.query(sql, params, (err, result) => {
-                if (err) {
-                    console.error("DB Error:", err);
-                    return res.status(500).send("Database Update Error: " + err.message);
-                }
+                if (err) return res.status(500).send("DB Error: " + err.message);
                 res.send("Product updated with new image!");
             });
         });
-
     } else {
-        // --- EDIT 3: Agar image change nahi karni hai ---
+        // Without image update
         const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
         const params = [name, price, city, quantity, productId];
 
         db.query(sql, params, (err, result) => {
-            if (err) {
-                console.error("DB Error:", err);
-                return res.status(500).send("Database Update Error: " + err.message);
-            }
+            if (err) return res.status(500).send("DB Error: " + err.message);
             res.send("Product updated successfully!");
         });
     }
