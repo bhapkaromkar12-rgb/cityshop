@@ -64,7 +64,7 @@ db.connect((err) => {
 });
 // --- MIDDLEWARES ---
 app.use(cors());
-
+// Agar CORS use kar rahe ho
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -172,13 +172,7 @@ app.get('/admin-products/:adminId', (req, res) => {
 });
 
 // --- ADMIN: UPDATE PRODUCT ---
-app.put('/update-product/:id', (req, res) => {
-    const { name, price } = req.body;
-    const sql = "UPDATE products SET name = ?, price = ? WHERE id = ?";
-    db.query(sql, [name, price, req.params.id], (err, result) => {
-        res.json({ success: !err });
-    });
-});
+
 
 // --- USER: PLACE ORDER ---
 app.post('/place-order', (req, res) => {
