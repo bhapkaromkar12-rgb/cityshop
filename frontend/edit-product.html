@@ -204,9 +204,10 @@
             formData.append("image", imageFile);
         }
 
-        fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
-            method: 'PUT',
-            body: formData
+      fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
+    method: 'PUT',
+    body: formData // Bas itna hi! No Headers.
+})
             // Note: FormData ke saath 'Content-Type' header MANUALLY mat lagana
         })
         .then(async res => {
@@ -226,7 +227,7 @@
             submitBtn.innerText = "Save Changes";
             submitBtn.disabled = false;
         });
-    });
+    
 
     if(productId) loadExistingData();
     else alert("No Product ID found in URL!");
