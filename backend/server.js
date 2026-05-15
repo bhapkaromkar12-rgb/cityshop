@@ -65,6 +65,8 @@ db.connect((err) => {
 // --- MIDDLEWARES ---
 app.use(cors());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -306,19 +308,25 @@ const fs = require('fs');
 // Product update karne ka route (With Image)
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
+
+    // --- EDIT 1: Check karo ki req.body khali toh nahi hai ---
+    if (!req.body || Object.keys(req.body).length === 0) {
+        console.error("Error: Backend received empty body!");
+        return res.status(400).send("Form data not received. Check frontend headers.");
+    }
+
     const { name, price, city, quantity } = req.body;
 
-    // 1. Pehle check karo ki naya data update kaise karna hai
+    // --- EDIT 2: Agar Nayi Image upload hui hai ---
     if (req.file) {
         const newImage = req.file.filename;
 
-        // Purani image delete karne ka kaam pehle finalize karo
+        // Purani image delete karne ka logic
         db.query("SELECT image FROM products WHERE id = ?", [productId], (err, results) => {
             if (err) {
                 console.error("Select Error:", err);
             } else if (results.length > 0 && results[0].image) {
                 const oldImagePath = path.join(__dirname, 'uploads', results[0].image);
-                // File delete handle karo safely
                 if (fs.existsSync(oldImagePath)) {
                     try {
                         fs.unlinkSync(oldImagePath);
@@ -328,23 +336,29 @@ app.put('/update-product/:id', upload.single('image'), (req, res) => {
                 }
             }
 
-            // Purani image delete hone ke baad (ya koshish ke baad) UPDATE chalao
+            // Database Update with Image
             const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
             const params = [name, price, city, quantity, newImage, productId];
             
             db.query(sql, params, (err, result) => {
-                if (err) return res.status(500).send("Database Update Error: " + err.message);
+                if (err) {
+                    console.error("DB Error:", err);
+                    return res.status(500).send("Database Update Error: " + err.message);
+                }
                 res.send("Product updated with new image!");
             });
         });
 
     } else {
-        // 2. Agar image change nahi hui, toh simple update
+        // --- EDIT 3: Agar image change nahi karni hai ---
         const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
         const params = [name, price, city, quantity, productId];
 
         db.query(sql, params, (err, result) => {
-            if (err) return res.status(500).send("Database Update Error: " + err.message);
+            if (err) {
+                console.error("DB Error:", err);
+                return res.status(500).send("Database Update Error: " + err.message);
+            }
             res.send("Product updated successfully!");
         });
     }
