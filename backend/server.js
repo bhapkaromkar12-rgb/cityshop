@@ -172,6 +172,13 @@ app.get('/admin-products/:adminId', (req, res) => {
 });
 
 // --- ADMIN: UPDATE PRODUCT ---
+app.put('/update-product/:id', (req, res) => {
+    const { name, price } = req.body;
+    const sql = "UPDATE products SET name = ?, price = ? WHERE id = ?";
+    db.query(sql, [name, price, req.params.id], (err, result) => {
+        res.json({ success: !err });
+    });
+});
 
 
 // --- USER: PLACE ORDER ---
