@@ -302,7 +302,16 @@ app.get('/get-product/:id', (req, res) => {
 // 2. Product update karne ka route
 const fs = require('fs');
 
-
+const db = mysql.createPool({
+    host: "your-aiven-host.aivencloud.com",
+    user: "your-username",
+    password: "your-password",
+    database: "defaultdb",
+    port: 25774, // Aiven ka port alag hota hai
+    ssl: {
+        rejectUnauthorized: false // Ye line zaroori hai Aiven ke liye
+    }
+});
 // Product update karne ka route (With Image)
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
