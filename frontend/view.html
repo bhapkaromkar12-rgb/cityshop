@@ -283,6 +283,8 @@
             document.getElementById("productContainer").innerHTML = "<h3>Unable to connect to server.</h3>";
         });
     }
+    // Jahan product card ka HTML append ho raha hai, wahan yeh jod do:
+    const descriptionTag = `<p style="color: #b0b0b0; font-size: 14px;">${product.description || 'No description available'}</p>`; 
 
     function addToCart(id) {
         localStorage.setItem("selectedProductId", id);
