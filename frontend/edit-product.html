@@ -163,65 +163,72 @@
         <p style="text-align: center;"><a href="admin_dash.html" style="color: #666;">Cancel</a></p>
     </form>
 </div>
-
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
+    // Purana data load karne ka function
     function loadExistingData() {
-        // Corrected URL to match your backend
         fetch(`https://cityshobackend.onrender.com/get-product/${productId}`)
         .then(res => {
             if (!res.ok) throw new Error("Product not found");
             return res.json();
         })
         .then(p => {
-            // Data fields update
             document.getElementById("name").value = p.name;
             document.getElementById("price").value = p.price;
             document.getElementById("city").value = p.city;
             document.getElementById("quantity").value = p.quantity;
-            document.getElementById("description").value = p.description || "";
             document.getElementById("productId").value = p.id; 
         })
         .catch(err => console.error("Load Error:", err));
     }
 
-    // UPDATE Function ko aise sahi karo
-document.getElementById("editForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    let formData = new FormData();
-    formData.append("name", document.getElementById("name").value);
-    formData.append("price", document.getElementById("price").value);
-    formData.append("city", document.getElementById("city").value);
-    formData.append("quantity", document.getElementById("quantity").value);
-    
-    const imageFile = document.getElementById("image").files[0];
-    if(imageFile) {
-        formData.append("image", imageFile);
-    }
+    // UPDATE Function
+    document.getElementById("editForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.querySelector(".update-btn");
+        submitBtn.innerText = "Updating...";
+        submitBtn.disabled = true;
 
-    fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
-        method: 'PUT',
-        body: formData 
-    })
-    .then(async res => {
-        const text = await res.text();
-        if (!res.ok) throw new Error(text || "Server Error");
-        return text;
-    })
-    .then(msg => {
-        alert("Success: " + msg);
-        window.location.href = "admin_dash.html";
-    })
-    .catch(err => {
-        alert("Update Failed: " + err.message);
-    });
-       // <--- Bas ek baar ye aayega
-    }); // Yahan extra block hata diya gaya hai
+        let formData = new FormData();
+        formData.append("name", document.getElementById("name").value);
+        formData.append("price", document.getElementById("price").value);
+        formData.append("city", document.getElementById("city").value);
+        formData.append("quantity", document.getElementById("quantity").value);
+        
+        const imageFile = document.getElementById("image").files[0];
+        if(imageFile) {
+            formData.append("image", imageFile);
+        }
+
+        // --- BRACKETS FIXED HERE ---
+        fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
+            method: 'PUT',
+            body: formData 
+        })
+        .then(async res => {
+            const text = await res.text();
+            if (!res.ok) throw new Error(text || "Server Error");
+            return text;
+        })
+        .then(msg => {
+            alert("Success: " + msg);
+            window.location.href = "admin_dash.html";
+        })
+        .catch(err => {
+            console.error("Update Error:", err);
+            alert("Update Failed: " + err.message);
+        })
+        .finally(() => {
+            submitBtn.innerText = "Save Changes";
+            submitBtn.disabled = false;
+        });
+    }); // Form event listener yahan khatam hota hai
 
     if(productId) loadExistingData();
+    else alert("No Product ID found in URL!");
 </script>
 </body>
 </html>
