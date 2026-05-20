@@ -40,8 +40,7 @@
         .logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
         .logo i { color: var(--primary); }
         
-        /* Container Setup */
-       /* Container Setup - Optimized for 2 per row on Mobile */
+        /* Container Setup - Optimized for 2 per row on Mobile */
         .container { 
             display: grid; 
             /* Desktop par auto-fill rahega */
@@ -219,8 +218,7 @@
     </div>
 </div>
 
-<div class="container" id="productContainer">
-    </div>
+<div class="container" id="productContainer"></div>
 
 <script>
     // 1. Auth Check
@@ -262,13 +260,18 @@
             }
 
             products.forEach(product => {
-                const imageUrl = `https://cityshobackend.onrender.com/uploads/${product.image}`;
+                // --- SMART IMAGE URL LOGIC ---
+                // Agar path 'http' se shuru hota hai (Cloudinary full URL), toh direct wahi use hoga
+                // Varna purana default local uploads ka prefix lagega
+                const imageUrl = product.image && product.image.startsWith('http') 
+                    ? product.image 
+                    : `https://cityshobackend.onrender.com/uploads/${product.image}`;
                 
                 container.innerHTML += `
                     <div class="card">
-                       <img src="${imageUrl}" 
-     onerror="this.src='https://via.placeholder.com/240x180?text=No+Image'" 
-     alt="${product.name}">
+                        <img src="${imageUrl}" 
+                             onerror="this.src='https://via.placeholder.com/240x180?text=No+Image'" 
+                             alt="${product.name}">
                         <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${product.city}</div>
                         <h4>${product.name}</h4>
                         <div class="price">₹${parseFloat(product.price).toFixed(2)}</div>
