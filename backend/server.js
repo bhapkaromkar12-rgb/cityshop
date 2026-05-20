@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -70,15 +70,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Multer for Images
-const storage = multer.diskStorage({
-    destination: './uploads/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-const upload = multer({ storage: storage });
 
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Cloudinary Configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Cloudinary ke sath Multer Storage setup
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'cityshop_products', // Cloudinary par is naam ka folder banega
+        allowed_formats: ['jpg', 'png', 'jpeg'],
+    },
+});
+
+const upload = multer({ storage: storage });
 // --- ROUTES ---
 
 // 1. REGISTER (Save to MySQL)
@@ -213,14 +224,37 @@ app.get('/my-orders/:userId', (req, res) => {
 });
 
 // --- USER: UPDATE PROFILE ---
-app.put('/update-profile/:userId', (req, res) => {
-    const { username, email, password } = req.body;
-    const sql = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
-    
-    db.query(sql, [username, email, password, req.params.userId], (err, result) => {
-        if (err) return res.status(500).json({ success: false, message: err.message });
-        res.json({ success: true, message: "Profile Updated Successfully!" });
-    });
+app.put('/update-product/:id', upload.single('image'), (req, res) => {
+    const productId = req.params.id;
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).send("Form data empty!");
+    }
+
+    const { name, price, city, quantity } = req.body;
+
+    if (req.file) {
+        // Nayi image ka Cloudinary link
+        const newImage = req.file.path; 
+
+        // Seedha database update karo (Cloudinary se purani photo manually delete karne ki free tier me zaroorat nahi hai, storage kaafi hoti hai)
+        const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
+        const params = [name, price, city, quantity, newImage, productId];
+        
+        db.query(sql, params, (err, result) => {
+            if (err) return res.status(500).send("DB Error: " + err.message);
+            res.send("Product updated with new image on Cloudinary!");
+        });
+    } else {
+        // Agar image change nahi karni hai
+        const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
+        const params = [name, price, city, quantity, productId];
+
+        db.query(sql, params, (err, result) => {
+            if (err) return res.status(500).send("DB Error: " + err.message);
+            res.send("Product updated successfully!");
+        });
+    }
 });
 
 // Connection tutne par auto-reconnect karne ke liye handle karein
@@ -245,12 +279,20 @@ app.get('/get-all-orders', (req, res) => {
 });
 
 // 2. Order ka status update karne ke liye (Receive/Cancel/Deliver)
-app.post('/update-order-status', (req, res) => {
-    const { orderId, status } = req.body;
-    const sql = "UPDATE orders SET status = ? WHERE id = ?";
-    db.query(sql, [status, orderId], (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.send(`Order ${status} successfully!`);
+app.post('/add-product', upload.single('image'), (req, res) => {
+    const { name, price, city, quantity, admin_id } = req.body; 
+    
+    // req.file.path mein Cloudinary ka permanent online link hota hai
+    const image = req.file ? req.file.path : null; 
+
+    const sql = "INSERT INTO products (name, price, city, quantity, image, admin_id) VALUES (?, ?, ?, ?, ?, ?)";
+    
+    db.query(sql, [name, price, city, quantity, image, admin_id], (err, result) => {
+        if (err) {
+            console.error("Database Error:", err.message);
+            return res.status(500).send("Database Error: " + err.message);
+        }
+        res.send("Product Added Successfully!");
     });
 });
 
