@@ -7,9 +7,22 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary'); // Cloudinar
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 
 const app = express();
 require('dotenv').config();
+
+// --- GMAIL TRANSPORTER FOR OTP ---
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, // Render environment variable ya .env file me add karein
+        pass: process.env.EMAIL_PASS  // Gmail App Password use karein
+    }
+});
+
+// Temporary memory store for OTP verification
+let otpStore = {};
 
 // --- MYSQL CONNECTION (Aiven) ---
 const db = mysql.createConnection({
@@ -31,31 +44,31 @@ db.connect((err) => {
 
     // Automatic Table Creation Script
     const sql = `
-    CREATE TABLE IF NOT EXISTS users (\r
-        id INT AUTO_INCREMENT PRIMARY KEY,\r
-        username VARCHAR(255),\r
-        email VARCHAR(255) UNIQUE,\r
-        password VARCHAR(255),\r
-        role VARCHAR(50)\r
-    );\r
-    CREATE TABLE IF NOT EXISTS products (\r
-        id INT AUTO_INCREMENT PRIMARY KEY,\r
-        name VARCHAR(255),\r
-        price DECIMAL(10,2),\r
-        city VARCHAR(255),\r
-        quantity INT,\r
-        image VARCHAR(255),\r
-        admin_id INT\r
-    );\r
-    CREATE TABLE IF NOT EXISTS orders (\r
-        id INT AUTO_INCREMENT PRIMARY KEY,\r
-        user_id INT,\r
-        product_id INT,\r
-        customer_name VARCHAR(255),\r
-        address TEXT,\r
-        phone VARCHAR(20),\r
-        status VARCHAR(50) DEFAULT 'Pending',\r
-        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP\r
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255),
+        email VARCHAR(255) UNIQUE,
+        password VARCHAR(255),
+        role VARCHAR(50)
+    );
+    CREATE TABLE IF NOT EXISTS products (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255),
+        price DECIMAL(10,2),
+        city VARCHAR(255),
+        quantity INT,
+        image VARCHAR(255),
+        admin_id INT
+    );
+    CREATE TABLE IF NOT EXISTS orders (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT,
+        product_id INT,
+        customer_name VARCHAR(255),
+        address TEXT,
+        phone VARCHAR(20),
+        status VARCHAR(50) DEFAULT 'Pending',
+        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );`;
 
     db.query(sql, (err) => {
@@ -91,7 +104,76 @@ const upload = multer({ storage: storage });
 
 // --- ROUTES ---
 
-// 1. REGISTER
+// --- ROUTE: SEND OTP ---
+app.post('/send-otp', (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, message: "Email is required!" });
+
+    // 6-digit random code generate karo
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Memory me temporary save karo (5 mins expiry)
+    otpStore[email] = {
+        otp: otp,
+        expires: Date.now() + 5 * 60 * 1000
+    };
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'City Shop Agro - Registration OTP Verification',
+        html: `
+            <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
+                <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
+                <p>Bhai, aapke account registration ke liye OTP niche diya gaya hai:</p>
+                <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; color: #fff; margin: 20px 0; background: rgba(116, 201, 71, 0.2); padding: 10px; border-radius: 10px;">
+                    ${otp}
+                </div>
+                <p style="color: #a0a0a0; font-size: 12px; text-align: center;">Yeh OTP sirf 5 minute ke liye hi valid hai. Kisi ke sath share na karein.</p>
+            </div>
+        `
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.error("Email Error:", err);
+            return res.status(500).json({ success: false, message: "Email bhejne me koi dikkat aayi!" });
+        }
+        res.json({ success: true, message: "OTP sent successfully to your email!" });
+    });
+});
+
+// --- ROUTE: REGISTER USER WITH OTP VERIFICATION ---
+app.post('/register-user', (req, res) => {
+    const { username, email, password, role, otp } = req.body;
+
+    if (!otpStore[email] || otpStore[email].otp !== otp) {
+        return res.json({ success: false, message: "Galat OTP dala hai bhai, firse check karo!" });
+    }
+
+    if (Date.now() > otpStore[email].expires) {
+        delete otpStore[email];
+        return res.json({ success: false, message: "OTP Expired ho gaya hai! Firse send karo." });
+    }
+
+    delete otpStore[email]; // Clear OTP after usage
+
+    const checkSql = "SELECT * FROM users WHERE email = ?";
+    db.query(checkSql, [email], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (results.length > 0) {
+            return res.json({ success: false, message: "Email already exists!" });
+        }
+
+        const insertSql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
+        db.query(insertSql, [username, email, password, role || 'customer'], (err, result) => {
+            if (err) return res.status(500).json({ success: false, message: err.message });
+            res.json({ success: true, message: "User Registered Successfully!" });
+        });
+    });
+});
+
+// 1. REGISTER (Old Route kept for backward compatibility if needed)
 app.post('/register', (req, res) => {
     const { username, email, password, role } = req.body;
     const sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
