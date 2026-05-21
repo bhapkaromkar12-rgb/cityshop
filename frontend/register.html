@@ -312,7 +312,7 @@ let isOtpSent = false;
 function sendOTP() {
     const email = document.getElementById("emailInput").value;
     if(!email || !email.includes("@")) {
-        alert("Bhai pahle sahi Email enter karo!");
+        alert("Enter a valid Email Address");
         return;
     }
 
@@ -333,7 +333,7 @@ function sendOTP() {
     .then(data => {
         loader.style.display = "none"; // Hide Loader
         if(data.success) {
-            alert("Bhai Mail check karo, OTP bhej diya hai!");
+            alert("Check mail, OTP to be sent");
             isOtpSent = true;
             
             // Layout dynamics un-hide and unlock actions
@@ -361,7 +361,7 @@ function sendOTP() {
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
     if(!isOtpSent) {
-        alert("Pehle Email Verify karke OTP dalein bhai!");
+        alert("Enter Email Verify OTP");
         return;
     }
 
