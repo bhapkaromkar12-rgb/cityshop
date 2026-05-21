@@ -113,6 +113,42 @@
         box-shadow: 0 0 10px rgba(116, 201, 71, 0.1);
     }
 
+    /* Email Field Layout Adjustment */
+    .email-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-verify-otp {
+        background: rgba(116, 201, 71, 0.15);
+        color: var(--primary);
+        border: 1px solid rgba(116, 201, 71, 0.4);
+        border-radius: 12px;
+        padding: 0 18px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+
+    .btn-verify-otp:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Dynamic Slide-in Animation for OTP input box */
+    #otpGroup {
+        animation: slideDownField 0.4s ease-out forwards;
+    }
+
+    @keyframes slideDownField {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Custom dropdown arrow */
     select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2374c947' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -126,7 +162,7 @@
         color: white;
     }
 
-    button {
+    button[type="submit"] {
         background: var(--primary);
         color: white;
         padding: 14px;
@@ -159,6 +195,41 @@
         font-weight: 700;
     }
 
+    /* --- REGISTRATION OVERLAY SCREEN LOADER --- */
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .plant-icon {
+        font-size: 65px;
+        color: var(--primary);
+        animation: breathAnimation 2s infinite ease-in-out;
+    }
+
+    .loader-text {
+        font-size: 17px;
+        font-weight: 600;
+        color: #b0b0b0;
+        margin: 15px 0 0 0;
+        letter-spacing: 0.5px;
+    }
+
+    @keyframes breathAnimation {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+
     /* Adjust for very small phones */
     @media (max-width: 360px) {
         .register-card {
@@ -180,6 +251,13 @@
 </head>
 <body>
 
+<div id="regLoader" class="loader-overlay">
+    <div style="text-align: center;">
+        <i class="fas fa-seedling plant-icon"></i>
+        <p id="loaderText" class="loader-text">Processing...</p>
+    </div>
+</div>
+
 <div class="register-card">
     <div class="logo-area">
         <i class="fas fa-seedling"></i>
@@ -193,9 +271,17 @@
             <input type="text" name="username" placeholder="Username" required>
         </div>
 
-        <div class="input-group">
-            <i class="fas fa-envelope"></i>
-            <input type="email" name="email" placeholder="Email Address" required>
+        <div class="email-container">
+            <div class="input-group" style="flex: 1;">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" id="emailInput" placeholder="Email Address" required>
+            </div>
+            <button type="button" class="btn-verify-otp" id="otpBtn" onclick="sendOTP()">Send OTP</button>
+        </div>
+
+        <div class="input-group" id="otpGroup" style="display: none;">
+            <i class="fas fa-key"></i>
+            <input type="text" name="otp" id="otpInput" placeholder="Enter 6-Digit OTP">
         </div>
 
         <div class="input-group">
@@ -211,7 +297,7 @@
             </select>
         </div>
 
-        <button type="submit">Create Account</button>
+        <button type="submit" id="subBtn" style="opacity: 0.6;" disabled>Create Account</button>
     </form>
 
     <div class="footer-links">
@@ -220,28 +306,94 @@
 </div>
 
 <script>
+let isOtpSent = false;
+
+// Action 1: Dispatch OTP Request to Backend Server
+function sendOTP() {
+    const email = document.getElementById("emailInput").value;
+    if(!email || !email.includes("@")) {
+        alert("Bhai pahle sahi Email enter karo!");
+        return;
+    }
+
+    const loader = document.getElementById("regLoader");
+    const loaderText = document.getElementById("loaderText");
+    const otpBtn = document.getElementById("otpBtn");
+
+    // Show Loading Overlay Animation
+    loader.style.display = "flex";
+    loaderText.innerText = "Sending Verification OTP...";
+
+    fetch("https://cityshobackend.onrender.com/send-otp", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email: email })
+    })
+    .then(res => res.json())
+    .then(data => {
+        loader.style.display = "none"; // Hide Loader
+        if(data.success) {
+            alert("Bhai Mail check karo, OTP bhej diya hai!");
+            isOtpSent = true;
+            
+            // Layout dynamics un-hide and unlock actions
+            document.getElementById("otpGroup").style.display = "block";
+            document.getElementById("otpInput").required = true;
+            
+            // Unlock Main Sign Up Registration Command Button
+            const subBtn = document.getElementById("subBtn");
+            subBtn.disabled = false;
+            subBtn.style.opacity = "1";
+            
+            otpBtn.innerText = "Resend OTP";
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        console.error("OTP Error:", err);
+        alert("Server network error while dispatching OTP!");
+    });
+}
+
+// Action 2: Process Complete Account Data Package Verification
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
-    const btn = this.querySelector('button');
+    if(!isOtpSent) {
+        alert("Pehle Email Verify karke OTP dalein bhai!");
+        return;
+    }
+
+    const btn = this.querySelector('button[type="submit"]');
     btn.innerText = "Registering...";
     btn.disabled = true;
+
+    const loader = document.getElementById("regLoader");
+    const loaderText = document.getElementById("loaderText");
+    
+    // Activate full screen glassmorphic loading blur overlay
+    loader.style.display = "flex";
+    loaderText.innerText = "Verifying OTP & Establishing Profile...";
 
     let data = {
         username: this.username.value,
         email: this.email.value,
         password: this.password.value,
-        role: this.role.value
+        role: this.role.value,
+        otp: this.otp.value
     };
 
-    fetch("https://cityshobackend.onrender.com/register", { 
+    fetch("https://cityshobackend.onrender.com/register-user", { 
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
     })
     .then(res => res.json())
     .then(result => {
+        loader.style.display = "none";
         if(result.success) {
-            alert("Success: " + result.message);
+            alert("Success: User Registered Successfully!");
             window.location.href = "index1.html";
         } else {
             alert("Error: " + result.message);
@@ -250,6 +402,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         }
     })
     .catch(err => {
+        loader.style.display = "none";
         console.error("Register Error:", err);
         alert("Server error. Please check your connection.");
         btn.innerText = "Create Account";
