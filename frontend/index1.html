@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - City Shop Agro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-   <style>
+    <style>
     :root {
         --primary: #74c947;
         --dark-card: rgba(20, 20, 20, 0.85);
@@ -158,6 +158,90 @@
         font-weight: 700;
     }
 
+    /* --- PREMIUM PLANT LOADER CSS STYLES --- */
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .loader-content {
+        text-align: center;
+    }
+
+    .plant-animation-box {
+        position: relative;
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Initial Sukha Paudha (Brown Stems) State */
+    .plant-icon {
+        font-size: 65px;
+        color: #554433; /* Brown/Dry wood branch color */
+        transition: color 1.2s ease-in-out, transform 1.2s ease-in-out;
+        animation: breathEffect 2s infinite ease-in-out;
+    }
+
+    /* Growing State (Turns bright green and slightly larger) */
+    .loader-overlay.growing .plant-icon {
+        color: var(--primary); /* Beautiful Green */
+        transform: scale(1.25) rotate(8deg);
+    }
+
+    /* Success Tick Pop Animation */
+    .success-checkmark {
+        position: absolute;
+        font-size: 70px;
+        color: var(--primary);
+        opacity: 0;
+        transform: scale(0.4);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: none;
+    }
+
+    .loader-overlay.success .success-checkmark {
+        display: block;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .loader-overlay.success .plant-icon {
+        display: none;
+    }
+
+    .loader-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #b0b0b0;
+        margin: 0;
+        letter-spacing: 1px;
+        transition: color 0.3s;
+    }
+
+    .loader-overlay.success .loader-text {
+        color: var(--primary);
+        font-weight: 800;
+    }
+
+    @keyframes breathEffect {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
     /* Small screen optimization */
     @media (max-width: 360px) {
         .login-card {
@@ -178,6 +262,18 @@
 </style>
 </head>
 <body>
+
+<div id="loginLoader" class="loader-overlay">
+    <div class="loader-content">
+        <div class="plant-animation-box">
+            <i class="fas fa-seedling plant-icon"></i>
+            <div class="success-checkmark">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+        <p id="loaderText" class="loader-text">Verifying Details...</p>
+    </div>
+</div>
 
 <div class="login-card">
     <div class="logo-area">
@@ -220,6 +316,21 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     btn.innerText = "Verifying...";
     btn.disabled = true;
 
+    // --- LOADER ACTIVATE LOGIC ---
+    const loader = document.getElementById("loginLoader");
+    const loaderText = document.getElementById("loaderText");
+    
+    // Loader reset karke display karna (Sukha State)
+    loader.style.display = "flex";
+    loader.classList.remove("growing", "success");
+    loaderText.innerText = "Verifying Details...";
+
+    // 500ms ke baad paudha hara bhara hona shuru hoga (Growing animation switch)
+    setTimeout(() => {
+        loader.classList.add("growing");
+        loaderText.innerText = "Growing your dashboard...";
+    }, 500);
+
     let data = {
         email: this.email.value,
         password: this.password.value,
@@ -234,16 +345,27 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     .then(res => res.json())
     .then(res => {
         if(res.success){
+            // --- SUCCESS STATE LOGIC ---
+            loader.classList.add("success");
+            loaderText.innerText = "Verification Successful! सत्यापित";
+            
             localStorage.setItem("user", JSON.stringify(res.user));
-            // User role check karke redirect
-            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            
+            // Animation dekhne ke liye ek chhota sa delay (1.2 sec) ke baad redirection
+            setTimeout(() => {
+                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            }, 1200);
         } else {
+            // Error handling par loader reset aur hide hoga
+            loader.style.display = "none";
             alert("Invalid Credentials. Please try again.");
             btn.innerText = "Sign In";
             btn.disabled = false;
         }
     })
     .catch(err => {
+        // Network connection fail state handling
+        loader.style.display = "none";
         console.error("Login Error:", err);
         alert("Server connection failed!");
         btn.innerText = "Sign In";
