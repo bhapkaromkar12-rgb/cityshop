@@ -21,13 +21,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 // --- GMAIL TRANSPORTER FOR OTP ---
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER, // Render Env me apni Gmail ID daalein
-        pass: process.env.EMAIL_PASS  // Render Env me 16-digit ka Google App Password daalein
-    }
-});
+
 
 // Temporary memory store for OTP verification
 let otpStore = {};
