@@ -148,12 +148,12 @@ app.post('/register-user', (req, res) => {
     const { username, email, password, role, otp } = req.body;
 
     if (!otpStore[email] || otpStore[email].otp !== otp) {
-        return res.json({ success: false, message: "Galat OTP dala hai bhai, firse check karo!" });
+        return res.json({ success: false, message: "wrong OTP,check again!" });
     }
 
     if (Date.now() > otpStore[email].expires) {
         delete otpStore[email];
-        return res.json({ success: false, message: "OTP Expired ho gaya hai! Firse send karo." });
+        return res.json({ success: false, message: "OTP is Expired ! send new otp." });
     }
 
     delete otpStore[email]; // Clear OTP after usage
