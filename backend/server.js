@@ -11,7 +11,13 @@ const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 
 const app = express();
 require('dotenv').config();
-
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS  
+    }
+});
 // --- GMAIL TRANSPORTER FOR OTP (FIXED: Ekdum clean ek baar setup) ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -119,6 +125,7 @@ app.post('/send-otp', (req, res) => {
         expires: Date.now() + 5 * 60 * 1000
     };
 
+    // HTML Email Template Design
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -135,11 +142,13 @@ app.post('/send-otp', (req, res) => {
         `
     };
 
+    // Nodemailer se Mail Send Karo
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-            console.error("Email Error:", err);
+            console.error("Nodemailer Email Error:", err);
             return res.status(500).json({ success: false, message: "Email bhejne me koi dikkat aayi!" });
         }
+        console.log("Email Sent Info:", info.response);
         res.json({ success: true, message: "OTP sent successfully to your email!" });
     });
 });
