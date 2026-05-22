@@ -11,13 +11,7 @@ const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 
 const app = express();
 require('dotenv').config();
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
-    }
-});
+
 // --- GMAIL TRANSPORTER FOR OTP (FIXED: Ekdum clean ek baar setup) ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
