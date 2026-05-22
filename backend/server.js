@@ -12,13 +12,22 @@ const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 const app = express();
 require('dotenv').config();
 
-// --- GMAIL TRANSPORTER FOR OTP (FIXED: Ekdum clean ek baar setup) ---
+// --- GMAIL TRANSPORTER FOR OTP (CRITICAL FIX: STRICT IPV4 ONLY) ---
 const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,                  // Secure SSL Port
+    secure: true,               // True kyunki port 465 use kar rahe hain
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Render environment variables me add karein
-        pass: process.env.EMAIL_PASS  // 16-digit Gmail App Password use karein
-    }
+        user: process.env.EMAIL_USER, // Render Env me apni Gmail ID daalein
+        pass: process.env.EMAIL_PASS  // Render Env me 16-digit ka Google App Password daalein
+    },
+    tls: {
+        rejectUnauthorized: false // Strict SSL verify rules ko soft karega taaki network drop na ho
+    },
+    connectionTimeout: 20000,   // Timeout badha kar 20 seconds kiya
+    socketTimeout: 20000,
+    family: 4                   // <--- YEH LINE ENETUNREACH ERROR KO JAD SE KHATAM KAREGI (FORCE IPV4)
 });
 
 // Temporary memory store for OTP verification
@@ -42,7 +51,7 @@ db.connect((err) => {
     }
     console.log('Connected to Aiven Cloud MySQL!');
 
-    // Automatic Table Creation Script (FIXED: Added phone column for profile updates)
+    // Automatic Table Creation Script (Fixed with phone column)
     const sql = `
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -119,7 +128,6 @@ app.post('/send-otp', (req, res) => {
         expires: Date.now() + 5 * 60 * 1000
     };
 
-    // HTML Email Template Design
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -136,13 +144,12 @@ app.post('/send-otp', (req, res) => {
         `
     };
 
-    // Nodemailer se Mail Send Karo
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
             console.error("Nodemailer Email Error:", err);
-            return res.status(500).json({ success: false, message: "Email bhejne me koi dikkat aayi!" });
+            return res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
         }
-        console.log("Email Sent Info:", info.response);
+        console.log("Email Sent Successfully!");
         res.json({ success: true, message: "OTP sent successfully to your email!" });
     });
 });
@@ -177,7 +184,7 @@ app.post('/register-user', (req, res) => {
     });
 });
 
-// 1. REGISTER (Old Route kept for backward compatibility if needed)
+// REGISTER (Old Route)
 app.post('/register', (req, res) => {
     const { username, email, password, role } = req.body;
     const sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
@@ -192,7 +199,7 @@ app.post('/register', (req, res) => {
     });
 });
 
-// 2. LOGIN
+// LOGIN
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
     const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -211,25 +218,19 @@ app.post('/login', (req, res) => {
     });
 });
 
-// 3. ADD PRODUCT
+// ADD PRODUCT
 app.post('/add-product', upload.single('image'), (req, res) => {
-    console.log("Received Body:", req.body);
-    console.log("Received File:", req.file);
     const { name, price, city, quantity, admin_id } = req.body; 
-    
     const image = req.file ? req.file.path : null; 
 
     const sql = "INSERT INTO products (name, price, city, quantity, image, admin_id) VALUES (?, ?, ?, ?, ?, ?)";
     db.query(sql, [name, price, city, quantity, image, admin_id], (err, result) => {
-        if (err) {
-            console.error("Database Error:", err.message);
-            return res.status(500).send("Database Error: " + err.message);
-        }
+        if (err) return res.status(500).send("Database Error: " + err.message);
         res.send("Product Added Successfully!");
     });
 });
 
-// 4. GET ALL PRODUCTS
+// GET ALL PRODUCTS
 app.get('/get-products', (req, res) => {
     const city = req.query.city || 'All';
     let sql = "SELECT * FROM products";
@@ -241,15 +242,12 @@ app.get('/get-products', (req, res) => {
     }
 
     db.query(sql, params, (err, results) => {
-        if (err) {
-            console.error("Query Error:", err.message);
-            return res.status(500).json({ success: false, message: err.message });
-        }
+        if (err) return res.status(500).json({ success: false, message: err.message });
         res.json({ success: true, products: results });
     });
 });
 
-// 5. ADMIN: VIEW OWN PRODUCTS
+// ADMIN: VIEW OWN PRODUCTS
 app.get('/admin-products/:adminId', (req, res) => {
     const sql = "SELECT * FROM products WHERE admin_id = ?";
     db.query(sql, [req.params.adminId], (err, results) => {
@@ -258,7 +256,7 @@ app.get('/admin-products/:adminId', (req, res) => {
     });
 });
 
-// 6. GET SINGLE PRODUCT FOR EDITING
+// GET SINGLE PRODUCT FOR EDITING
 app.get('/get-product/:id', (req, res) => {
     const sql = "SELECT * FROM products WHERE id = ?";
     db.query(sql, [req.params.id], (err, result) => {
@@ -267,48 +265,38 @@ app.get('/get-product/:id', (req, res) => {
     });
 });
 
-// 7. ADMIN: UPDATE PRODUCT
+// ADMIN: UPDATE PRODUCT
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
-
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).send("Form data empty! Check frontend headers.");
-    }
-
+    if (!req.body || Object.keys(req.body).length === 0) return res.status(400).send("Form empty!");
     const { name, price, city, quantity } = req.body;
 
     if (req.file) {
         const newImage = req.file.path; 
-
         const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
-        const params = [name, price, city, quantity, newImage, productId];
-        
-        db.query(sql, params, (err, result) => {
+        db.query(sql, [name, price, city, quantity, newImage, productId], (err, result) => {
             if (err) return res.status(500).send("DB Error: " + err.message);
-            res.send("Product updated with new image on Cloudinary!");
+            res.send("Product updated with new image!");
         });
     } else {
         const sql = "UPDATE products SET name=?, price=?, city=?, quantity=? WHERE id=?";
-        const params = [name, price, city, quantity, productId];
-
-        db.query(sql, params, (err, result) => {
+        db.query(sql, [name, price, city, quantity, productId], (err, result) => {
             if (err) return res.status(500).send("DB Error: " + err.message);
             res.send("Product updated successfully!");
         });
     }
 });
 
-// 8. DELETE PRODUCT
+// DELETE PRODUCT
 app.delete('/delete-product/:id', (req, res) => {
-    const productId = req.params.id;
     const deleteSql = "DELETE FROM products WHERE id = ?";
-    db.query(deleteSql, [productId], (err, result) => {
+    db.query(deleteSql, [req.params.id], (err, result) => {
         if (err) return res.status(500).send(err);
         res.send("Product deleted successfully!");
     });
 });
 
-// 9. PLACE ORDER
+// PLACE ORDER
 app.post('/place-order', (req, res) => {
     const { user_id, product_id, name, address, phone } = req.body;
     const sql = "INSERT INTO orders (user_id, product_id, customer_name, address, phone) VALUES (?, ?, ?, ?, ?)";
@@ -318,32 +306,23 @@ app.post('/place-order', (req, res) => {
     });
 });
 
-// 10. GET MY ORDERS
+// GET MY ORDERS
 app.get('/my-orders/:userId', (req, res) => {
     const sql = `
-        SELECT 
-            orders.id, 
-            orders.address, 
-            orders.status, 
-            orders.order_date,
-            products.name AS product_name, 
-            products.image, 
-            products.price 
+        SELECT orders.id, orders.address, orders.status, orders.order_date,
+               products.name AS product_name, products.image, products.price 
         FROM orders 
         JOIN products ON orders.product_id = products.id 
         WHERE orders.user_id = ? 
         ORDER BY orders.id DESC`;
         
     db.query(sql, [req.params.userId], (err, results) => {
-        if (err) {
-            console.error("SQL Error:", err.message);
-            return res.status(500).json({ success: false, message: err.message });
-        }
+        if (err) return res.status(500).json({ success: false, message: err.message });
         res.json({ success: true, orders: results });
     });
 });
 
-// 11. GET ALL ORDERS FOR ADMIN
+// GET ALL ORDERS FOR ADMIN
 app.get('/get-all-orders', (req, res) => {
     const sql = "SELECT * FROM orders ORDER BY id DESC";
     db.query(sql, (err, results) => {
@@ -352,7 +331,7 @@ app.get('/get-all-orders', (req, res) => {
     });
 });
 
-// 12. UPDATE PROFILE
+// UPDATE PROFILE
 app.put('/update-profile/:adminid', (req, res) => {
     const userId = req.params.adminid;
     const { username, email, phone, password } = req.body;
