@@ -12,16 +12,14 @@ const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 const app = express();
 require('dotenv').config();
 
-// --- GMAIL TRANSPORTER FOR OTP ---
+// --- GMAIL TRANSPORTER FOR OTP (FIXED: Ekdum clean ek baar setup) ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Render environment variable ya .env file me add karein
-        pass: process.env.EMAIL_PASS  // Gmail App Password use karein
+        user: process.env.EMAIL_USER, // Render environment variables me add karein
+        pass: process.env.EMAIL_PASS  // 16-digit Gmail App Password use karein
     }
 });
-// --- GMAIL TRANSPORTER FOR OTP ---
-
 
 // Temporary memory store for OTP verification
 let otpStore = {};
@@ -44,14 +42,15 @@ db.connect((err) => {
     }
     console.log('Connected to Aiven Cloud MySQL!');
 
-    // Automatic Table Creation Script
+    // Automatic Table Creation Script (FIXED: Added phone column for profile updates)
     const sql = `
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255),
         email VARCHAR(255) UNIQUE,
         password VARCHAR(255),
-        role VARCHAR(50)
+        role VARCHAR(50),
+        phone VARCHAR(20)
     );
     CREATE TABLE IF NOT EXISTS products (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -97,7 +96,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'cityshop_products', // Cloudinary Dashboard par is naam ka folder banega
+        folder: 'cityshop_products', 
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     },
 });
@@ -150,7 +149,7 @@ app.post('/register-user', (req, res) => {
     const { username, email, password, role, otp } = req.body;
 
     if (!otpStore[email] || otpStore[email].otp !== otp) {
-        return res.json({ success: false, message: "wrong OTP,check again!" });
+        return res.json({ success: false, message: "wrong OTP, check again!" });
     }
 
     if (Date.now() > otpStore[email].expires) {
@@ -209,13 +208,12 @@ app.post('/login', (req, res) => {
     });
 });
 
-// 3. ADD PRODUCT (Cloudinary Permanent URL Logic Fixed)
+// 3. ADD PRODUCT
 app.post('/add-product', upload.single('image'), (req, res) => {
     console.log("Received Body:", req.body);
     console.log("Received File:", req.file);
     const { name, price, city, quantity, admin_id } = req.body; 
     
-    // Cloudinary ka permanent dynamic internet link yahan se milega
     const image = req.file ? req.file.path : null; 
 
     const sql = "INSERT INTO products (name, price, city, quantity, image, admin_id) VALUES (?, ?, ?, ?, ?, ?)";
@@ -266,7 +264,7 @@ app.get('/get-product/:id', (req, res) => {
     });
 });
 
-// 7. ADMIN: UPDATE PRODUCT (Cloudinary Storage Logic Fixed)
+// 7. ADMIN: UPDATE PRODUCT
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
 
@@ -277,7 +275,6 @@ app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const { name, price, city, quantity } = req.body;
 
     if (req.file) {
-        // Cloudinary ka permanent internet link save hoga
         const newImage = req.file.path; 
 
         const sql = "UPDATE products SET name=?, price=?, city=?, quantity=?, image=? WHERE id=?";
