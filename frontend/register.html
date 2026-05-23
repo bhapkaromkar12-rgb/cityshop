@@ -324,7 +324,7 @@ function sendOTP() {
     loader.style.display = "flex";
     loaderText.innerText = "Sending Verification OTP...";
 
-    fetch("/send-otp", {
+    fetch("https://cityshobackend.onrender.com/send-otp", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ email: email })
@@ -384,7 +384,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         otp: this.otp.value
     };
 
-    fetch("/register-user", { 
+    fetch("https://cityshobackend.onrender.com/register-user", { 
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
