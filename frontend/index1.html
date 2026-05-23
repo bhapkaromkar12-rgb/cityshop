@@ -347,7 +347,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
         if(res.success){
             // --- SUCCESS STATE LOGIC ---
             loader.classList.add("success");
-            loaderText.innerText = "Verification Successful! सत्यापित";
+            loaderText.innerText = "Verification Successful!";
             
             localStorage.setItem("user", JSON.stringify(res.user));
             
