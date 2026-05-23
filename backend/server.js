@@ -118,7 +118,8 @@ const upload = multer({ storage: storage });
 // --- ROUTES ---
 
 // --- ROUTE: SEND OTP ---
-app.post('/send-otp', (req, res) => {
+// --- ROUTE: SEND OTP (ULTIMATE FIXED HTTP API METHOD - NO NODEMAILER) ---
+app.post('/send-otp', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ success: false, message: "Email is required!" });
 
@@ -131,32 +132,45 @@ app.post('/send-otp', (req, res) => {
         expires: Date.now() + 5 * 60 * 1000
     };
 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'City Shop Agro - Registration OTP Verification',
-        html: `
-            <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
-                <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
-                <p>Bhai, aapke account registration ke liye OTP niche diya gaya hai:</p>
-                <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; color: #fff; margin: 20px 0; background: rgba(116, 201, 71, 0.2); padding: 10px; border-radius: 10px;">
-                    ${otp}
-                </div>
-                <p style="color: #a0a0a0; font-size: 12px; text-align: center;">Yeh OTP sirf 5 minute ke liye hi valid hai. Kisi ke sath share na karein.</p>
+    const emailHtml = `
+        <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
+            <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
+            <p>Bhai, aapke account registration ke liye OTP niche diya gaya hai:</p>
+            <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; color: #fff; margin: 20px 0; background: rgba(116, 201, 71, 0.2); padding: 10px; border-radius: 10px;">
+                ${otp}
             </div>
-        `
-    };
+            <p style="color: #a0a0a0; font-size: 12px; text-align: center;">Yeh OTP sirf 5 minute ke liye hi valid hai. Kisi ke sath share na karein.</p>
+        </div>
+    `;
 
-    transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.error("Nodemailer Email Error:", err);
-            return res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
+    try {
+        const axios = require('axios'); // Local import for security
+        
+        // Direct Elastic Email HTTP API Call (Bypasses all SMTP Network blocks)
+        const response = await axios.get('https://api.elasticemail.com/v2/email/send', {
+            params: {
+                apikey: process.env.EMAIL_API_KEY, // Render me ye key set karni hogi
+                subject: 'City Shop Agro - Registration OTP Verification',
+                from: process.env.EMAIL_FROM,      // Aapka verified sender email
+                to: email,
+                bodyHtml: emailHtml,
+                isTransactional: true
+            }
+        });
+
+        // Elastic Email ya toh success:true bhejta hai ya direct mail object
+        if (response.data.success === true || response.data.map || response.data.data) { 
+            console.log("API Mail Sent Successfully!");
+            return res.json({ success: true, message: "OTP sent successfully to your email!" });
+        } else {
+            console.error("Mail API Error Response:", response.data);
+            return res.status(500).json({ success: false, message: "API Failed to accept request" });
         }
-        console.log("Email Sent Successfully!");
-        res.json({ success: true, message: "OTP sent successfully to your email!" });
-    });
+    } catch (err) {
+        console.error("Critical Network Error:", err.message);
+        return res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
+    }
 });
-
 // --- ROUTE: REGISTER USER WITH OTP VERIFICATION ---
 app.post('/register-user', (req, res) => {
     const { username, email, password, role, otp } = req.body;
