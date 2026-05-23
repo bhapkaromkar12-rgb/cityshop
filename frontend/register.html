@@ -325,7 +325,8 @@ function sendOTP() {
     loaderText.innerText = "Sending Verification OTP...";
 
    // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
-fetch("/send-otp", { 
+// --- IS LINE KO UPDATE KAREIN ---
+fetch("https://cityshobackend.onrender.com/send-otp", { 
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({ email: email })
@@ -386,7 +387,8 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
     };
 
    // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
-fetch("/register-user", { 
+// --- IS LINE KO BHI UPDATE KAREIN ---
+fetch("https://cityshobackend.onrender.com/register-user", { 
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
