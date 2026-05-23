@@ -13,21 +13,23 @@ const app = express();
 require('dotenv').config();
 
 // --- GMAIL TRANSPORTER FOR OTP (CRITICAL FIX: STRICT IPV4 ONLY) ---
+// --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,                  // Secure SSL Port
-    secure: true,               // True kyunki port 465 use kar rahe hain
-    service: 'gmail',
+    secure: true,               // true for 465
     auth: {
-        user: process.env.EMAIL_USER, // Render Env me apni Gmail ID daalein
-        pass: process.env.EMAIL_PASS  // Render Env me 16-digit ka Google App Password daalein
+        user: process.env.EMAIL_USER, // Aapki Gmail ID
+        pass: process.env.EMAIL_PASS  // 16-digit App Password
     },
     tls: {
-        rejectUnauthorized: false // Strict SSL verify rules ko soft karega taaki network drop na ho
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2'   // Safe connection standards for Render
     },
-    connectionTimeout: 20000,   // Timeout badha kar 20 seconds kiya
-    socketTimeout: 20000,
-    family: 4                   // <--- YEH LINE ENETUNREACH ERROR KO JAD SE KHATAM KAREGI (FORCE IPV4)
+    connectionTimeout: 30000,   // Wait limit to 30 seconds (Free tier server optimization)
+    socketTimeout: 30000,
+    greetingTimeout: 30000,
+    family: 4                   // STRICTLY FORCE IPV4 Only
 });
 
 // Temporary memory store for OTP verification
