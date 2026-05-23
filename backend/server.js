@@ -7,7 +7,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary'); // Cloudinar
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
+const { Resend } = require('resend'); // --- NODEMAILER IMPORT FOR OTP ---
 
 const app = express();
 require('dotenv').config();
@@ -15,6 +15,7 @@ require('dotenv').config();
 // --- GMAIL TRANSPORTER FOR OTP (CRITICAL FIX: STRICT IPV4 ONLY) ---
 // --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
 // --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
+const resend = new Resend(process.env.RESEND_API_KEY || 're_yahan_apni_api_key_daalo');
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,                  // Secure SSL Port
@@ -119,6 +120,7 @@ const upload = multer({ storage: storage });
 
 // --- ROUTE: SEND OTP ---
 // --- ROUTE: SEND OTP (ULTIMATE FIXED HTTP API METHOD - NO NODEMAILER) ---
+// --- ROUTE: SEND OTP (FIXED USING RESEND API ENGINE) ---
 app.post('/send-otp', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ success: false, message: "Email is required!" });
@@ -132,43 +134,35 @@ app.post('/send-otp', async (req, res) => {
         expires: Date.now() + 5 * 60 * 1000
     };
 
-    const emailHtml = `
-        <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
-            <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
-            <p>Bhai, aapke account registration ke liye OTP niche diya gaya hai:</p>
-            <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; color: #fff; margin: 20px 0; background: rgba(116, 201, 71, 0.2); padding: 10px; border-radius: 10px;">
-                ${otp}
-            </div>
-            <p style="color: #a0a0a0; font-size: 12px; text-align: center;">Yeh OTP sirf 5 minute ke liye hi valid hai. Kisi ke sath share na karein.</p>
-        </div>
-    `;
-
     try {
-        const axios = require('axios'); // Local import for security
-        
-        // Direct Elastic Email HTTP API Call (Bypasses all SMTP Network blocks)
-        const response = await axios.get('https://api.elasticemail.com/v2/email/send', {
-            params: {
-                apikey: process.env.EMAIL_API_KEY, // Render me ye key set karni hogi
-                subject: 'City Shop Agro - Registration OTP Verification',
-                from: process.env.EMAIL_FROM,      // Aapka verified sender email
-                to: email,
-                bodyHtml: emailHtml,
-                isTransactional: true
-            }
+        // Resend API se mail send karo (Bypasses all Render network limits)
+        const { data, error } = await resend.emails.send({
+            from: 'onboarding@resend.dev', // Free tier me yahi standard sender address rahega
+            to: email,
+            subject: 'City Shop Agro - Registration OTP Verification',
+            html: `
+                <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
+                    <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
+                    <p>Bhai, aapke account registration ke liye OTP niche diya gaya hai:</p>
+                    <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; color: #fff; margin: 20px 0; background: rgba(116, 201, 71, 0.2); padding: 10px; border-radius: 10px;">
+                        ${otp}
+                    </div>
+                    <p style="color: #a0a0a0; font-size: 12px; text-align: center;">Yeh OTP sirf 5 minute ke liye hi valid hai. Kisi ke sath share na karein.</p>
+                </div>
+            `
         });
 
-        // Elastic Email ya toh success:true bhejta hai ya direct mail object
-        if (response.data.success === true || response.data.map || response.data.data) { 
-            console.log("API Mail Sent Successfully!");
-            return res.json({ success: true, message: "OTP sent successfully to your email!" });
-        } else {
-            console.error("Mail API Error Response:", response.data);
-            return res.status(500).json({ success: false, message: "API Failed to accept request" });
+        if (error) {
+            console.error("Resend API Error:", error);
+            return res.status(500).json({ success: false, message: "API failed to deliver email" });
         }
+
+        console.log("Email Sent Successfully via Resend!", data);
+        res.json({ success: true, message: "OTP sent successfully to your email!" });
+
     } catch (err) {
-        console.error("Critical Network Error:", err.message);
-        return res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
+        console.error("Critical Server Error:", err.message);
+        res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
     }
 });
 // --- ROUTE: REGISTER USER WITH OTP VERIFICATION ---
