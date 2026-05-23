@@ -324,11 +324,12 @@ function sendOTP() {
     loader.style.display = "flex";
     loaderText.innerText = "Sending Verification OTP...";
 
-    fetch("/send-otp", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ email: email })
-    })
+   // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
+fetch("/send-otp", { 
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email: email })
+})
     .then(res => res.json())
     .then(data => {
         loader.style.display = "none"; // Hide Loader
@@ -384,11 +385,12 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         otp: this.otp.value
     };
 
-    fetch("/register-user", { 
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(data)
-    })
+   // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
+fetch("/register-user", { 
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+})
     .then(res => res.json())
     .then(result => {
         loader.style.display = "none";
