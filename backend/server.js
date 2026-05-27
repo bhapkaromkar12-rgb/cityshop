@@ -19,8 +19,8 @@ require('dotenv').config();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Render variables se aayega (Aapki Gmail)
-        pass: process.env.EMAIL_PASS  // Render variables se aayega (Strictly bina space ke)
+        user: 'agrotechh12@gmail.com',  // <--- Yahan apni asli Gmail ID daalo
+        pass: 'aldf zybg qvrr dkji'          // <--- Yahan apna 16-digit ka Google App Password daalo
     }
 });
 
