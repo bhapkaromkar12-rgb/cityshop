@@ -326,39 +326,47 @@ function sendOTP() {
 
    // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
 // --- IS LINE KO UPDATE KAREIN ---
-fetch("https://cityshobackend.onrender.com/send-otp", { 
+fetch("https://cityshobackend.onrender.com/send-otp", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ email: email })
-})
-    .then(res => res.json())
-    .then(data => {
-        loader.style.display = "none"; // Hide Loader
-        if(data.success) {
-            alert("Check mail, OTP to be sent");
-            isOtpSent = true;
-            
-            // Layout dynamics un-hide and unlock actions
-            document.getElementById("otpGroup").style.display = "block";
-            document.getElementById("otpInput").required = true;
-            
-            // Unlock Main Sign Up Registration Command Button
-            const subBtn = document.getElementById("subBtn");
-            subBtn.disabled = false;
-            subBtn.style.opacity = "1";
-            
-            otpBtn.innerText = "Resend OTP";
-        } else {
-            alert(data.message);
-        }
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        email: email
     })
-    .catch(err => {
-        loader.style.display = "none";
-        console.error("OTP Error:", err);
-        alert("Server network error while dispatching OTP!");
-    });
-}
+})
+.then(res => res.json())
+.then(data => {
+    loader.style.display = "none"; // Hide Loader
 
+    if (data.success) {
+        alert("✅ OTP sent successfully! Please check your email.");
+
+        isOtpSent = true;
+
+        // Show OTP Input
+        document.getElementById("otpGroup").style.display = "block";
+        document.getElementById("otpInput").required = true;
+
+        // Enable Register Button
+        const subBtn = document.getElementById("subBtn");
+        subBtn.disabled = false;
+        subBtn.style.opacity = "1";
+        subBtn.style.cursor = "pointer";
+
+        // Change Button Text
+        otpBtn.innerHTML = "Resend OTP";
+    } else {
+        alert(data.message || "Failed to send OTP.");
+    }
+})
+.catch(err => {
+    loader.style.display = "none";
+    console.error("OTP Error:", err);
+    alert("❌ Server network error while sending OTP!");
+});
+
+}
 // Action 2: Process Complete Account Data Package Verification
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
