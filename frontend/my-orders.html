@@ -178,16 +178,17 @@
                 const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
                 
                 // Image path ko bhi BASE_URL se connect kiya
-                const imgPath = order.image ? 
-                    `${BASE_URL}/uploads/${order.image}` : 
-                    'https://via.placeholder.com/80?text=Agro';
+                
+
+                    const imgPath = order.image
+    ? (order.image.startsWith("http")
+        ? order.image
+        : `${BASE_URL}/uploads/${order.image}`)
+    : "https://via.placeholder.com/80?text=Agro";
 
                 list.innerHTML += `
                     <div class="order-card">
-                        <img src="${p.image && p.image.startsWith('http') ? p.image : 'https://cityshobackend.onrender.com/uploads/' + p.image}" 
-     class="product-img" 
-     onerror="this.src='https://via.placeholder.com/50'"
-     alt="img">
+                        <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
                         <div class="order-info">
                             <h3>${order.product_name || 'Product'}</h3>
                             <p><strong>ID:</strong> #${order.id}</p>

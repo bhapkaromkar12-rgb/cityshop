@@ -206,10 +206,7 @@
                 listContainer.innerHTML += `
                     <div class="product-item">
                         <div class="product-info">
-                           <img src="${p.image && p.image.startsWith('http') ? p.image : 'https://cityshobackend.onrender.com/uploads/' + p.image}" 
-     class="product-img" 
-     onerror="this.src='https://via.placeholder.com/50'"
-     alt="img">
+                           <img src="${p.image && p.image.startsWith('http') ? p.image : 'https://cityshobackend.onrender.com/uploads/' + p.image}" class="product-img" onerror="this.src='https://via.placeholder.com/50'" alt="img">
                             <div class="product-details">
                                 <h4>${p.name}</h4>
                                 <p>₹${p.price}</p>
