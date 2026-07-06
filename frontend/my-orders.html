@@ -184,7 +184,10 @@
 
                 list.innerHTML += `
                     <div class="order-card">
-                        <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
+                        <img src="${p.image && p.image.startsWith('http') ? p.image : 'https://cityshobackend.onrender.com/uploads/' + p.image}" 
+     class="product-img" 
+     onerror="this.src='https://via.placeholder.com/50'"
+     alt="img">
                         <div class="order-info">
                             <h3>${order.product_name || 'Product'}</h3>
                             <p><strong>ID:</strong> #${order.id}</p>
