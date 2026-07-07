@@ -12,30 +12,28 @@ const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
 const app = express();
 require('dotenv').config();
 
-// --- GMAIL TRANSPORTER FOR OTP (CRITICAL FIX: STRICT IPV4 ONLY) ---
-// --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
-// --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
-// --- GMAIL TRANSPORTER FOR OTP (PERFECT FIXED CONFIGURATION - NO SERVICE LAYER) ---
+// --- 🚀 CRITICAL TIMEOUT FIX: GMAIL TRANSPORTER VIA SECURE PORT 465 (SSL) ---
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,                  // Render network par timeout se bachne ke liye Port 465 Secure SSL mandatory hai
+    secure: true,               // True strictly for port 465
+    service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.EMAIL_USER, // Aapka full Gmail address
+        pass: process.env.EMAIL_PASS  // Aapka 16-digit Google App Password (bina kisi space ke)
     },
-    tls: {
-        rejectUnauthorized: false
-    },
-    family: 4
+    connectionTimeout: 15000,   // 15 seconds connection timeout buffer
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
+    family: 4                   // Forces IPv4 strictly to avoid DNS/IPv6 routing failures on Render
 });
 
-// SMTP Connection Check
+// SMTP Connection Check (Server starting logs me status dikh jayega)
 transporter.verify((err, success) => {
     if (err) {
-        console.error("SMTP Error:", err);
+        console.error("SMTP Configuration Error:", err.message);
     } else {
-        console.log("SMTP Server Ready");
+        console.log("SMTP Server Ready - Gmail Gateway Connected Successfully! 🎉");
     }
 });
 
@@ -156,7 +154,7 @@ app.post('/send-otp', (req, res) => {
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
             console.error("Nodemailer Email Error:", err);
-            return res.status(500).json({ success: false, message: "Server network error while dispatching OTP!" });
+            return res.status(500).json({ success: false, message: "Server network error while dispatching OTP: " + err.message });
         }
         console.log("Email Sent Successfully!");
         res.json({ success: true, message: "OTP sent successfully to your email!" });
