@@ -17,10 +17,25 @@ require('dotenv').config();
 // --- GMAIL TRANSPORTER FOR OTP (ULTIMATE FIXED CONFIGURATION) ---
 // --- GMAIL TRANSPORTER FOR OTP (PERFECT FIXED CONFIGURATION - NO SERVICE LAYER) ---
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     auth: {
-        user: process.env.EMAIL_USER, // Render variables se aayega (Aapki Gmail)
-        pass: process.env.EMAIL_PASS  // Render variables se aayega (Strictly bina space ke)
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    family: 4
+});
+
+// SMTP Connection Check
+transporter.verify((err, success) => {
+    if (err) {
+        console.error("SMTP Error:", err);
+    } else {
+        console.log("SMTP Server Ready");
     }
 });
 
