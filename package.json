@@ -17,7 +17,9 @@
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.7",
-    "nodemailer": "^8.0.7",
-    "resend": "^6.12.3"
+    "nodemailer": "^8.0.11",
+    "otp-generator": "^4.0.1",
+    "resend": "^6.12.3",
+    "twilio": "^6.0.2"
   }
 }
