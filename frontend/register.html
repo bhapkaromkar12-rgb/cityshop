@@ -113,6 +113,44 @@
         box-shadow: 0 0 10px rgba(116, 201, 71, 0.1);
     }
 
+    /* Role Toggle Option */
+    .role-switcher {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 6px;
+        margin-bottom: 18px;
+    }
+
+    .role-tab {
+        border: none;
+        background: transparent;
+        color: #d9d9d9;
+        border-radius: 12px;
+        padding: 12px 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .role-tab.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 6px 12px rgba(116, 201, 71, 0.22);
+    }
+
+    .role-tab i {
+        font-size: 14px;
+    }
+
     /* Email Field Layout Adjustment */
     .email-container {
         display: flex;
@@ -266,6 +304,21 @@
     </div>
 
     <form id="registerForm">
+        <div class="role-switcher" aria-label="Account type selector">
+            <button type="button" class="role-tab active" data-role="customer">
+                <i class="fas fa-user"></i>
+                <span>Customer</span>
+            </button>
+            <button type="button" class="role-tab" data-role="seller">
+                <i class="fas fa-store"></i>
+                <span>Seller</span>
+            </button>
+            <button type="button" class="role-tab" data-role="admin">
+                <i class="fas fa-shield-alt"></i>
+                <span>Admin</span>
+            </button>
+        </div>
+
         <div class="input-group">
             <i class="fas fa-user"></i>
             <input type="text" name="username" placeholder="Username" required>
@@ -289,11 +342,12 @@
             <input type="password" name="password" placeholder="Password" required>
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="display: none;">
             <i class="fas fa-user-shield"></i>
-            <select name="role">
-                <option value="customer" selected>Customer / Farmer</option>
-                <option value="admin">Admin Panel</option>
+            <select name="role" id="roleSelect">
+                <option value="customer" selected>Customer</option>
+                <option value="seller">Seller</option>
+                <option value="admin">Admin</option>
             </select>
         </div>
 
@@ -307,6 +361,17 @@
 
 <script>
 let isOtpSent = false;
+
+const roleTabs = document.querySelectorAll('.role-tab');
+const roleSelect = document.getElementById('roleSelect');
+
+roleTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const selectedRole = tab.dataset.role;
+        roleTabs.forEach(item => item.classList.toggle('active', item === tab));
+        roleSelect.value = selectedRole;
+    });
+});
 
 // Action 1: Dispatch OTP Request to Backend Server
 function sendOTP() {
