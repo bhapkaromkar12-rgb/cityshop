@@ -4,13 +4,13 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - City Shop Agro</title>
+    <title>Register - City Shop Agro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
     :root {
         --primary: #74c947;
         --primary-glow: rgba(116, 201, 71, 0.4);
-        --dark-card: rgba(18, 22, 18, 0.85);
+        --dark-card: rgba(18, 22, 18, 0.88);
         --text-gray: #b0b0b0;
     }
 
@@ -51,10 +51,10 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* LEFT SIDE: Hero & Animations */
+    /* LEFT SIDE: Hero Section */
     .hero-side {
         flex: 1;
-        background: linear-gradient(135deg, rgba(116, 201, 71, 0.15) 0%, rgba(10, 20, 10, 0.8) 100%);
+        background: linear-gradient(135deg, rgba(116, 201, 71, 0.15) 0%, rgba(10, 20, 10, 0.85) 100%);
         padding: 40px 35px;
         display: flex;
         flex-direction: column;
@@ -72,20 +72,10 @@
         z-index: 0;
     }
     .hero-side::before {
-        width: 180px;
-        height: 180px;
+        width: 180px; height: 180px;
         background: var(--primary-glow);
-        top: -30px;
-        left: -30px;
+        top: -30px; left: -30px;
         animation: floatOrb 8s infinite alternate ease-in-out;
-    }
-    .hero-side::after {
-        width: 220px;
-        height: 220px;
-        background: rgba(116, 201, 71, 0.15);
-        bottom: -50px;
-        right: -50px;
-        animation: floatOrb 10s infinite alternate-reverse ease-in-out;
     }
 
     @keyframes floatOrb {
@@ -102,19 +92,12 @@
         letter-spacing: 1px;
         z-index: 1;
     }
-    .hero-header i {
-        color: var(--primary);
-        font-size: 26px;
-    }
+    .hero-header i { color: var(--primary); font-size: 26px; }
 
-    .hero-body {
-        z-index: 1;
-        margin: 30px 0;
-    }
+    .hero-body { z-index: 1; margin: 30px 0; }
 
     .animated-icon-box {
-        width: 70px;
-        height: 70px;
+        width: 70px; height: 70px;
         background: rgba(116, 201, 71, 0.15);
         border: 1px solid var(--primary);
         border-radius: 20px;
@@ -123,26 +106,14 @@
         justify-content: center;
         margin-bottom: 25px;
         box-shadow: 0 0 25px var(--primary-glow);
-        animation: pulseIcon 3s infinite ease-in-out;
     }
-    .animated-icon-box i {
-        font-size: 32px;
-        color: var(--primary);
-    }
-
-    @keyframes pulseIcon {
-        0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--primary-glow); }
-        50% { transform: scale(1.08); box-shadow: 0 0 35px var(--primary-glow); }
-    }
+    .animated-icon-box i { font-size: 32px; color: var(--primary); }
 
     .hero-body h1 {
-        font-size: 32px;
+        font-size: 30px;
         line-height: 1.25;
         font-weight: 800;
         margin: 0 0 15px 0;
-        background: linear-gradient(180deg, #ffffff 0%, #d0d0d0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
 
     .hero-body p {
@@ -152,61 +123,30 @@
         margin: 0;
     }
 
-    .hero-badges {
-        display: flex;
-        gap: 12px;
-        margin-top: 25px;
-        z-index: 1;
-        flex-wrap: wrap;
-    }
-    .badge-item {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 8px 12px;
-        border-radius: 10px;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #e0e0e0;
-    }
-    .badge-item i {
-        color: var(--primary);
-    }
-
-    /* RIGHT SIDE: Register Card Form */
+    /* RIGHT SIDE: Form Section */
     .register-side {
-        flex: 1.1;
-        padding: 35px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex: 1.2;
+        padding: 35px 40px;
+        max-height: 85vh;
+        overflow-y: auto;
     }
 
-    .form-header {
-        margin-bottom: 18px;
-    }
-    .form-header h2 {
-        font-size: 24px;
-        margin: 0;
-        font-weight: 800;
-    }
-    .form-header p {
-        color: var(--text-gray);
-        font-size: 13px;
-        margin-top: 4px;
-    }
+    .register-side::-webkit-scrollbar { width: 6px; }
+    .register-side::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
-    /* Role Switcher */
+    .form-header h2 { font-size: 24px; margin: 0; font-weight: 800; }
+    .form-header p { color: var(--text-gray); font-size: 13px; margin-top: 4px; margin-bottom: 18px; }
+
+    /* Role Switcher Tabs */
     .role-switcher {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px;
         padding: 6px;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
     }
 
     .role-tab {
@@ -222,7 +162,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        gap: 6px;
     }
 
     .role-tab.active {
@@ -231,28 +171,29 @@
         box-shadow: 0 6px 12px rgba(116, 201, 71, 0.22);
     }
 
-    form {
-        display: flex;
-        flex-direction: column;
+    /* Form Fields Grid */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
     }
 
-    .input-group {
-        position: relative;
-    }
+    .full-width { grid-column: span 2; }
+
+    .input-group { position: relative; }
 
     .input-group i.left-icon {
         position: absolute;
-        left: 15px;
+        left: 14px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--primary);
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .toggle-password {
         position: absolute;
-        right: 15px;
+        right: 14px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--text-gray);
@@ -260,23 +201,58 @@
         font-size: 14px;
     }
 
-    input {
+    input, select, textarea {
         width: 100%;
-        padding: 12px 15px 12px 45px;
+        padding: 11px 14px 11px 40px;
         background: rgba(255, 255, 255, 0.07);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 14px;
-        transition: 0.3s;
+        font-size: 13px;
         outline: none;
         box-sizing: border-box;
+        transition: 0.3s;
     }
 
-    input:focus {
+    select option { background: #1a1a1a; color: white; }
+
+    input:focus, select:focus, textarea:focus {
         border-color: var(--primary);
         background: rgba(255, 255, 255, 0.12);
         box-shadow: 0 0 15px rgba(116, 201, 71, 0.15);
+    }
+
+    /* Hidden Seller Section Styling */
+    #sellerFields {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    /* File Upload Box */
+    .file-upload-box {
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .file-upload-box:hover {
+        border-color: var(--primary);
+        background: rgba(116, 201, 71, 0.05);
+    }
+
+    .file-upload-box i { font-size: 26px; color: var(--primary); margin-bottom: 6px; }
+    .file-upload-box p { margin: 0; font-size: 12px; color: var(--text-gray); }
+
+    .file-upload-box input[type="file"] {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0;
+        cursor: pointer;
     }
 
     button[type="submit"] {
@@ -291,12 +267,12 @@
         text-transform: uppercase;
         letter-spacing: 1.2px;
         transition: 0.3s;
-        margin-top: 4px;
+        margin-top: 10px;
+        width: 100%;
         box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
     }
 
     button:hover { opacity: 0.95; }
-    button:active { transform: scale(0.98); }
 
     .divider {
         display: flex;
@@ -304,16 +280,13 @@
         text-align: center;
         color: var(--text-gray);
         font-size: 12px;
-        font-weight: 600;
-        margin: 12px 0;
+        margin: 14px 0;
     }
 
     .divider::before, .divider::after {
-        content: '';
-        flex: 1;
+        content: ''; flex: 1;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-
     .divider span { padding: 0 10px; }
 
     .btn-google {
@@ -333,137 +306,45 @@
         transition: 0.3s;
     }
 
-    .btn-google:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
+    .footer-links { text-align: center; margin-top: 15px; font-size: 13px; color: var(--text-gray); }
+    .footer-links a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
-    .footer-links {
-        text-align: center;
-        margin-top: 15px;
-        font-size: 13px;
-        color: var(--text-gray);
-    }
-
-    .footer-links a {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 700;
-    }
-
-    /* --- PREMIUM PLANT LOADER --- */
+    /* Plant Loader Overlay */
     .loader-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top:0; left:0; width:100%; height:100%;
         background: rgba(10, 10, 10, 0.95);
         backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
         display: none;
-        justify-content: center;
-        align-items: center;
+        justify-content: center; align-items: center;
         z-index: 9999;
     }
-
     .loader-content { text-align: center; }
-
-    .plant-animation-box {
-        position: relative;
-        width: 130px;
-        height: 130px;
-        margin: 0 auto 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .plant-icon {
-        font-size: 65px;
-        color: #554433;
-        transition: color 1.2s ease-in-out, transform 1.2s ease-in-out;
-        animation: breathEffect 2s infinite ease-in-out;
-    }
-
-    .loader-overlay.growing .plant-icon {
-        color: var(--primary);
-        transform: scale(1.25) rotate(8deg);
-    }
-
-    .success-checkmark {
-        position: absolute;
-        font-size: 70px;
-        color: var(--primary);
-        opacity: 0;
-        transform: scale(0.4);
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        display: none;
-    }
-
-    .loader-overlay.success .success-checkmark {
-        display: block;
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    .loader-overlay.success .plant-icon { display: none; }
-
-    .loader-text {
-        font-size: 18px;
-        font-weight: 600;
-        color: #b0b0b0;
-        margin: 0;
-        letter-spacing: 1px;
-    }
-
-    .loader-overlay.success .loader-text {
-        color: var(--primary);
-        font-weight: 800;
-    }
-
-    @keyframes breathEffect {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.08); }
-    }
+    .loader-icon { font-size: 65px; color: var(--primary); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
     @media (max-width: 768px) {
-        .app-container {
-            flex-direction: column;
-            max-width: 420px;
-        }
-        .hero-side {
-            padding: 25px 20px;
-            text-align: center;
-            border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .hero-header, .animated-icon-box {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .hero-badges { justify-content: center; }
-        .register-side { padding: 25px 20px; }
+        .app-container { flex-direction: column; }
+        .hero-side { padding: 25px; text-align: center; }
+        .animated-icon-box { margin: 0 auto 15px; }
+        .register-side { padding: 25px 20px; max-height: none; }
+        .form-grid { grid-template-columns: 1fr; }
+        .full-width { grid-column: span 1; }
     }
-</style>
+    </style>
 </head>
 <body>
 
 <div id="registerLoader" class="loader-overlay">
     <div class="loader-content">
-        <div class="plant-animation-box">
-            <i class="fas fa-seedling plant-icon"></i>
-            <div class="success-checkmark">
-                <i class="fas fa-check-circle"></i>
-            </div>
-        </div>
-        <p id="loaderText" class="loader-text">Creating Your Account...</p>
+        <i class="fas fa-seedling loader-icon"></i>
+        <p id="loaderText" style="margin-top: 15px; font-size: 16px; font-weight: 600;">Processing Registration...</p>
     </div>
 </div>
 
 <div class="app-container">
     
-    <!-- LEFT SIDE: Branding & Features Animation -->
+    <!-- LEFT SIDE: Branding -->
     <div class="hero-side">
         <div class="hero-header">
             <i class="fas fa-leaf"></i>
@@ -472,16 +353,10 @@
 
         <div class="hero-body">
             <div class="animated-icon-box">
-                <i class="fas fa-seedling"></i>
+                <i class="fas fa-tractor" id="heroIcon"></i>
             </div>
-            <h1>Start Your Smart Farming Journey</h1>
-            <p>Join thousands of farmers & sellers building a transparent, direct, and digital agricultural community.</p>
-            
-            <div class="hero-badges">
-                <div class="badge-item"><i class="fas fa-user-check"></i> Free Signup</div>
-                <div class="badge-item"><i class="fas fa-handshake"></i> Direct Deals</div>
-                <div class="badge-item"><i class="fas fa-bell"></i> Instant Alerts</div>
-            </div>
+            <h1 id="heroTitle">Join Agro Community</h1>
+            <p id="heroDesc">Connect directly with trusted farmers, sellers, and agricultural supply chains across India.</p>
         </div>
 
         <div style="font-size: 12px; color: var(--text-gray); z-index: 1;">
@@ -493,65 +368,117 @@
     <div class="register-side">
         <div class="form-header">
             <h2>Create Account</h2>
-            <p>Select your account type and fill in your details</p>
+            <p id="formSubheading">Choose your role and enter basic information</p>
         </div>
 
-        <!-- Role Switcher -->
-        <div class="role-switcher" aria-label="Account type selector">
+        <!-- Role Tabs -->
+        <div class="role-switcher">
             <button type="button" class="role-tab active" data-role="farmer">
-                <i class="fas fa-tractor"></i>
-                <span>Farmer</span>
+                <i class="fas fa-tractor"></i> <span>Farmer</span>
             </button>
             <button type="button" class="role-tab" data-role="seller">
-                <i class="fas fa-store"></i>
-                <span>Seller</span>
+                <i class="fas fa-store"></i> <span>Seller</span>
             </button>
             <button type="button" class="role-tab" data-role="admin">
-                <i class="fas fa-user-shield"></i>
-                <span>Admin</span>
+                <i class="fas fa-user-shield"></i> <span>Admin</span>
             </button>
         </div>
 
-        <form id="registerForm">
-            <div class="input-group">
-                <i class="fas fa-user left-icon"></i>
-                <input type="text" name="name" placeholder="Full Name" required>
-            </div>
-
-            <div class="input-group">
-                <i class="fas fa-envelope left-icon"></i>
-                <input type="email" name="email" placeholder="Email Address" required>
-            </div>
-
-            <div class="input-group">
-                <i class="fas fa-phone left-icon"></i>
-                <input type="tel" name="phone" placeholder="Phone Number" required>
-            </div>
-
-            <div class="input-group">
-                <i class="fas fa-lock left-icon"></i>
-                <input type="password" name="password" id="passInput" placeholder="Password" required>
-                <i class="fas fa-eye toggle-password" onclick="togglePass('passInput', this)"></i>
-            </div>
-
+        <form id="registerForm" enctype="multipart/form-data">
             <input type="hidden" name="role" id="roleSelect" value="farmer">
 
-            <button type="submit">Register Now</button>
+            <div class="form-grid">
+                
+                <!-- Common Base Inputs -->
+                <div class="input-group full-width">
+                    <i class="fas fa-user left-icon"></i>
+                    <input type="text" name="name" placeholder="Full Name / Person Name" required>
+                </div>
+
+                <div class="input-group full-width">
+                    <i class="fas fa-envelope left-icon"></i>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group full-width">
+                    <i class="fas fa-phone left-icon"></i>
+                    <input type="tel" name="phone" placeholder="Phone Number" required>
+                </div>
+
+                <div class="input-group full-width">
+                    <i class="fas fa-lock left-icon"></i>
+                    <input type="password" name="password" id="passInput" placeholder="Password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePass('passInput', this)"></i>
+                </div>
+
+                <!-- DYNAMIC SELLER PERMISSION FIELDS -->
+                <div id="sellerFields" class="full-width">
+                    <div class="form-grid" style="margin-top: 5px;">
+                        
+                        <div class="input-group full-width">
+                            <i class="fas fa-building left-icon"></i>
+                            <input type="text" name="companyName" id="companyName" placeholder="Company / Business Name">
+                        </div>
+
+                        <div class="input-group">
+                            <i class="fas fa-map-marked-alt left-icon"></i>
+                            <select name="state" id="stateSelect">
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <i class="fas fa-city left-icon"></i>
+                            <select name="district" id="districtSelect">
+                                <option value="">Select District</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <i class="fas fa-map-marker-alt left-icon"></i>
+                            <input type="text" name="taluka" id="talukaInput" placeholder="Taluka / Sub-District">
+                        </div>
+
+                        <div class="input-group">
+                            <i class="fas fa-home left-icon"></i>
+                            <input type="text" name="village" id="villageInput" placeholder="Village / City">
+                        </div>
+
+                        <div class="input-group full-width">
+                            <i class="fas fa-mail-bulk left-icon"></i>
+                            <input type="text" name="pincode" id="pincodeInput" placeholder="6-digit Pincode" maxlength="6">
+                        </div>
+
+                        <!-- DOCUMENT UPLOAD -->
+                        <div class="full-width">
+                            <label style="font-size: 11px; color: var(--text-gray); display: block; margin-bottom: 5px;">Upload Verification Document (GST / Shop License)</label>
+                            <div class="file-upload-box">
+                                <i class="fas fa-file-upload"></i>
+                                <p id="fileNameText">Click or Drag & Drop document to upload</p>
+                                <input type="file" name="document" id="docInput" accept=".pdf,image/*">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" id="submitBtn">Register Now</button>
         </form>
 
-        <div class="divider">
-            <span>OR</span>
+        <div id="googleAuthSection">
+            <div class="divider"><span>OR</span></div>
+            <button type="button" class="btn-google" onclick="googleSignUp()">
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                    <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                    <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+                    <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+                </svg>
+                Sign up with Google
+            </button>
         </div>
-
-        <button type="button" class="btn-google" onclick="googleSignUp()">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
-                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
-                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
-                <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
-            </svg>
-            Sign up with Google
-        </button>
 
         <div class="footer-links">
             Already have an account? <a href="index1.html">Sign In</a>
@@ -563,15 +490,95 @@
 <script>
 const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
 
-// Role switcher tab selection
+// ALL INDIA STATES LIST
+const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
+    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
+    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+];
+
+const stateSelect = document.getElementById("stateSelect");
+indianStates.forEach(st => {
+    let opt = document.createElement("option");
+    opt.value = st;
+    opt.innerText = st;
+    stateSelect.appendChild(opt);
+});
+
+// Dynamic District Mock Options
+stateSelect.addEventListener("change", function() {
+    const districtSelect = document.getElementById("districtSelect");
+    districtSelect.innerHTML = '<option value="">Select District</option>';
+    if(this.value) {
+        let sampleDistricts = [this.value + " Central", this.value + " North", this.value + " South"];
+        sampleDistricts.forEach(d => {
+            let opt = document.createElement("option");
+            opt.value = d;
+            opt.innerText = d;
+            districtSelect.appendChild(opt);
+        });
+    }
+});
+
+// File Name Display
+document.getElementById("docInput").addEventListener("change", function() {
+    const fileName = this.files[0] ? this.files[0].name : "Click or Drag & Drop document to upload";
+    document.getElementById("fileNameText").innerText = fileName;
+});
+
+// Role Switcher Dynamics
 const roleTabs = document.querySelectorAll('.role-tab');
 const roleSelect = document.getElementById('roleSelect');
+const sellerFields = document.getElementById('sellerFields');
+const submitBtn = document.getElementById('submitBtn');
+const heroIcon = document.getElementById('heroIcon');
+const heroTitle = document.getElementById('heroTitle');
+const heroDesc = document.getElementById('heroDesc');
+const googleSection = document.getElementById('googleAuthSection');
+
+// Require or Remove Required from Seller Fields
+function setSellerRequirements(isRequired) {
+    document.getElementById('companyName').required = isRequired;
+    document.getElementById('stateSelect').required = isRequired;
+    document.getElementById('districtSelect').required = isRequired;
+    document.getElementById('talukaInput').required = isRequired;
+    document.getElementById('villageInput').required = isRequired;
+    document.getElementById('pincodeInput').required = isRequired;
+    document.getElementById('docInput').required = isRequired;
+}
 
 roleTabs.forEach(tab => {
     tab.addEventListener('click', () => {
         const selectedRole = tab.dataset.role;
         roleTabs.forEach(item => item.classList.toggle('active', item === tab));
         roleSelect.value = selectedRole;
+
+        if(selectedRole === 'seller') {
+            sellerFields.style.display = 'block';
+            submitBtn.innerText = 'Submit Seller Application';
+            heroIcon.className = 'fas fa-store';
+            heroTitle.innerText = 'Partner with Us';
+            heroDesc.innerText = 'Fill in company & address details. Admin approval is required for verified seller accounts.';
+            googleSection.style.display = 'none'; // Hide Google Auth for Seller Applications
+            setSellerRequirements(true);
+        } else if(selectedRole === 'admin') {
+            sellerFields.style.display = 'none';
+            submitBtn.innerText = 'Register as Admin';
+            heroIcon.className = 'fas fa-user-shield';
+            heroTitle.innerText = 'Admin Management';
+            heroDesc.innerText = 'Manage applications, users, products and orders seamlessly.';
+            googleSection.style.display = 'block';
+            setSellerRequirements(false);
+        } else {
+            sellerFields.style.display = 'none';
+            submitBtn.innerText = 'Register Now';
+            heroIcon.className = 'fas fa-tractor';
+            heroTitle.innerText = 'Join Agro Community';
+            heroDesc.innerText = 'Connect directly with trusted farmers, sellers, and agricultural supply chains across India.';
+            googleSection.style.display = 'block';
+            setSellerRequirements(false);
+        }
     });
 });
 
@@ -590,120 +597,83 @@ function togglePass(inputId, icon) {
 // Google Sign-Up Trigger
 function googleSignUp() {
     if (typeof google === "undefined" || !google.accounts) {
-        alert("Google SDK loading... Please wait a second and try again.");
+        alert("Google SDK loading... Please wait a second.");
         return;
     }
-
     google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleResponse
     });
-
     google.accounts.id.prompt();
 }
 
 function handleGoogleResponse(response) {
-    const idToken = response.credential;
-    const selectedRole = roleSelect ? roleSelect.value : "farmer";
-
     const loader = document.getElementById("registerLoader");
     const loaderText = document.getElementById("loaderText");
-
     loader.style.display = "flex";
-    loader.classList.remove("growing", "success");
-    loaderText.innerText = "Processing Google Signup...";
-
-    setTimeout(() => {
-        loader.classList.add("growing");
-        loaderText.innerText = "Setting up your account...";
-    }, 500);
+    loaderText.innerText = "Processing Google Authentication...";
 
     fetch("https://cityshobackend.onrender.com/google-auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            token: idToken,
-            role: selectedRole
-        })
+        body: JSON.stringify({ token: response.credential, role: roleSelect.value })
     })
     .then(res => res.json())
     .then(res => {
+        loader.style.display = "none";
         if (res.success) {
-            loader.classList.add("success");
-            loaderText.innerText = "Registration Successful!";
-
+            alert("Registration Successful!");
             localStorage.setItem("user", JSON.stringify(res.user));
-            if (res.token) localStorage.setItem("token", res.token);
-
-            setTimeout(() => {
-                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
-            }, 1200);
+            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
         } else {
-            loader.style.display = "none";
-            alert("Google Registration Failed: " + (res.message || "Something went wrong"));
+            alert(res.message || "Google auth failed.");
         }
     })
     .catch(err => {
         loader.style.display = "none";
-        console.error("Google Signup Error:", err);
-        alert("Server connection failed during Google registration!");
+        alert("Server Error during Google Login!");
     });
 }
 
-// Form Submit Handler
+// FORM SUBMISSION (Supports multipart/form-data for files)
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
-    const btn = this.querySelector('button[type="submit"]');
-    btn.innerText = "Creating Account...";
-    btn.disabled = true;
-
+    
     const loader = document.getElementById("registerLoader");
     const loaderText = document.getElementById("loaderText");
+    const isSeller = roleSelect.value === 'seller';
     
     loader.style.display = "flex";
-    loader.classList.remove("growing", "success");
-    loaderText.innerText = "Creating Your Account...";
+    loaderText.innerText = isSeller ? "Submitting Seller Application to Admin..." : "Creating Account...";
 
-    setTimeout(() => {
-        loader.classList.add("growing");
-        loaderText.innerText = "Planting your account data...";
-    }, 500);
+    const formData = new FormData(this);
 
-    let data = {
-        name: this.name.value,
-        email: this.email.value,
-        phone: this.phone.value,
-        password: this.password.value,
-        role: this.role.value
-    };
+    // Endpoint selection
+    const targetEndpoint = isSeller ? "/apply-seller" : "/register";
 
-    fetch("https://cityshobackend.onrender.com/register", {
+    fetch("https://cityshobackend.onrender.com" + targetEndpoint, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(data)
+        body: formData
     })
     .then(res => res.json())
     .then(res => {
+        loader.style.display = "none";
         if(res.success){
-            loader.classList.add("success");
-            loaderText.innerText = "Account Created Successfully!";
-            
-            setTimeout(() => {
+            if(isSeller) {
+                alert("Application Submitted! Admin will review your document and details.");
                 window.location.href = "index1.html";
-            }, 1400);
+            } else {
+                alert("Account Created Successfully! Please Sign In.");
+                window.location.href = "index1.html";
+            }
         } else {
-            loader.style.display = "none";
-            alert(res.message || "Registration failed. Try again.");
-            btn.innerText = "Register Now";
-            btn.disabled = false;
+            alert(res.message || "Registration failed!");
         }
     })
     .catch(err => {
         loader.style.display = "none";
-        console.error("Registration Error:", err);
+        console.error("Error:", err);
         alert("Server connection failed!");
-        btn.innerText = "Register Now";
-        btn.disabled = false;
     });
 });
 </script>
