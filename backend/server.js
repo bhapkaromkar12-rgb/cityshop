@@ -101,25 +101,48 @@ db.connect((err) => {
     );`;
 
     db.query(sql, (err) => {
-        if (err) console.log("Table setup error:", err.message);
-        else console.log("Success: Sabhi tables Aiven par verified hain!");
-        
-        // 2. Dynamic Schema Update (Prevents "Unknown Column 'phone'" Errors on Existing Tables)
-        const alterColumns = [
-            "ADD COLUMN IF NOT EXISTS phone VARCHAR(20)",
-            "ADD COLUMN IF NOT EXISTS company_name VARCHAR(255)",
-            "ADD COLUMN IF NOT EXISTS state VARCHAR(100)",
-            "ADD COLUMN IF NOT EXISTS district VARCHAR(100)",
-            "ADD COLUMN IF NOT EXISTS taluka VARCHAR(100)",
-            "ADD COLUMN IF NOT EXISTS village VARCHAR(100)",
-            "ADD COLUMN IF NOT EXISTS pincode VARCHAR(10)",
-            "ADD COLUMN IF NOT EXISTS document_url VARCHAR(255)",
-            "ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'approved'"
+        if (err) {
+            console.log("Table setup error:", err.message);
+            return;
+        }
+        console.log("Success: Sabhi tables Aiven par verified hain!");
+
+        // 2. Safe Dynamic Schema Migration (Checks INFORMATION_SCHEMA)
+        const requiredColumns = [
+            { name: 'phone', definition: 'VARCHAR(20)' },
+            { name: 'company_name', definition: 'VARCHAR(255)' },
+            { name: 'state', definition: 'VARCHAR(100)' },
+            { name: 'district', definition: 'VARCHAR(100)' },
+            { name: 'taluka', definition: 'VARCHAR(100)' },
+            { name: 'village', definition: 'VARCHAR(100)' },
+            { name: 'pincode', definition: 'VARCHAR(10)' },
+            { name: 'document_url', definition: 'VARCHAR(255)' },
+            { name: 'status', definition: "VARCHAR(50) DEFAULT 'approved'" }
         ];
 
-        alterColumns.forEach(alterQuery => {
-            db.query(`ALTER TABLE users ${alterQuery}`, (alterErr) => {
-                // Ignore errors if database engine doesn't support IF NOT EXISTS directly
+        requiredColumns.forEach(col => {
+            const checkColSql = `
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users' AND COLUMN_NAME = ?
+            `;
+
+            db.query(checkColSql, [process.env.DB_NAME, col.name], (chkErr, results) => {
+                if (chkErr) {
+                    console.error(`Error checking column ${col.name}:`, chkErr.message);
+                    return;
+                }
+
+                if (results.length === 0) {
+                    const alterSql = `ALTER TABLE users ADD COLUMN ${col.name} ${col.definition}`;
+                    db.query(alterSql, (alterErr) => {
+                        if (alterErr) {
+                            console.error(`Failed to add column ${col.name}:`, alterErr.message);
+                        } else {
+                            console.log(`Successfully added missing column: ${col.name}`);
+                        }
+                    });
+                }
             });
         });
     });
