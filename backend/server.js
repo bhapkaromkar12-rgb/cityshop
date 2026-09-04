@@ -219,12 +219,24 @@ app.get('/admin/stats-users', (req, res) => {
     });
 });
 
-// 4. APPROVE OR REJECT SELLER STATUS
+// 4. APPROVE OR REJECT SELLER STATUS (FIXED)
 app.post('/admin/update-seller-status', (req, res) => {
-    const { userId, status } = req.body;
+    // userId and id dono support kiye hain taaki payload key mismatch error resolve ho sake
+    const userId = req.body.userId || req.body.id; 
+    const status = req.body.status;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: "User ID is required to update status!" });
+    }
+
     const sql = "UPDATE users SET status = ? WHERE id = ?";
     db.query(sql, [status, userId], (err, result) => {
         if (err) return res.status(500).json({ success: false, message: err.message });
+
+        if (result.affectedRows === 0) {
+            return res.status(444).json({ success: false, message: "User record not found or status already updated." });
+        }
+
         res.json({ success: true, message: `Seller application ${status} successfully!` });
     });
 });
