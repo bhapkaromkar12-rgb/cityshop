@@ -3,32 +3,36 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary'); // Cloudinary Storage Import
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const nodemailer = require('nodemailer'); // --- NODEMAILER IMPORT FOR OTP ---
+const nodemailer = require('nodemailer');
+const { OAuth2Client } = require('google-auth-library');
 
 const app = express();
 require('dotenv').config();
 
-// --- 🚀 CRITICAL TIMEOUT FIX: GMAIL TRANSPORTER VIA SECURE PORT 465 (SSL) ---
+// --- STRICT ADMIN LOGIN CREDENTIALS ---
+const ADMIN_EMAIL = "bhapkaromkar12@gmail.com";
+const ADMIN_PASS = "Chiku@2121";
+
+// --- GMAIL TRANSPORTER SETUP ---
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,                  // Render network par timeout se bachne ke liye Port 465 Secure SSL mandatory hai
-    secure: true,               // True strictly for port 465
+    port: 465,
+    secure: true,
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Aapka full Gmail address
-        pass: process.env.EMAIL_PASS  // Aapka 16-digit Google App Password (bina kisi space ke)
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 15000,   // 15 seconds connection timeout buffer
+    connectionTimeout: 15000,
     greetingTimeout: 15000,
     socketTimeout: 20000,
-    family: 4                   // Forces IPv4 strictly to avoid DNS/IPv6 routing failures on Render
+    family: 4
 });
 
-// SMTP Connection Check (Server starting logs me status dikh jayega)
 transporter.verify((err, success) => {
     if (err) {
         console.error("SMTP Configuration Error:", err.message);
@@ -37,7 +41,6 @@ transporter.verify((err, success) => {
     }
 });
 
-// Temporary memory store for OTP verification
 let otpStore = {};
 
 // --- MYSQL CONNECTION (Aiven) ---
@@ -58,15 +61,24 @@ db.connect((err) => {
     }
     console.log('Connected to Aiven Cloud MySQL!');
 
-    // Automatic Table Creation Script (Fixed with phone column)
+    // Updated Table Setup Schema (Includes Seller Fields)
     const sql = `
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255),
         email VARCHAR(255) UNIQUE,
         password VARCHAR(255),
-        role VARCHAR(50),
-        phone VARCHAR(20)
+        role VARCHAR(50) DEFAULT 'farmer',
+        phone VARCHAR(20),
+        company_name VARCHAR(255),
+        state VARCHAR(100),
+        district VARCHAR(100),
+        taluka VARCHAR(100),
+        village VARCHAR(100),
+        pincode VARCHAR(10),
+        document_url VARCHAR(255),
+        status VARCHAR(50) DEFAULT 'approved',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS products (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -108,32 +120,82 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Cloudinary Storage Link with Multer
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'cityshop_products', 
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf'],
     },
 });
 
 const upload = multer({ storage: storage });
 
-// --- ROUTES ---
+// --- ADMIN SPECIFIC ROUTES ---
 
-// --- ROUTE: SEND OTP ---
+// 1. STRICT ADMIN LOGIN
+app.post('/admin-login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (email !== ADMIN_EMAIL || password !== ADMIN_PASS) {
+        return res.status(401).json({ success: false, message: "Invalid Admin Credentials!" });
+    }
+
+    res.json({
+        success: true,
+        message: "Welcome Super Admin!",
+        user: { name: "Omkar Bhapkar (Admin)", email: ADMIN_EMAIL, role: "admin" }
+    });
+});
+
+// 2. GET PENDING SELLER APPLICATIONS
+app.get('/admin/seller-requests', (req, res) => {
+    const sql = "SELECT id, username, email, phone, company_name, state, district, village, document_url, status FROM users WHERE role = 'seller' AND status = 'pending'";
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({ success: true, requests: results });
+    });
+});
+
+// 3. GET ADMIN STATS & VERIFIED SELLERS
+app.get('/admin/stats-users', (req, res) => {
+    const sqlFarmers = "SELECT COUNT(*) AS totalFarmers FROM users WHERE role = 'farmer'";
+    const sqlSellers = "SELECT COUNT(*) AS totalSellers FROM users WHERE role = 'seller' AND status = 'approved'";
+    const sqlPending = "SELECT COUNT(*) AS pendingRequests FROM users WHERE role = 'seller' AND status = 'pending'";
+    const sqlApprovedSellers = "SELECT id, username AS name, email, phone, company_name, pincode FROM users WHERE role = 'seller' AND status = 'approved'";
+
+    db.query(`${sqlFarmers}; ${sqlSellers}; ${sqlPending}; ${sqlApprovedSellers}`, (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({
+            success: true,
+            stats: {
+                totalFarmers: results[0][0].totalFarmers,
+                totalSellers: results[1][0].totalSellers,
+                pendingRequests: results[2][0].pendingRequests
+            },
+            approvedSellers: results[3]
+        });
+    });
+});
+
+// 4. APPROVE OR REJECT SELLER STATUS
+app.post('/admin/update-seller-status', (req, res) => {
+    const { userId, status } = req.body;
+    const sql = "UPDATE users SET status = ? WHERE id = ?";
+    db.query(sql, [status, userId], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({ success: true, message: `Seller application ${status} successfully!` });
+    });
+});
+
+// --- EXISTING ROUTES ---
+
+// ROUTE: SEND OTP
 app.post('/send-otp', (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ success: false, message: "Email is required!" });
 
-    // 6-digit random code generate karo
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Memory me temporary save karo (5 mins expiry)
-    otpStore[email] = {
-        otp: otp,
-        expires: Date.now() + 5 * 60 * 1000
-    };
+    otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -152,16 +214,12 @@ app.post('/send-otp', (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.error("Nodemailer Email Error:", err);
-            return res.status(500).json({ success: false, message: "Server network error while dispatching OTP: " + err.message });
-        }
-        console.log("Email Sent Successfully!");
+        if (err) return res.status(500).json({ success: false, message: "Server network error while dispatching OTP: " + err.message });
         res.json({ success: true, message: "OTP sent successfully to your email!" });
     });
 });
 
-// --- ROUTE: REGISTER USER WITH OTP VERIFICATION ---
+// ROUTE: REGISTER USER WITH OTP
 app.post('/register-user', (req, res) => {
     const { username, email, password, role, otp } = req.body;
 
@@ -174,14 +232,12 @@ app.post('/register-user', (req, res) => {
         return res.json({ success: false, message: "OTP is Expired ! send new otp." });
     }
 
-    delete otpStore[email]; // Clear OTP after usage
+    delete otpStore[email];
 
     const checkSql = "SELECT * FROM users WHERE email = ?";
     db.query(checkSql, [email], (err, results) => {
         if (err) return res.status(500).json({ success: false, message: err.message });
-        if (results.length > 0) {
-            return res.json({ success: false, message: "Email already exists!" });
-        }
+        if (results.length > 0) return res.json({ success: false, message: "Email already exists!" });
 
         const insertSql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
         db.query(insertSql, [username, email, password, role || 'customer'], (err, result) => {
@@ -191,30 +247,46 @@ app.post('/register-user', (req, res) => {
     });
 });
 
-// REGISTER (Old Route)
-app.post('/register', (req, res) => {
-    const { username, email, password, role } = req.body;
-    const sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
-    db.query(sql, [username, email, password, role || 'customer'], (err, result) => {
-        if (err) {
-            if (err.code === 'ER_DUP_ENTRY') {
-                return res.json({ success: false, message: "Email already exists!" });
-            }
-            return res.status(500).json({ success: false, message: err.message });
-        }
-        res.json({ success: true, message: "User Registered!" });
+// ROUTE: APPLY FOR SELLER WITH DOCUMENT UPLOAD
+app.post('/apply-seller', upload.single('document'), (req, res) => {
+    const { username, email, phone, password, companyName, state, district, taluka, village, pincode } = req.body;
+    const documentUrl = req.file ? req.file.path : null;
+
+    const checkSql = "SELECT * FROM users WHERE email = ?";
+    db.query(checkSql, [email], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (results.length > 0) return res.json({ success: false, message: "Email already registered!" });
+
+        const sql = `INSERT INTO users (username, email, phone, password, role, company_name, state, district, taluka, village, pincode, document_url, status) 
+                     VALUES (?, ?, ?, ?, 'seller', ?, ?, ?, ?, ?, ?, ?, 'pending')`;
+        db.query(sql, [username, email, phone, password, companyName, state, district, taluka, village, pincode, documentUrl], (err, result) => {
+            if (err) return res.status(500).json({ success: false, message: err.message });
+            res.json({ success: true, message: "Seller application submitted to Admin!" });
+        });
     });
 });
 
 // LOGIN
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
+
+    // Direct redirection for Admin credentials
+    if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+        return res.json({
+            success: true,
+            user: { id: 0, email: ADMIN_EMAIL, role: 'admin', username: 'Omkar Bhapkar (Admin)' }
+        });
+    }
+
     const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
     db.query(sql, [email, password], (err, results) => {
         if (err) return res.status(500).json({ success: false, message: err.message });
 
         if (results.length > 0) {
             const user = results[0];
+            if (user.role === 'seller' && user.status === 'pending') {
+                return res.json({ success: false, message: "Your seller application is pending Admin approval!" });
+            }
             res.json({
                 success: true,
                 user: { id: user.id, email: user.email, role: user.role, username: user.username }
@@ -225,7 +297,52 @@ app.post('/login', (req, res) => {
     });
 });
 
-// ADD PRODUCT
+// GOOGLE AUTHENTICATION
+const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+app.post('/google-auth', async (req, res) => {
+    const { token, role } = req.body;
+
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { email, name } = payload;
+
+        const checkSql = "SELECT * FROM users WHERE email = ?";
+        db.query(checkSql, [email], (err, results) => {
+            if (err) return res.status(500).json({ success: false, message: err.message });
+
+            if (results.length > 0) {
+                const user = results[0];
+                return res.json({
+                    success: true,
+                    message: "Authentication successful",
+                    user: { id: user.id, username: user.username, email: user.email, role: user.role }
+                });
+            } else {
+                const insertSql = "INSERT INTO users (username, email, role, password) VALUES (?, ?, ?, 'GOOGLE_AUTH')";
+                db.query(insertSql, [name, email, role || 'farmer'], (err, result) => {
+                    if (err) return res.status(500).json({ success: false, message: err.message });
+                    res.json({
+                        success: true,
+                        message: "Registration successful",
+                        user: { id: result.insertId, username: name, email: email, role: role || 'farmer' }
+                    });
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Google Token Verification Error:", error);
+        res.status(400).json({ success: false, message: "Invalid Google Token" });
+    }
+});
+
+// PRODUCT MANAGEMENT ROUTES
 app.post('/add-product', upload.single('image'), (req, res) => {
     const { name, price, city, quantity, admin_id } = req.body; 
     const image = req.file ? req.file.path : null; 
@@ -237,7 +354,6 @@ app.post('/add-product', upload.single('image'), (req, res) => {
     });
 });
 
-// GET ALL PRODUCTS
 app.get('/get-products', (req, res) => {
     const city = req.query.city || 'All';
     let sql = "SELECT * FROM products";
@@ -254,7 +370,6 @@ app.get('/get-products', (req, res) => {
     });
 });
 
-// ADMIN: VIEW OWN PRODUCTS
 app.get('/admin-products/:adminId', (req, res) => {
     const sql = "SELECT * FROM products WHERE admin_id = ?";
     db.query(sql, [req.params.adminId], (err, results) => {
@@ -263,7 +378,6 @@ app.get('/admin-products/:adminId', (req, res) => {
     });
 });
 
-// GET SINGLE PRODUCT FOR EDITING
 app.get('/get-product/:id', (req, res) => {
     const sql = "SELECT * FROM products WHERE id = ?";
     db.query(sql, [req.params.id], (err, result) => {
@@ -272,7 +386,6 @@ app.get('/get-product/:id', (req, res) => {
     });
 });
 
-// ADMIN: UPDATE PRODUCT
 app.put('/update-product/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
     if (!req.body || Object.keys(req.body).length === 0) return res.status(400).send("Form empty!");
@@ -294,7 +407,6 @@ app.put('/update-product/:id', upload.single('image'), (req, res) => {
     }
 });
 
-// DELETE PRODUCT
 app.delete('/delete-product/:id', (req, res) => {
     const deleteSql = "DELETE FROM products WHERE id = ?";
     db.query(deleteSql, [req.params.id], (err, result) => {
@@ -303,7 +415,7 @@ app.delete('/delete-product/:id', (req, res) => {
     });
 });
 
-// PLACE ORDER
+// ORDERS
 app.post('/place-order', (req, res) => {
     const { user_id, product_id, name, address, phone } = req.body;
     const sql = "INSERT INTO orders (user_id, product_id, customer_name, address, phone) VALUES (?, ?, ?, ?, ?)";
@@ -313,7 +425,6 @@ app.post('/place-order', (req, res) => {
     });
 });
 
-// GET MY ORDERS
 app.get('/my-orders/:userId', (req, res) => {
     const sql = `
         SELECT orders.id, orders.address, orders.status, orders.order_date,
@@ -329,7 +440,6 @@ app.get('/my-orders/:userId', (req, res) => {
     });
 });
 
-// GET ALL ORDERS FOR ADMIN
 app.get('/get-all-orders', (req, res) => {
     const sql = "SELECT * FROM orders ORDER BY id DESC";
     db.query(sql, (err, results) => {
@@ -359,125 +469,8 @@ app.put('/update-profile/:adminid', (req, res) => {
     });
 });
 
-// Auto Reconnect Logic
-function handleDisconnect() {
-    db.on('error', function(err) {
-        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            console.log('DB connection lost. Reconnecting...');
-        } else {
-            throw err;
-        }
-    });
-}
-handleDisconnect();
-
+// SERVER LISTEN
 const PORT = process.env.PORT || 5000; 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
-});
-
-// Google Client ID Yahan Daalein
-const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com"; 
-
-// Google Sign-In Trigger Function
-function googleSignIn() {
-    if (typeof google === "undefined") {
-        alert("Google SDK loading... Please wait a second and try again.");
-        return;
-    }
-
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse
-    });
-
-    google.accounts.id.prompt(); // Shows One-Tap popup or account selector
-}
-
-// Token Response Callback Handler
-function handleGoogleResponse(response) {
-    const idToken = response.credential; // ID Token from Google
-    const selectedRole = document.getElementById("roleSelect") ? document.getElementById("roleSelect").value : "farmer";
-
-    const loader = document.getElementById("loginLoader") || document.getElementById("regLoader");
-    const loaderText = document.getElementById("loaderText");
-
-    if (loader) {
-        loader.style.display = "flex";
-        if (loaderText) loaderText.innerText = "Authenticating with Google...";
-    }
-
-    // Backend API Request
-    fetch("https://cityshobackend.onrender.com/google-auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            token: idToken,
-            role: selectedRole
-        })
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (loader) loader.style.display = "none";
-
-        if (res.success) {
-            alert("Google Sign-In Successful!");
-            localStorage.setItem("user", JSON.stringify(res.user));
-            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
-        } else {
-            alert(res.message || "Google Authentication failed!");
-        }
-    })
-    .catch(err => {
-        if (loader) loader.style.display = "none";
-        console.error("Google Auth Error:", err);
-        alert("Server network error during Google Login!");
-    });
-}
-
-const { OAuth2Client } = require('google-auth-library');
-const googleClient = new OAuth2Client("926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com");
-
-app.post('/google-auth', async (req, res) => {
-    const { token, role } = req.body;
-
-    try {
-        const ticket = await googleClient.verifyIdToken({
-            idToken: token,
-            audience: "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com",
-        });
-
-        const payload = ticket.getPayload();
-        const { email, name, picture, sub: googleId } = payload;
-
-        // Check if user already exists in DB
-        let user = await User.findOne({ email: email });
-
-        if (!user) {
-            // New User Registration via Google
-            user = new User({
-                username: name,
-                email: email,
-                role: role || 'farmer',
-                isGoogleUser: true,
-                googleId: googleId
-            });
-            await user.save();
-        }
-
-        res.json({
-            success: true,
-            message: "Authentication successful",
-            user: {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }
-        });
-
-    } catch (error) {
-        console.error("Google Token Verification Error:", error);
-        res.status(400).json({ success: false, message: "Invalid Google Token" });
-    }
 });
