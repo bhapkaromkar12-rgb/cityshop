@@ -370,16 +370,16 @@ function loadAdminData() {
             // Render Approved Sellers
             const tbody = document.getElementById("approvedSellersTable");
             tbody.innerHTML = "";
-            if(data.approvedSellers.length === 0) {
+            if(!data.approvedSellers || data.approvedSellers.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">No verified sellers yet.</td></tr>`;
             } else {
                 data.approvedSellers.forEach(s => {
                     tbody.innerHTML += `
                         <tr>
-                            <td><b>${s.companyName || 'N/A'}</b></td>
-                            <td>${s.name}</td>
+                            <td><b>${s.company_name || s.companyName || 'N/A'}</b></td>
+                            <td>${s.name || s.username || 'N/A'}</td>
                             <td>${s.email}</td>
-                            <td>${s.phone}</td>
+                            <td>${s.phone || 'N/A'}</td>
                             <td>${s.pincode || 'N/A'}</td>
                             <td><span style="color: var(--primary); font-weight:700;">Verified</span></td>
                         </tr>
@@ -396,22 +396,27 @@ function loadAdminData() {
         if(data.success) {
             const tbody = document.getElementById("pendingRequestsTable");
             tbody.innerHTML = "";
-            if(data.requests.length === 0) {
+            if(!data.requests || data.requests.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">No pending seller requests.</td></tr>`;
             } else {
                 data.requests.forEach(r => {
+                    // Correct document URL check
+                    const docLink = r.document_url || r.documentUrl;
+                    const fullDocPath = docLink ? (docLink.startsWith('http') ? docLink : `${BACKEND_URL}${docLink}`) : null;
+
                     tbody.innerHTML += `
                         <tr>
-                            <td><b>${r.companyName || 'N/A'}</b></td>
-                            <td>${r.name}</td>
-                            <td>${r.phone}<br><small style="color:var(--text-gray);">${r.email}</small></td>
+                            <td><b>${r.company_name || r.companyName || 'N/A'}</b></td>
+                            <td>${r.username || r.name || 'N/A'}</td>
+                            <td>${r.phone || 'N/A'}<br><small style="color:var(--text-gray);">${r.email}</small></td>
                             <td>${r.village || ''}, ${r.state || ''}</td>
                             <td>
-                                ${r.documentUrl ? `<a href="${BACKEND_URL}${r.documentUrl}" target="_blank" class="btn-action btn-doc"><i class="fas fa-file-alt"></i> View</a>` : 'No Document'}
+                                ${fullDocPath ? `<a href="${fullDocPath}" target="_blank" class="btn-action btn-doc"><i class="fas fa-file-alt"></i> View</a>` : 'No Document'}
                             </td>
                             <td>
-                                <button class="btn-action btn-approve" onclick="updateStatus('${r._id}', 'approved')">Approve</button>
-                                <button class="btn-action btn-reject" onclick="updateStatus('${r._id}', 'rejected')">Reject</button>
+                                <!-- FIXED: Passing MySQL r.id explicitly -->
+                                <button class="btn-action btn-approve" onclick="updateStatus(${r.id}, 'approved')">Approve</button>
+                                <button class="btn-action btn-reject" onclick="updateStatus(${r.id}, 'rejected')">Reject</button>
                             </td>
                         </tr>
                     `;
@@ -423,12 +428,19 @@ function loadAdminData() {
 
 // UPDATE STATUS (APPROVE / REJECT)
 function updateStatus(userId, status) {
+    console.log("Updating Status for User ID:", userId);
+
+    if(!userId || userId === "undefined") {
+        alert("Error: Missing User ID!");
+        return;
+    }
+
     if(!confirm(`Are you sure you want to ${status} this seller?`)) return;
 
     fetch(`${BACKEND_URL}/admin/update-seller-status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, status })
+        body: JSON.stringify({ userId: parseInt(userId, 10), status })
     })
     .then(res => res.json())
     .then(data => {
@@ -438,6 +450,10 @@ function updateStatus(userId, status) {
         } else {
             alert(data.message || "Action failed!");
         }
+    })
+    .catch(err => {
+        console.error("API Error:", err);
+        alert("Server connection failed!");
     });
 }
 
