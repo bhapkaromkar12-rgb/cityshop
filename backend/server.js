@@ -98,7 +98,20 @@ db.connect((err) => {
         phone VARCHAR(20),
         status VARCHAR(50) DEFAULT 'Pending',
         order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`;
+    );`
+    const alterTableQuery = `
+        ALTER TABLE users 
+        ADD COLUMN IF NOT EXISTS phone VARCHAR(20),
+        ADD COLUMN IF NOT EXISTS company_name VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS state VARCHAR(100),
+        ADD COLUMN IF NOT EXISTS district VARCHAR(100),
+        ADD COLUMN IF NOT EXISTS taluka VARCHAR(100),
+        ADD COLUMN IF NOT EXISTS village VARCHAR(100),
+        ADD COLUMN IF NOT EXISTS pincode VARCHAR(10),
+        ADD COLUMN IF NOT EXISTS document_url VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'approved';
+    `;
+    ;
 
     db.query(sql, (err) => {
         if (err) console.log("Table setup error:", err.message);
