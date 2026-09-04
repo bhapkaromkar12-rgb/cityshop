@@ -703,7 +703,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
             if (res.token) localStorage.setItem("token", res.token);
             
             setTimeout(() => {
-                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+                window.location.href = res.user.role === "admin" ? "adminom.html" : "view1.html";
             }, 1200);
         } else {
             loader.style.display = "none";
