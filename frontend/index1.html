@@ -649,7 +649,7 @@ function handleGoogleResponse(response) {
             if (res.token) localStorage.setItem("token", res.token);
 
             setTimeout(() => {
-                window.location.href = res.user.role === "seller" ? "admin.html" : "admin.html";
+                window.location.href = res.user.role === "seller" ? "adminom.html" : "view.html";
             }, 1200);
         } else {
             loader.style.display = "none";
@@ -703,7 +703,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
             if (res.token) localStorage.setItem("token", res.token);
             
             setTimeout(() => {
-                window.location.href = res.user.role === "admin" ? "adminom.html" : "view.html";
+                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
             }, 1200);
         } else {
             loader.style.display = "none";
