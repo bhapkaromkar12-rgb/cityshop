@@ -33,7 +33,7 @@
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         width: 90%;
-        max-width: 400px;
+        max-width: 420px;
         padding: 30px 20px;
         border-radius: 25px;
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -76,7 +76,7 @@
     form {
         display: flex;
         flex-direction: column;
-        gap: 12px; /* Tight gap for mobile screens */
+        gap: 12px;
         margin-top: 15px;
     }
 
@@ -84,13 +84,23 @@
         position: relative;
     }
 
-    .input-group i {
+    .input-group i.left-icon {
         position: absolute;
         left: 15px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--primary);
         font-size: 15px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-gray);
+        cursor: pointer;
+        font-size: 14px;
     }
 
     input, select {
@@ -100,7 +110,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 16px; /* Prevents auto-zoom on mobile */
+        font-size: 16px;
         transition: 0.3s;
         outline: none;
         box-sizing: border-box;
@@ -122,7 +132,7 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px;
         padding: 6px;
-        margin-bottom: 18px;
+        margin-bottom: 15px;
     }
 
     .role-tab {
@@ -130,15 +140,15 @@
         background: transparent;
         color: #d9d9d9;
         border-radius: 12px;
-        padding: 12px 8px;
-        font-size: 14px;
+        padding: 12px 6px;
+        font-size: 13px;
         font-weight: 700;
         cursor: pointer;
         transition: 0.25s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
     }
 
     .role-tab.active {
@@ -148,7 +158,7 @@
     }
 
     .role-tab i {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     /* Email Field Layout Adjustment */
@@ -162,10 +172,10 @@
         color: var(--primary);
         border: 1px solid rgba(116, 201, 71, 0.4);
         border-radius: 12px;
-        padding: 0 18px;
+        padding: 0 16px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         transition: 0.3s;
@@ -177,7 +187,6 @@
         color: white;
     }
 
-    /* Dynamic Slide-in Animation for OTP input box */
     #otpGroup {
         animation: slideDownField 0.4s ease-out forwards;
     }
@@ -187,7 +196,6 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Custom dropdown arrow */
     select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2374c947' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -212,12 +220,56 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: 0.3s;
-        margin-top: 10px;
+        margin-top: 5px;
         box-shadow: 0 8px 15px rgba(116, 201, 71, 0.3);
     }
 
     button:active {
         transform: scale(0.97);
+    }
+
+    /* OR Divider */
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-gray);
+        font-size: 12px;
+        font-weight: 600;
+        margin: 15px 0;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .divider span {
+        padding: 0 10px;
+    }
+
+    /* Google Button */
+    .btn-google {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-google:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 
     .footer-links {
@@ -233,7 +285,7 @@
         font-weight: 700;
     }
 
-    /* --- REGISTRATION OVERLAY SCREEN LOADER --- */
+    /* Loader */
     .loader-overlay {
         position: fixed;
         top: 0;
@@ -268,22 +320,9 @@
         50% { transform: scale(1.12); }
     }
 
-    /* Adjust for very small phones */
     @media (max-width: 360px) {
-        .register-card {
-            padding: 20px 15px;
-        }
+        .register-card { padding: 20px 15px; }
         h2 { font-size: 20px; }
-    }
-
-    /* Handling landscape mode / short screens */
-    @media (max-height: 650px) {
-        body {
-            align-items: flex-start;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-        .register-card { margin-top: 10px; }
     }
 </style>
 </head>
@@ -304,48 +343,49 @@
     </div>
 
     <form id="registerForm">
+        <!-- Role Switcher (Farmer, Seller, Admin) -->
         <div class="role-switcher" aria-label="Account type selector">
-            <button type="button" class="role-tab active" data-role="customer">
-                <i class="fas fa-user"></i>
-                <span>Customer</span>
+            <button type="button" class="role-tab active" data-role="farmer">
+                <i class="fas fa-tractor"></i>
+                <span>Farmer</span>
             </button>
             <button type="button" class="role-tab" data-role="seller">
                 <i class="fas fa-store"></i>
                 <span>Seller</span>
             </button>
             <button type="button" class="role-tab" data-role="admin">
-                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-user-shield"></i>
                 <span>Admin</span>
             </button>
         </div>
 
         <div class="input-group">
-            <i class="fas fa-user"></i>
+            <i class="fas fa-user left-icon"></i>
             <input type="text" name="username" placeholder="Username" required>
         </div>
 
         <div class="email-container">
             <div class="input-group" style="flex: 1;">
-                <i class="fas fa-envelope"></i>
+                <i class="fas fa-envelope left-icon"></i>
                 <input type="email" name="email" id="emailInput" placeholder="Email Address" required>
             </div>
             <button type="button" class="btn-verify-otp" id="otpBtn" onclick="sendOTP()">Send OTP</button>
         </div>
 
         <div class="input-group" id="otpGroup" style="display: none;">
-            <i class="fas fa-key"></i>
+            <i class="fas fa-key left-icon"></i>
             <input type="text" name="otp" id="otpInput" placeholder="Enter 6-Digit OTP">
         </div>
 
         <div class="input-group">
-            <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="Password" required>
+            <i class="fas fa-lock left-icon"></i>
+            <input type="password" name="password" id="passInput" placeholder="Password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
         </div>
 
         <div class="input-group" style="display: none;">
-            <i class="fas fa-user-shield"></i>
             <select name="role" id="roleSelect">
-                <option value="customer" selected>Customer</option>
+                <option value="farmer" selected>Farmer</option>
                 <option value="seller">Seller</option>
                 <option value="admin">Admin</option>
             </select>
@@ -353,6 +393,21 @@
 
         <button type="submit" id="subBtn" style="opacity: 0.6;" disabled>Create Account</button>
     </form>
+
+    <div class="divider">
+        <span>OR</span>
+    </div>
+
+    <!-- Google Sign In Button -->
+    <button type="button" class="btn-google" onclick="googleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+        </svg>
+        Continue with Google
+    </button>
 
     <div class="footer-links">
         Already have an account? <a href="index1.html">Login here</a>
@@ -373,7 +428,22 @@ roleTabs.forEach(tab => {
     });
 });
 
-// Action 1: Dispatch OTP Request to Backend Server
+function togglePass() {
+    const passInput = document.getElementById("passInput");
+    const toggleIcon = document.querySelector(".toggle-password");
+    if (passInput.type === "password") {
+        passInput.type = "text";
+        toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        passInput.type = "password";
+        toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+function googleSignIn() {
+    alert("Google Sign-In Clicked! Implement Google OAuth backend route here.");
+}
+
 function sendOTP() {
     const email = document.getElementById("emailInput").value;
     if(!email || !email.includes("@")) {
@@ -385,54 +455,41 @@ function sendOTP() {
     const loaderText = document.getElementById("loaderText");
     const otpBtn = document.getElementById("otpBtn");
 
-    // Show Loading Overlay Animation
     loader.style.display = "flex";
     loaderText.innerText = "Sending Verification OTP...";
 
-   // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
-// --- IS LINE KO UPDATE KAREIN ---
-fetch("https://cityshobackend.onrender.com/send-otp", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        email: email
+    fetch("https://cityshobackend.onrender.com/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
     })
-})
-.then(res => res.json())
-.then(data => {
-    loader.style.display = "none"; // Hide Loader
+    .then(res => res.json())
+    .then(data => {
+        loader.style.display = "none";
 
-    if (data.success) {
-        alert("✅ OTP sent successfully! Please check your email.");
+        if (data.success) {
+            alert("✅ OTP sent successfully! Please check your email.");
+            isOtpSent = true;
+            document.getElementById("otpGroup").style.display = "block";
+            document.getElementById("otpInput").required = true;
 
-        isOtpSent = true;
+            const subBtn = document.getElementById("subBtn");
+            subBtn.disabled = false;
+            subBtn.style.opacity = "1";
+            subBtn.style.cursor = "pointer";
 
-        // Show OTP Input
-        document.getElementById("otpGroup").style.display = "block";
-        document.getElementById("otpInput").required = true;
-
-        // Enable Register Button
-        const subBtn = document.getElementById("subBtn");
-        subBtn.disabled = false;
-        subBtn.style.opacity = "1";
-        subBtn.style.cursor = "pointer";
-
-        // Change Button Text
-        otpBtn.innerHTML = "Resend OTP";
-    } else {
-        alert(data.message || "Failed to send OTP.");
-    }
-})
-.catch(err => {
-    loader.style.display = "none";
-    console.error("OTP Error:", err);
-    alert("❌ Server network error while sending OTP!");
-});
-
+            otpBtn.innerHTML = "Resend OTP";
+        } else {
+            alert(data.message || "Failed to send OTP.");
+        }
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        console.error("OTP Error:", err);
+        alert("❌ Server network error while sending OTP!");
+    });
 }
-// Action 2: Process Complete Account Data Package Verification
+
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
     if(!isOtpSent) {
@@ -447,7 +504,6 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
     const loader = document.getElementById("regLoader");
     const loaderText = document.getElementById("loaderText");
     
-    // Activate full screen glassmorphic loading blur overlay
     loader.style.display = "flex";
     loaderText.innerText = "Verifying OTP & Establishing Profile...";
 
@@ -459,13 +515,11 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         otp: this.otp.value
     };
 
-   // --- PURANI FETCH LINE HATA KAR ITNA LIKHO ---
-// --- IS LINE KO BHI UPDATE KAREIN ---
-fetch("https://cityshobackend.onrender.com/register-user", { 
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
-})
+    fetch("https://cityshobackend.onrender.com/register-user", { 
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
     .then(res => res.json())
     .then(result => {
         loader.style.display = "none";
