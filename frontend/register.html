@@ -418,6 +418,9 @@
 <script>
 let isOtpSent = false;
 
+// GOOGLE OAUTH CLIENT ID (Replace with your actual Google Client ID)
+const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
+
 const roleTabs = document.querySelectorAll('.role-tab');
 const roleSelect = document.getElementById('roleSelect');
 
@@ -441,8 +444,60 @@ function togglePass() {
     }
 }
 
+// Google Sign-In Trigger
 function googleSignIn() {
-    alert("Google Sign-In Clicked! Implement Google OAuth backend route here.");
+    if (typeof google === "undefined" || !google.accounts) {
+        alert("Google SDK loading... Please wait a second and try again.");
+        return;
+    }
+
+    google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
+    });
+
+    google.accounts.id.prompt(); 
+}
+
+// Handle Google Authentication Response
+function handleGoogleResponse(response) {
+    const idToken = response.credential;
+    const selectedRole = roleSelect ? roleSelect.value : "farmer";
+
+    const loader = document.getElementById("regLoader");
+    const loaderText = document.getElementById("loaderText");
+
+    loader.style.display = "flex";
+    loaderText.innerText = "Authenticating with Google...";
+
+    fetch("https://cityshobackend.onrender.com/google-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            token: idToken,
+            role: selectedRole
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        loader.style.display = "none";
+
+        if (res.success) {
+            alert("✅ Google Sign-In Successful!");
+            localStorage.setItem("user", JSON.stringify(res.user));
+            if (res.token) localStorage.setItem("token", res.token);
+
+            // Redirect as per user role
+            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+        } else {
+            alert("❌ " + (res.message || "Google Authentication failed!"));
+        }
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        console.error("Google Auth Error:", err);
+        alert("❌ Server error during Google Login!");
+    });
 }
 
 function sendOTP() {
