@@ -219,22 +219,27 @@ app.get('/admin/stats-users', (req, res) => {
     });
 });
 
-// 4. APPROVE OR REJECT SELLER STATUS (FIXED)
+// 4. APPROVE OR REJECT SELLER STATUS (FIXED DOUBLE/UNDEFINED ERROR)
 app.post('/admin/update-seller-status', (req, res) => {
-    // userId and id dono support kiye hain taaki payload key mismatch error resolve ho sake
-    const userId = req.body.userId || req.body.id; 
-    const status = req.body.status;
+    const rawUserId = req.body.userId || req.body.id;
+    const { status } = req.body;
 
-    if (!userId) {
-        return res.status(400).json({ success: false, message: "User ID is required to update status!" });
+    // Check for missing or string "undefined" values
+    if (!rawUserId || rawUserId === 'undefined' || isNaN(Number(rawUserId))) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Invalid or missing User ID. Please make sure the ID is passed correctly from Frontend." 
+        });
     }
+
+    const userId = parseInt(rawUserId, 10); // Parse strictly as Integer
 
     const sql = "UPDATE users SET status = ? WHERE id = ?";
     db.query(sql, [status, userId], (err, result) => {
         if (err) return res.status(500).json({ success: false, message: err.message });
 
         if (result.affectedRows === 0) {
-            return res.status(444).json({ success: false, message: "User record not found or status already updated." });
+            return res.status(404).json({ success: false, message: "User not found or status already updated." });
         }
 
         res.json({ success: true, message: `Seller application ${status} successfully!` });
