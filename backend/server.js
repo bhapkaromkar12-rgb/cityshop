@@ -219,12 +219,11 @@ app.get('/admin/stats-users', (req, res) => {
     });
 });
 
-// 4. APPROVE OR REJECT SELLER STATUS (FIXED DOUBLE/UNDEFINED ERROR)
+// 4. APPROVE OR REJECT SELLER STATUS
 app.post('/admin/update-seller-status', (req, res) => {
     const rawUserId = req.body.userId || req.body.id;
     const { status } = req.body;
 
-    // Check for missing or string "undefined" values
     if (!rawUserId || rawUserId === 'undefined' || isNaN(Number(rawUserId))) {
         return res.status(400).json({ 
             success: false, 
@@ -232,7 +231,7 @@ app.post('/admin/update-seller-status', (req, res) => {
         });
     }
 
-    const userId = parseInt(rawUserId, 10); // Parse strictly as Integer
+    const userId = parseInt(rawUserId, 10);
 
     const sql = "UPDATE users SET status = ? WHERE id = ?";
     db.query(sql, [status, userId], (err, result) => {
@@ -246,7 +245,7 @@ app.post('/admin/update-seller-status', (req, res) => {
     });
 });
 
-// --- EXISTING ROUTES ---
+// --- USER AUTHENTICATION & LOGIN ---
 
 // ROUTE: SEND OTP
 app.post('/send-otp', (req, res) => {
@@ -299,7 +298,7 @@ app.post('/register-user', (req, res) => {
         if (results.length > 0) return res.json({ success: false, message: "Email already exists!" });
 
         const insertSql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
-        db.query(insertSql, [username, email, password, role || 'customer'], (err, result) => {
+        db.query(insertSql, [username, email, password, role || 'farmer'], (err, result) => {
             if (err) return res.status(500).json({ success: false, message: err.message });
             res.json({ success: true, message: "User Registered Successfully!" });
         });
@@ -325,7 +324,7 @@ app.post('/apply-seller', upload.single('document'), (req, res) => {
     });
 });
 
-// LOGIN
+// FIXED: LOGIN ROUTE (RETURNS ROLE & STATUS PROPERLY)
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
@@ -343,12 +342,28 @@ app.post('/login', (req, res) => {
 
         if (results.length > 0) {
             const user = results[0];
-            if (user.role === 'seller' && user.status === 'pending') {
-                return res.json({ success: false, message: "Your seller application is pending Admin approval!" });
+
+            // Seller Approval Checks
+            if (user.role === 'seller') {
+                if (user.status === 'pending') {
+                    return res.json({ success: false, message: "Your seller application is pending Admin approval! Please wait." });
+                }
+                if (user.status === 'rejected') {
+                    return res.json({ success: false, message: "Your seller application was rejected by Admin." });
+                }
             }
+
+            // Successfully Return Role and User Details
             res.json({
                 success: true,
-                user: { id: user.id, email: user.email, role: user.role, username: user.username }
+                message: "Login successful!",
+                user: { 
+                    id: user.id, 
+                    email: user.email, 
+                    role: user.role, // 'seller', 'farmer', 'admin'
+                    username: user.username,
+                    status: user.status 
+                }
             });
         } else {
             res.json({ success: false, message: "Invalid email or password!" });
@@ -381,7 +396,7 @@ app.post('/google-auth', async (req, res) => {
                 return res.json({
                     success: true,
                     message: "Authentication successful",
-                    user: { id: user.id, username: user.username, email: user.email, role: user.role }
+                    user: { id: user.id, username: user.username, email: user.email, role: user.role, status: user.status }
                 });
             } else {
                 const insertSql = "INSERT INTO users (username, email, role, password) VALUES (?, ?, ?, 'GOOGLE_AUTH')";
@@ -390,7 +405,7 @@ app.post('/google-auth', async (req, res) => {
                     res.json({
                         success: true,
                         message: "Registration successful",
-                        user: { id: result.insertId, username: name, email: email, role: role || 'farmer' }
+                        user: { id: result.insertId, username: name, email: email, role: role || 'farmer', status: 'approved' }
                     });
                 });
             }
