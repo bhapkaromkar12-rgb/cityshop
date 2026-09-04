@@ -375,3 +375,109 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// Google Client ID Yahan Daalein
+const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com"; 
+
+// Google Sign-In Trigger Function
+function googleSignIn() {
+    if (typeof google === "undefined") {
+        alert("Google SDK loading... Please wait a second and try again.");
+        return;
+    }
+
+    google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
+    });
+
+    google.accounts.id.prompt(); // Shows One-Tap popup or account selector
+}
+
+// Token Response Callback Handler
+function handleGoogleResponse(response) {
+    const idToken = response.credential; // ID Token from Google
+    const selectedRole = document.getElementById("roleSelect") ? document.getElementById("roleSelect").value : "farmer";
+
+    const loader = document.getElementById("loginLoader") || document.getElementById("regLoader");
+    const loaderText = document.getElementById("loaderText");
+
+    if (loader) {
+        loader.style.display = "flex";
+        if (loaderText) loaderText.innerText = "Authenticating with Google...";
+    }
+
+    // Backend API Request
+    fetch("https://cityshobackend.onrender.com/google-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            token: idToken,
+            role: selectedRole
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (loader) loader.style.display = "none";
+
+        if (res.success) {
+            alert("Google Sign-In Successful!");
+            localStorage.setItem("user", JSON.stringify(res.user));
+            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+        } else {
+            alert(res.message || "Google Authentication failed!");
+        }
+    })
+    .catch(err => {
+        if (loader) loader.style.display = "none";
+        console.error("Google Auth Error:", err);
+        alert("Server network error during Google Login!");
+    });
+}
+
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client("926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com");
+
+app.post('/google-auth', async (req, res) => {
+    const { token, role } = req.body;
+
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com",
+        });
+
+        const payload = ticket.getPayload();
+        const { email, name, picture, sub: googleId } = payload;
+
+        // Check if user already exists in DB
+        let user = await User.findOne({ email: email });
+
+        if (!user) {
+            // New User Registration via Google
+            user = new User({
+                username: name,
+                email: email,
+                role: role || 'farmer',
+                isGoogleUser: true,
+                googleId: googleId
+            });
+            await user.save();
+        }
+
+        res.json({
+            success: true,
+            message: "Authentication successful",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Google Token Verification Error:", error);
+        res.status(400).json({ success: false, message: "Invalid Google Token" });
+    }
+});
