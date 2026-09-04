@@ -4,19 +4,20 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Agro City Shop</title>
+    <title>Create Account - City Shop Agro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
+    <style>
     :root {
         --primary: #74c947;
-        --dark-card: rgba(18, 18, 18, 0.88);
+        --primary-glow: rgba(116, 201, 71, 0.4);
+        --dark-card: rgba(18, 22, 18, 0.85);
         --text-gray: #b0b0b0;
     }
 
     body {
         margin: 0;
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -26,59 +27,214 @@
         justify-content: center;
         color: white;
         overflow-x: hidden;
-    }
-
-    /* Mobile Responsive Card */
-    .register-card {
-        background: var(--dark-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        width: 90%;
-        max-width: 420px;
-        padding: 30px 20px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        animation: slideUp 0.6s ease-out;
+        padding: 20px;
         box-sizing: border-box;
     }
 
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(30px); }
+    /* Split Screen Container */
+    .app-container {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
+        background: var(--dark-card);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        overflow: hidden;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .logo-area {
-        text-align: center;
-        margin-bottom: 20px;
+    /* LEFT SIDE: Hero & Animations */
+    .hero-side {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(116, 201, 71, 0.15) 0%, rgba(10, 20, 10, 0.8) 100%);
+        padding: 40px 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
     }
 
-    .logo-area i {
-        font-size: 40px;
+    .hero-side::before, .hero-side::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        z-index: 0;
+    }
+    .hero-side::before {
+        width: 180px;
+        height: 180px;
+        background: var(--primary-glow);
+        top: -30px;
+        left: -30px;
+        animation: floatOrb 8s infinite alternate ease-in-out;
+    }
+    .hero-side::after {
+        width: 220px;
+        height: 220px;
+        background: rgba(116, 201, 71, 0.15);
+        bottom: -50px;
+        right: -50px;
+        animation: floatOrb 10s infinite alternate-reverse ease-in-out;
+    }
+
+    @keyframes floatOrb {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, 30px) scale(1.15); }
+    }
+
+    .hero-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        z-index: 1;
+    }
+    .hero-header i {
         color: var(--primary);
-        margin-bottom: 8px;
-        filter: drop-shadow(0 0 10px rgba(116, 201, 71, 0.3));
+        font-size: 26px;
     }
 
-    h2 {
-        font-size: 22px;
+    .hero-body {
+        z-index: 1;
+        margin: 30px 0;
+    }
+
+    .animated-icon-box {
+        width: 70px;
+        height: 70px;
+        background: rgba(116, 201, 71, 0.15);
+        border: 1px solid var(--primary);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        box-shadow: 0 0 25px var(--primary-glow);
+        animation: pulseIcon 3s infinite ease-in-out;
+    }
+    .animated-icon-box i {
+        font-size: 32px;
+        color: var(--primary);
+    }
+
+    @keyframes pulseIcon {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--primary-glow); }
+        50% { transform: scale(1.08); box-shadow: 0 0 35px var(--primary-glow); }
+    }
+
+    .hero-body h1 {
+        font-size: 32px;
+        line-height: 1.25;
+        font-weight: 800;
+        margin: 0 0 15px 0;
+        background: linear-gradient(180deg, #ffffff 0%, #d0d0d0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-body p {
+        color: var(--text-gray);
+        font-size: 14px;
+        line-height: 1.6;
         margin: 0;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
+    }
+
+    .hero-badges {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+        z-index: 1;
+        flex-wrap: wrap;
+    }
+    .badge-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #e0e0e0;
+    }
+    .badge-item i {
+        color: var(--primary);
+    }
+
+    /* RIGHT SIDE: Register Card Form */
+    .register-side {
+        flex: 1.1;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-header {
+        margin-bottom: 18px;
+    }
+    .form-header h2 {
+        font-size: 24px;
+        margin: 0;
         font-weight: 800;
     }
-
-    p.subtitle {
+    .form-header p {
         color: var(--text-gray);
         font-size: 13px;
-        margin-top: 5px;
+        margin-top: 4px;
+    }
+
+    /* Role Switcher */
+    .role-switcher {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 6px;
+        margin-bottom: 18px;
+    }
+
+    .role-tab {
+        border: none;
+        background: transparent;
+        color: #d9d9d9;
+        border-radius: 12px;
+        padding: 9px 4px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .role-tab.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 6px 12px rgba(116, 201, 71, 0.22);
     }
 
     form {
         display: flex;
         flex-direction: column;
         gap: 12px;
-        margin-top: 15px;
     }
 
     .input-group {
@@ -104,132 +260,44 @@
         font-size: 14px;
     }
 
-    input, select {
+    input {
         width: 100%;
-        padding: 13px 15px 13px 45px;
+        padding: 12px 15px 12px 45px;
         background: rgba(255, 255, 255, 0.07);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 16px;
+        font-size: 14px;
         transition: 0.3s;
         outline: none;
         box-sizing: border-box;
-        appearance: none;
     }
 
-    input:focus, select:focus {
+    input:focus {
         border-color: var(--primary);
         background: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 0 10px rgba(116, 201, 71, 0.1);
-    }
-
-    /* Role Toggle Option */
-    .role-switcher {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 6px;
-        margin-bottom: 15px;
-    }
-
-    .role-tab {
-        border: none;
-        background: transparent;
-        color: #d9d9d9;
-        border-radius: 12px;
-        padding: 12px 6px;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: 0.25s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
-
-    .role-tab.active {
-        background: var(--primary);
-        color: white;
-        box-shadow: 0 6px 12px rgba(116, 201, 71, 0.22);
-    }
-
-    .role-tab i {
-        font-size: 13px;
-    }
-
-    /* Email Field Layout Adjustment */
-    .email-container {
-        display: flex;
-        gap: 10px;
-    }
-
-    .btn-verify-otp {
-        background: rgba(116, 201, 71, 0.15);
-        color: var(--primary);
-        border: 1px solid rgba(116, 201, 71, 0.4);
-        border-radius: 12px;
-        padding: 0 16px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: 0.3s;
-        white-space: nowrap;
-    }
-
-    .btn-verify-otp:hover {
-        background: var(--primary);
-        color: white;
-    }
-
-    #otpGroup {
-        animation: slideDownField 0.4s ease-out forwards;
-    }
-
-    @keyframes slideDownField {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2374c947' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 16px;
-    }
-
-    select option {
-        background: #1a1a1a;
-        color: white;
+        box-shadow: 0 0 15px rgba(116, 201, 71, 0.15);
     }
 
     button[type="submit"] {
         background: var(--primary);
         color: white;
-        padding: 14px;
+        padding: 13px;
         border: none;
         border-radius: 12px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         cursor: pointer;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.2px;
         transition: 0.3s;
-        margin-top: 5px;
-        box-shadow: 0 8px 15px rgba(116, 201, 71, 0.3);
+        margin-top: 4px;
+        box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
     }
 
-    button:active {
-        transform: scale(0.97);
-    }
+    button:hover { opacity: 0.95; }
+    button:active { transform: scale(0.98); }
 
-    /* OR Divider */
     .divider {
         display: flex;
         align-items: center;
@@ -237,7 +305,7 @@
         color: var(--text-gray);
         font-size: 12px;
         font-weight: 600;
-        margin: 15px 0;
+        margin: 12px 0;
     }
 
     .divider::before, .divider::after {
@@ -246,19 +314,16 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .divider span {
-        padding: 0 10px;
-    }
+    .divider span { padding: 0 10px; }
 
-    /* Google Button */
     .btn-google {
         width: 100%;
         background: rgba(255, 255, 255, 0.05);
         color: white;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 12px;
+        padding: 11px;
         border-radius: 12px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         display: flex;
         align-items: center;
@@ -275,7 +340,7 @@
 
     .footer-links {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 15px;
         font-size: 13px;
         color: var(--text-gray);
     }
@@ -286,7 +351,7 @@
         font-weight: 700;
     }
 
-    /* Loader */
+    /* --- PREMIUM PLANT LOADER --- */
     .loader-overlay {
         position: fixed;
         top: 0;
@@ -302,49 +367,136 @@
         z-index: 9999;
     }
 
+    .loader-content { text-align: center; }
+
+    .plant-animation-box {
+        position: relative;
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .plant-icon {
         font-size: 65px;
-        color: var(--primary);
-        animation: breathAnimation 2s infinite ease-in-out;
+        color: #554433;
+        transition: color 1.2s ease-in-out, transform 1.2s ease-in-out;
+        animation: breathEffect 2s infinite ease-in-out;
     }
+
+    .loader-overlay.growing .plant-icon {
+        color: var(--primary);
+        transform: scale(1.25) rotate(8deg);
+    }
+
+    .success-checkmark {
+        position: absolute;
+        font-size: 70px;
+        color: var(--primary);
+        opacity: 0;
+        transform: scale(0.4);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: none;
+    }
+
+    .loader-overlay.success .success-checkmark {
+        display: block;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .loader-overlay.success .plant-icon { display: none; }
 
     .loader-text {
-        font-size: 17px;
+        font-size: 18px;
         font-weight: 600;
         color: #b0b0b0;
-        margin: 15px 0 0 0;
-        letter-spacing: 0.5px;
+        margin: 0;
+        letter-spacing: 1px;
     }
 
-    @keyframes breathAnimation {
+    .loader-overlay.success .loader-text {
+        color: var(--primary);
+        font-weight: 800;
+    }
+
+    @keyframes breathEffect {
         0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.12); }
+        50% { transform: scale(1.08); }
     }
 
-    @media (max-width: 360px) {
-        .register-card { padding: 20px 15px; }
-        h2 { font-size: 20px; }
+    @media (max-width: 768px) {
+        .app-container {
+            flex-direction: column;
+            max-width: 420px;
+        }
+        .hero-side {
+            padding: 25px 20px;
+            text-align: center;
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hero-header, .animated-icon-box {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-badges { justify-content: center; }
+        .register-side { padding: 25px 20px; }
     }
 </style>
 </head>
 <body>
 
-<div id="regLoader" class="loader-overlay">
-    <div style="text-align: center;">
-        <i class="fas fa-seedling plant-icon"></i>
-        <p id="loaderText" class="loader-text">Processing...</p>
+<div id="registerLoader" class="loader-overlay">
+    <div class="loader-content">
+        <div class="plant-animation-box">
+            <i class="fas fa-seedling plant-icon"></i>
+            <div class="success-checkmark">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+        <p id="loaderText" class="loader-text">Creating Your Account...</p>
     </div>
 </div>
 
-<div class="register-card">
-    <div class="logo-area">
-        <i class="fas fa-seedling"></i>
-        <h2>Join AgroTech</h2>
-        <p class="subtitle">Create an account to start farming smarter</p>
+<div class="app-container">
+    
+    <!-- LEFT SIDE: Branding & Features Animation -->
+    <div class="hero-side">
+        <div class="hero-header">
+            <i class="fas fa-leaf"></i>
+            <span>CITY SHOP AGRO</span>
+        </div>
+
+        <div class="hero-body">
+            <div class="animated-icon-box">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h1>Start Your Smart Farming Journey</h1>
+            <p>Join thousands of farmers & sellers building a transparent, direct, and digital agricultural community.</p>
+            
+            <div class="hero-badges">
+                <div class="badge-item"><i class="fas fa-user-check"></i> Free Signup</div>
+                <div class="badge-item"><i class="fas fa-handshake"></i> Direct Deals</div>
+                <div class="badge-item"><i class="fas fa-bell"></i> Instant Alerts</div>
+            </div>
+        </div>
+
+        <div style="font-size: 12px; color: var(--text-gray); z-index: 1;">
+            &copy; City Shop Agro Platform. All rights reserved.
+        </div>
     </div>
 
-    <form id="registerForm">
-        <!-- Role Switcher (Farmer, Seller, Admin) -->
+    <!-- RIGHT SIDE: Registration Form -->
+    <div class="register-side">
+        <div class="form-header">
+            <h2>Create Account</h2>
+            <p>Select your account type and fill in your details</p>
+        </div>
+
+        <!-- Role Switcher -->
         <div class="role-switcher" aria-label="Account type selector">
             <button type="button" class="role-tab active" data-role="farmer">
                 <i class="fas fa-tractor"></i>
@@ -360,67 +512,58 @@
             </button>
         </div>
 
-        <div class="input-group">
-            <i class="fas fa-user left-icon"></i>
-            <input type="text" name="username" placeholder="Username" required>
-        </div>
-
-        <div class="email-container">
-            <div class="input-group" style="flex: 1;">
-                <i class="fas fa-envelope left-icon"></i>
-                <input type="email" name="email" id="emailInput" placeholder="Email Address" required>
+        <form id="registerForm">
+            <div class="input-group">
+                <i class="fas fa-user left-icon"></i>
+                <input type="text" name="name" placeholder="Full Name" required>
             </div>
-            <button type="button" class="btn-verify-otp" id="otpBtn" onclick="sendOTP()">Send OTP</button>
+
+            <div class="input-group">
+                <i class="fas fa-envelope left-icon"></i>
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-phone left-icon"></i>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock left-icon"></i>
+                <input type="password" name="password" id="passInput" placeholder="Password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePass('passInput', this)"></i>
+            </div>
+
+            <input type="hidden" name="role" id="roleSelect" value="farmer">
+
+            <button type="submit">Register Now</button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
         </div>
 
-        <div class="input-group" id="otpGroup" style="display: none;">
-            <i class="fas fa-key left-icon"></i>
-            <input type="text" name="otp" id="otpInput" placeholder="Enter 6-Digit OTP">
+        <button type="button" class="btn-google" onclick="googleSignUp()">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+                <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+            </svg>
+            Sign up with Google
+        </button>
+
+        <div class="footer-links">
+            Already have an account? <a href="index1.html">Sign In</a>
         </div>
-
-        <div class="input-group">
-            <i class="fas fa-lock left-icon"></i>
-            <input type="password" name="password" id="passInput" placeholder="Password" required>
-            <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
-        </div>
-
-        <div class="input-group" style="display: none;">
-            <select name="role" id="roleSelect">
-                <option value="farmer" selected>Farmer</option>
-                <option value="seller">Seller</option>
-                <option value="admin">Admin</option>
-            </select>
-        </div>
-
-        <button type="submit" id="subBtn" style="opacity: 0.6;" disabled>Create Account</button>
-    </form>
-
-    <div class="divider">
-        <span>OR</span>
     </div>
 
-    <!-- Google Sign In Button -->
-    <button type="button" class="btn-google" onclick="googleSignIn()">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
-            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
-            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
-            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
-        </svg>
-        Continue with Google
-    </button>
-
-    <div class="footer-links">
-        Already have an account? <a href="index1.html">Login here</a>
-    </div>
 </div>
 
 <script>
-let isOtpSent = false;
-
-// GOOGLE OAUTH CLIENT ID (Replace with your actual Google Client ID)
 const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
 
+// Role switcher tab selection
 const roleTabs = document.querySelectorAll('.role-tab');
 const roleSelect = document.getElementById('roleSelect');
 
@@ -432,20 +575,20 @@ roleTabs.forEach(tab => {
     });
 });
 
-function togglePass() {
-    const passInput = document.getElementById("passInput");
-    const toggleIcon = document.querySelector(".toggle-password");
+// Password Toggle Functionality
+function togglePass(inputId, icon) {
+    const passInput = document.getElementById(inputId);
     if (passInput.type === "password") {
         passInput.type = "text";
-        toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+        icon.classList.replace("fa-eye", "fa-eye-slash");
     } else {
         passInput.type = "password";
-        toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+        icon.classList.replace("fa-eye-slash", "fa-eye");
     }
 }
 
-// Google Sign-In Trigger
-function googleSignIn() {
+// Google Sign-Up Trigger
+function googleSignUp() {
     if (typeof google === "undefined" || !google.accounts) {
         alert("Google SDK loading... Please wait a second and try again.");
         return;
@@ -456,19 +599,24 @@ function googleSignIn() {
         callback: handleGoogleResponse
     });
 
-    google.accounts.id.prompt(); 
+    google.accounts.id.prompt();
 }
 
-// Handle Google Authentication Response
 function handleGoogleResponse(response) {
     const idToken = response.credential;
     const selectedRole = roleSelect ? roleSelect.value : "farmer";
 
-    const loader = document.getElementById("regLoader");
+    const loader = document.getElementById("registerLoader");
     const loaderText = document.getElementById("loaderText");
 
     loader.style.display = "flex";
-    loaderText.innerText = "Authenticating with Google...";
+    loader.classList.remove("growing", "success");
+    loaderText.innerText = "Processing Google Signup...";
+
+    setTimeout(() => {
+        loader.classList.add("growing");
+        loaderText.innerText = "Setting up your account...";
+    }, 500);
 
     fetch("https://cityshobackend.onrender.com/google-auth", {
         method: "POST",
@@ -480,119 +628,81 @@ function handleGoogleResponse(response) {
     })
     .then(res => res.json())
     .then(res => {
-        loader.style.display = "none";
-
         if (res.success) {
-            alert("✅ Google Sign-In Successful!");
+            loader.classList.add("success");
+            loaderText.innerText = "Registration Successful!";
+
             localStorage.setItem("user", JSON.stringify(res.user));
             if (res.token) localStorage.setItem("token", res.token);
 
-            // Redirect as per user role
-            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            setTimeout(() => {
+                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            }, 1200);
         } else {
-            alert("❌ " + (res.message || "Google Authentication failed!"));
+            loader.style.display = "none";
+            alert("Google Registration Failed: " + (res.message || "Something went wrong"));
         }
     })
     .catch(err => {
         loader.style.display = "none";
-        console.error("Google Auth Error:", err);
-        alert("❌ Server error during Google Login!");
+        console.error("Google Signup Error:", err);
+        alert("Server connection failed during Google registration!");
     });
 }
 
-function sendOTP() {
-    const email = document.getElementById("emailInput").value;
-    if(!email || !email.includes("@")) {
-        alert("Enter a valid Email Address");
-        return;
-    }
-
-    const loader = document.getElementById("regLoader");
-    const loaderText = document.getElementById("loaderText");
-    const otpBtn = document.getElementById("otpBtn");
-
-    loader.style.display = "flex";
-    loaderText.innerText = "Sending Verification OTP...";
-
-    fetch("https://cityshobackend.onrender.com/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email })
-    })
-    .then(res => res.json())
-    .then(data => {
-        loader.style.display = "none";
-
-        if (data.success) {
-            alert("✅ OTP sent successfully! Please check your email.");
-            isOtpSent = true;
-            document.getElementById("otpGroup").style.display = "block";
-            document.getElementById("otpInput").required = true;
-
-            const subBtn = document.getElementById("subBtn");
-            subBtn.disabled = false;
-            subBtn.style.opacity = "1";
-            subBtn.style.cursor = "pointer";
-
-            otpBtn.innerHTML = "Resend OTP";
-        } else {
-            alert(data.message || "Failed to send OTP.");
-        }
-    })
-    .catch(err => {
-        loader.style.display = "none";
-        console.error("OTP Error:", err);
-        alert("❌ Server network error while sending OTP!");
-    });
-}
-
+// Form Submit Handler
 document.getElementById("registerForm").addEventListener("submit", function(e){
     e.preventDefault();
-    if(!isOtpSent) {
-        alert("Enter Email Verify OTP");
-        return;
-    }
-
     const btn = this.querySelector('button[type="submit"]');
-    btn.innerText = "Registering...";
+    btn.innerText = "Creating Account...";
     btn.disabled = true;
 
-    const loader = document.getElementById("regLoader");
+    const loader = document.getElementById("registerLoader");
     const loaderText = document.getElementById("loaderText");
     
     loader.style.display = "flex";
-    loaderText.innerText = "Verifying OTP & Establishing Profile...";
+    loader.classList.remove("growing", "success");
+    loaderText.innerText = "Creating Your Account...";
+
+    setTimeout(() => {
+        loader.classList.add("growing");
+        loaderText.innerText = "Planting your account data...";
+    }, 500);
 
     let data = {
-        username: this.username.value,
+        name: this.name.value,
         email: this.email.value,
+        phone: this.phone.value,
         password: this.password.value,
-        role: this.role.value,
-        otp: this.otp.value
+        role: this.role.value
     };
 
-    fetch("https://cityshobackend.onrender.com/register-user", { 
+    fetch("https://cityshobackend.onrender.com/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(result => {
-        loader.style.display = "none";
-        if(result.success) {
-            alert("Success: User Registered Successfully!");
-            window.location.href = "index1.html";
+    .then(res => {
+        if(res.success){
+            loader.classList.add("success");
+            loaderText.innerText = "Account Created Successfully!";
+            
+            setTimeout(() => {
+                window.location.href = "index1.html";
+            }, 1400);
         } else {
-            alert("Error: " + result.message);
-            btn.innerText = "Create Account";
+            loader.style.display = "none";
+            alert(res.message || "Registration failed. Try again.");
+            btn.innerText = "Register Now";
             btn.disabled = false;
         }
     })
     .catch(err => {
         loader.style.display = "none";
-        console.error("Register Error:", err);
-        alert("Server error. Please check your connection.");
-        btn.innerText = "Create Account";
+        console.error("Registration Error:", err);
+        alert("Server connection failed!");
+        btn.innerText = "Register Now";
         btn.disabled = false;
     });
 });

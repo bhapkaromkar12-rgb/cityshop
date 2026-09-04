@@ -9,14 +9,15 @@
     <style>
     :root {
         --primary: #74c947;
-        --dark-card: rgba(20, 20, 20, 0.85);
+        --primary-glow: rgba(116, 201, 71, 0.4);
+        --dark-card: rgba(18, 22, 18, 0.85);
         --text-gray: #b0b0b0;
     }
 
     body {
         margin: 0;
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -26,21 +27,23 @@
         justify-content: center;
         color: white;
         overflow-x: hidden;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
-    /* Mobile Responsive Card */
-    .login-card {
+    /* Split Screen Container */
+    .app-container {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
         background: var(--dark-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        width: 90%;
-        max-width: 400px;
-        padding: 30px 22px;
-        border-radius: 25px;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border-radius: 28px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        overflow: hidden;
         animation: fadeIn 0.8s ease-out;
-        box-sizing: border-box;
     }
 
     @keyframes fadeIn {
@@ -48,30 +51,152 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .logo-area {
-        text-align: center;
+    /* LEFT SIDE: Hero & Animations */
+    .hero-side {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(116, 201, 71, 0.15) 0%, rgba(10, 20, 10, 0.8) 100%);
+        padding: 40px 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+    }
+
+    /* Floating Animated Circles in Background */
+    .hero-side::before, .hero-side::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        z-index: 0;
+    }
+    .hero-side::before {
+        width: 180px;
+        height: 180px;
+        background: var(--primary-glow);
+        top: -30px;
+        left: -30px;
+        animation: floatOrb 8s infinite alternate ease-in-out;
+    }
+    .hero-side::after {
+        width: 220px;
+        height: 220px;
+        background: rgba(116, 201, 71, 0.15);
+        bottom: -50px;
+        right: -50px;
+        animation: floatOrb 10s infinite alternate-reverse ease-in-out;
+    }
+
+    @keyframes floatOrb {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, 30px) scale(1.15); }
+    }
+
+    .hero-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        z-index: 1;
+    }
+    .hero-header i {
+        color: var(--primary);
+        font-size: 26px;
+    }
+
+    .hero-body {
+        z-index: 1;
+        margin: 40px 0;
+    }
+
+    /* Animated Plant Hero Icon Box */
+    .animated-icon-box {
+        width: 70px;
+        height: 70px;
+        background: rgba(116, 201, 71, 0.15);
+        border: 1px solid var(--primary);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        box-shadow: 0 0 25px var(--primary-glow);
+        animation: pulseIcon 3s infinite ease-in-out;
+    }
+    .animated-icon-box i {
+        font-size: 32px;
+        color: var(--primary);
+    }
+
+    @keyframes pulseIcon {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--primary-glow); }
+        50% { transform: scale(1.08); box-shadow: 0 0 35px var(--primary-glow); }
+    }
+
+    .hero-body h1 {
+        font-size: 32px;
+        line-height: 1.25;
+        font-weight: 800;
+        margin: 0 0 15px 0;
+        background: linear-gradient(180deg, #ffffff 0%, #d0d0d0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-body p {
+        color: var(--text-gray);
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Agro Feature Badges */
+    .hero-badges {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        z-index: 1;
+    }
+    .badge-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #e0e0e0;
+    }
+    .badge-item i {
+        color: var(--primary);
+    }
+
+    /* RIGHT SIDE: Login Card Form */
+    .login-side {
+        flex: 1.1;
+        padding: 40px 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-header {
         margin-bottom: 20px;
     }
-
-    .logo-area i {
-        font-size: 42px;
-        color: var(--primary);
-        margin-bottom: 8px;
-        filter: drop-shadow(0 0 10px rgba(116, 201, 71, 0.3));
-    }
-
-    h2 {
-        font-size: 22px;
+    .form-header h2 {
+        font-size: 24px;
         margin: 0;
-        letter-spacing: 1px;
-        text-transform: uppercase;
         font-weight: 800;
     }
-
-    p.subtitle {
+    .form-header p {
         color: var(--text-gray);
         font-size: 13px;
-        margin-top: 5px;
+        margin-top: 4px;
     }
 
     /* Role Switcher */
@@ -83,7 +208,7 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px;
         padding: 6px;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .role-tab {
@@ -111,8 +236,7 @@
     form {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        margin-top: 10px;
+        gap: 14px;
     }
 
     .input-group {
@@ -145,14 +269,13 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 16px;
+        font-size: 15px;
         transition: 0.3s;
         outline: none;
         box-sizing: border-box;
-        appearance: none;
     }
 
-    input:focus, select:focus {
+    input:focus {
         border-color: var(--primary);
         background: rgba(255, 255, 255, 0.12);
         box-shadow: 0 0 15px rgba(116, 201, 71, 0.15);
@@ -169,16 +292,19 @@
         cursor: pointer;
         text-transform: uppercase;
         letter-spacing: 1.2px;
-        transition: 0.4s;
+        transition: 0.3s;
         margin-top: 5px;
         box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
+    }
+
+    button:hover {
+        opacity: 0.95;
     }
 
     button:active {
         transform: scale(0.98);
     }
 
-    /* OR Divider */
     .divider {
         display: flex;
         align-items: center;
@@ -199,7 +325,6 @@
         padding: 0 10px;
     }
 
-    /* Google Button */
     .btn-google {
         width: 100%;
         background: rgba(255, 255, 255, 0.05);
@@ -235,7 +360,7 @@
         font-weight: 700;
     }
 
-    /* --- PREMIUM PLANT LOADER CSS STYLES --- */
+    /* --- PREMIUM PLANT LOADER --- */
     .loader-overlay {
         position: fixed;
         top: 0;
@@ -251,9 +376,7 @@
         z-index: 9999;
     }
 
-    .loader-content {
-        text-align: center;
-    }
+    .loader-content { text-align: center; }
 
     .plant-animation-box {
         position: relative;
@@ -293,9 +416,7 @@
         transform: scale(1);
     }
 
-    .loader-overlay.success .plant-icon {
-        display: none;
-    }
+    .loader-overlay.success .plant-icon { display: none; }
 
     .loader-text {
         font-size: 18px;
@@ -303,7 +424,6 @@
         color: #b0b0b0;
         margin: 0;
         letter-spacing: 1px;
-        transition: color 0.3s;
     }
 
     .loader-overlay.success .loader-text {
@@ -316,15 +436,27 @@
         50% { transform: scale(1.08); }
     }
 
-    @media (max-width: 360px) {
-        .login-card { padding: 25px 18px; }
-        h2 { font-size: 20px; }
-    }
-
-    @media (max-height: 600px) {
-        body {
-            align-items: flex-start;
-            padding: 20px 0;
+    /* Mobile Responsive Logic */
+    @media (max-width: 768px) {
+        .app-container {
+            flex-direction: column;
+            max-width: 420px;
+        }
+        .hero-side {
+            padding: 30px 25px;
+            text-align: center;
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hero-header, .animated-icon-box {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-badges {
+            justify-content: center;
+        }
+        .login-side {
+            padding: 30px 25px;
         }
     }
 </style>
@@ -343,69 +475,106 @@
     </div>
 </div>
 
-<div class="login-card">
-    <div class="logo-area">
-        <i class="fas fa-leaf"></i>
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Access your Agro account</p>
-    </div>
-
-    <!-- Role Switcher -->
-    <div class="role-switcher" aria-label="Account type selector">
-        <button type="button" class="role-tab active" data-role="farmer">
-            <i class="fas fa-tractor"></i>
-            <span>Farmer</span>
-        </button>
-        <button type="button" class="role-tab" data-role="seller">
-            <i class="fas fa-store"></i>
-            <span>Seller</span>
-        </button>
-        <button type="button" class="role-tab" data-role="admin">
-            <i class="fas fa-user-shield"></i>
-            <span>Admin</span>
-        </button>
-    </div>
-
-    <form id="loginForm">
-        <div class="input-group">
-            <i class="fas fa-envelope left-icon"></i>
-            <input type="email" name="email" placeholder="Email Address" required>
+<div class="app-container">
+    
+    <!-- LEFT SIDE: Agricultural Branding & Interactive Animations -->
+    <div class="hero-side">
+        <div class="hero-header">
+            <i class="fas fa-leaf"></i>
+            <span>CITY SHOP AGRO</span>
         </div>
 
-        <div class="input-group">
-            <i class="fas fa-lock left-icon"></i>
-            <input type="password" name="password" id="passInput" placeholder="Password" required>
-            <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
+        <div class="hero-body">
+            <div class="animated-icon-box">
+                <i class="fas fa-tractor"></i>
+            </div>
+            <h1>Empowering Smart Farming Everywhere</h1>
+            <p>Connect direct with buyers, monitor crop trends, and manage your agricultural ecosystem in one place.</p>
+            
+            <div class="hero-badges">
+                <div class="badge-item">
+                    <i class="fas fa-shield-alt"></i> Secure
+                </div>
+                <div class="badge-item">
+                    <i class="fas fa-chart-line"></i> Live Analytics
+                </div>
+                <div class="badge-item">
+                    <i class="fas fa-store"></i> Direct Market
+                </div>
+            </div>
         </div>
 
-        <!-- Hidden role input mapped to role tabs -->
-        <input type="hidden" name="role" id="roleSelect" value="farmer">
-
-        <button type="submit">Sign In</button>
-    </form>
-
-    <div class="divider">
-        <span>OR</span>
+        <div style="font-size: 12px; color: var(--text-gray); z-index: 1;">
+            &copy; City Shop Agro Platform. All rights reserved.
+        </div>
     </div>
 
-    <!-- Google Sign In Button -->
-    <button type="button" class="btn-google" onclick="googleSignIn()">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
-            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
-            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
-            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
-        </svg>
-        Continue with Google
-    </button>
+    <!-- RIGHT SIDE: Login Form -->
+    <div class="login-side">
+        <div class="form-header">
+            <h2>Welcome Back</h2>
+            <p>Please enter your details to sign in</p>
+        </div>
 
-    <div class="footer-links">
-        New User? <a href="register.html">Create Account</a>
+        <!-- Role Switcher -->
+        <div class="role-switcher" aria-label="Account type selector">
+            <button type="button" class="role-tab active" data-role="farmer">
+                <i class="fas fa-tractor"></i>
+                <span>Farmer</span>
+            </button>
+            <button type="button" class="role-tab" data-role="seller">
+                <i class="fas fa-store"></i>
+                <span>Seller</span>
+            </button>
+            <button type="button" class="role-tab" data-role="admin">
+                <i class="fas fa-user-shield"></i>
+                <span>Admin</span>
+            </button>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-envelope left-icon"></i>
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock left-icon"></i>
+                <input type="password" name="password" id="passInput" placeholder="Password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
+            </div>
+
+            <input type="hidden" name="role" id="roleSelect" value="farmer">
+
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <!-- Google Sign In Button -->
+        <button type="button" class="btn-google" onclick="googleSignIn()">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+                <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="footer-links">
+            New User? <a href="register.html">Create Account</a>
+        </div>
     </div>
+
 </div>
 
 <script>
-// Role switcher tab selection logic
+const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
+
+// Role switcher tab selection
 const roleTabs = document.querySelectorAll('.role-tab');
 const roleSelect = document.getElementById('roleSelect');
 
@@ -430,17 +599,77 @@ function togglePass() {
     }
 }
 
+// Google Sign-In Trigger
 function googleSignIn() {
-    alert("Google Sign-In Clicked! Connect your Google OAuth backend API here.");
+    if (typeof google === "undefined" || !google.accounts) {
+        alert("Google SDK loading... Please wait a second and try again.");
+        return;
+    }
+
+    google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
+    });
+
+    google.accounts.id.prompt(); 
 }
 
+// Handle Google Response
+function handleGoogleResponse(response) {
+    const idToken = response.credential;
+    const selectedRole = roleSelect ? roleSelect.value : "farmer";
+
+    const loader = document.getElementById("loginLoader");
+    const loaderText = document.getElementById("loaderText");
+
+    loader.style.display = "flex";
+    loader.classList.remove("growing", "success");
+    loaderText.innerText = "Authenticating Google Account...";
+
+    setTimeout(() => {
+        loader.classList.add("growing");
+        loaderText.innerText = "Growing your dashboard...";
+    }, 500);
+
+    fetch("https://cityshobackend.onrender.com/google-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            token: idToken,
+            role: selectedRole
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            loader.classList.add("success");
+            loaderText.innerText = "Verification Successful!";
+
+            localStorage.setItem("user", JSON.stringify(res.user));
+            if (res.token) localStorage.setItem("token", res.token);
+
+            setTimeout(() => {
+                window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            }, 1200);
+        } else {
+            loader.style.display = "none";
+            alert("Google Login Failed: " + (res.message || "Unauthorized access"));
+        }
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        console.error("Google Auth Error:", err);
+        alert("Server network error during Google Login!");
+    });
+}
+
+// Normal Email/Password Submit Logic
 document.getElementById("loginForm").addEventListener("submit", function(e){
     e.preventDefault();
     const btn = this.querySelector('button[type="submit"]');
     btn.innerText = "Verifying...";
     btn.disabled = true;
 
-    // --- LOADER ACTIVATE LOGIC ---
     const loader = document.getElementById("loginLoader");
     const loaderText = document.getElementById("loaderText");
     
@@ -467,11 +696,11 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     .then(res => res.json())
     .then(res => {
         if(res.success){
-            // --- SUCCESS STATE LOGIC ---
             loader.classList.add("success");
             loaderText.innerText = "Verification Successful!";
             
             localStorage.setItem("user", JSON.stringify(res.user));
+            if (res.token) localStorage.setItem("token", res.token);
             
             setTimeout(() => {
                 window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
