@@ -31,10 +31,10 @@
     .login-card {
         background: var(--dark-card);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px); /* Safari support */
-        width: 88%; /* Side gaps for mobile */
-        max-width: 380px;
-        padding: 35px 25px;
+        -webkit-backdrop-filter: blur(20px);
+        width: 90%;
+        max-width: 400px;
+        padding: 30px 22px;
         border-radius: 25px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 25px 50px rgba(0,0,0,0.6);
@@ -49,18 +49,18 @@
 
     .logo-area {
         text-align: center;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .logo-area i {
-        font-size: 45px;
+        font-size: 42px;
         color: var(--primary);
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         filter: drop-shadow(0 0 10px rgba(116, 201, 71, 0.3));
     }
 
     h2 {
-        font-size: 24px;
+        font-size: 22px;
         margin: 0;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -70,41 +70,85 @@
     p.subtitle {
         color: var(--text-gray);
         font-size: 13px;
-        margin-top: 6px;
+        margin-top: 5px;
+    }
+
+    /* Role Switcher */
+    .role-switcher {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 6px;
+        margin-bottom: 15px;
+    }
+
+    .role-tab {
+        border: none;
+        background: transparent;
+        color: #d9d9d9;
+        border-radius: 12px;
+        padding: 10px 4px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .role-tab.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 6px 12px rgba(116, 201, 71, 0.22);
     }
 
     form {
         display: flex;
         flex-direction: column;
-        gap: 15px;
-        margin-top: 20px;
+        gap: 12px;
+        margin-top: 10px;
     }
 
     .input-group {
         position: relative;
     }
 
-    .input-group i {
+    .input-group i.left-icon {
         position: absolute;
         left: 15px;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--primary); /* Icons green for better visibility */
-        font-size: 16px;
+        color: var(--primary);
+        font-size: 15px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-gray);
+        cursor: pointer;
+        font-size: 14px;
     }
 
     input, select {
         width: 100%;
-        padding: 14px 15px 14px 45px;
+        padding: 13px 15px 13px 45px;
         background: rgba(255, 255, 255, 0.07);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         color: white;
-        font-size: 16px; /* 16px prevents iOS auto-zoom */
+        font-size: 16px;
         transition: 0.3s;
         outline: none;
         box-sizing: border-box;
-        appearance: none; /* Reset for mobile browsers */
+        appearance: none;
     }
 
     input:focus, select:focus {
@@ -113,42 +157,74 @@
         box-shadow: 0 0 15px rgba(116, 201, 71, 0.15);
     }
 
-    select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2374c947' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 18px;
-    }
-
-    select option {
-        background: #1a1a1a;
-        color: white;
-    }
-
-    button {
+    button[type="submit"] {
         background: var(--primary);
         color: white;
-        padding: 15px;
+        padding: 14px;
         border: none;
         border-radius: 12px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
         cursor: pointer;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
+        letter-spacing: 1.2px;
         transition: 0.4s;
-        margin-top: 10px;
+        margin-top: 5px;
         box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
     }
 
     button:active {
-        transform: scale(0.98); /* Touch feedback for mobile */
+        transform: scale(0.98);
+    }
+
+    /* OR Divider */
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-gray);
+        font-size: 12px;
+        font-weight: 600;
+        margin: 15px 0;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .divider span {
+        padding: 0 10px;
+    }
+
+    /* Google Button */
+    .btn-google {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-google:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 
     .footer-links {
         text-align: center;
-        margin-top: 25px;
-        font-size: 14px;
+        margin-top: 20px;
+        font-size: 13px;
         color: var(--text-gray);
     }
 
@@ -168,7 +244,7 @@
         background: rgba(10, 10, 10, 0.95);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        display: none; /* Hidden by default */
+        display: none;
         justify-content: center;
         align-items: center;
         z-index: 9999;
@@ -188,21 +264,18 @@
         align-items: center;
     }
 
-    /* Initial Sukha Paudha (Brown Stems) State */
     .plant-icon {
         font-size: 65px;
-        color: #554433; /* Brown/Dry wood branch color */
+        color: #554433;
         transition: color 1.2s ease-in-out, transform 1.2s ease-in-out;
         animation: breathEffect 2s infinite ease-in-out;
     }
 
-    /* Growing State (Turns bright green and slightly larger) */
     .loader-overlay.growing .plant-icon {
-        color: var(--primary); /* Beautiful Green */
+        color: var(--primary);
         transform: scale(1.25) rotate(8deg);
     }
 
-    /* Success Tick Pop Animation */
     .success-checkmark {
         position: absolute;
         font-size: 70px;
@@ -242,17 +315,11 @@
         50% { transform: scale(1.08); }
     }
 
-    /* Small screen optimization */
     @media (max-width: 360px) {
-        .login-card {
-            padding: 25px 18px;
-        }
-        h2 {
-            font-size: 20px;
-        }
+        .login-card { padding: 25px 18px; }
+        h2 { font-size: 20px; }
     }
 
-    /* Handling landscape mode or small height phones */
     @media (max-height: 600px) {
         body {
             align-items: flex-start;
@@ -282,27 +349,54 @@
         <p class="subtitle">Access your Agro account</p>
     </div>
 
+    <!-- Role Switcher -->
+    <div class="role-switcher" aria-label="Account type selector">
+        <button type="button" class="role-tab active" data-role="farmer">
+            <i class="fas fa-tractor"></i>
+            <span>Farmer</span>
+        </button>
+        <button type="button" class="role-tab" data-role="seller">
+            <i class="fas fa-store"></i>
+            <span>Seller</span>
+        </button>
+        <button type="button" class="role-tab" data-role="admin">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin</span>
+        </button>
+    </div>
+
     <form id="loginForm">
         <div class="input-group">
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-envelope left-icon"></i>
             <input type="email" name="email" placeholder="Email Address" required>
         </div>
 
         <div class="input-group">
-            <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="Password" required>
+            <i class="fas fa-lock left-icon"></i>
+            <input type="password" name="password" id="passInput" placeholder="Password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
         </div>
 
-        <div class="input-group">
-            <i class="fas fa-user-tag"></i>
-            <select name="role">
-                <option value="customer">Customer / Farmer</option>
-                <option value="admin">Admin Panel</option>
-            </select>
-        </div>
+        <!-- Hidden role input mapped to role tabs -->
+        <input type="hidden" name="role" id="roleSelect" value="farmer">
 
         <button type="submit">Sign In</button>
     </form>
+
+    <div class="divider">
+        <span>OR</span>
+    </div>
+
+    <!-- Google Sign In Button -->
+    <button type="button" class="btn-google" onclick="googleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+        </svg>
+        Continue with Google
+    </button>
 
     <div class="footer-links">
         New User? <a href="register.html">Create Account</a>
@@ -310,9 +404,38 @@
 </div>
 
 <script>
+// Role switcher tab selection logic
+const roleTabs = document.querySelectorAll('.role-tab');
+const roleSelect = document.getElementById('roleSelect');
+
+roleTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const selectedRole = tab.dataset.role;
+        roleTabs.forEach(item => item.classList.toggle('active', item === tab));
+        roleSelect.value = selectedRole;
+    });
+});
+
+// Password Toggle Functionality
+function togglePass() {
+    const passInput = document.getElementById("passInput");
+    const toggleIcon = document.querySelector(".toggle-password");
+    if (passInput.type === "password") {
+        passInput.type = "text";
+        toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        passInput.type = "password";
+        toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+function googleSignIn() {
+    alert("Google Sign-In Clicked! Connect your Google OAuth backend API here.");
+}
+
 document.getElementById("loginForm").addEventListener("submit", function(e){
     e.preventDefault();
-    const btn = this.querySelector('button');
+    const btn = this.querySelector('button[type="submit"]');
     btn.innerText = "Verifying...";
     btn.disabled = true;
 
@@ -320,12 +443,10 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     const loader = document.getElementById("loginLoader");
     const loaderText = document.getElementById("loaderText");
     
-    // Loader reset karke display karna (Sukha State)
     loader.style.display = "flex";
     loader.classList.remove("growing", "success");
     loaderText.innerText = "Verifying Details...";
 
-    // 500ms ke baad paudha hara bhara hona shuru hoga (Growing animation switch)
     setTimeout(() => {
         loader.classList.add("growing");
         loaderText.innerText = "Growing your dashboard...";
@@ -334,7 +455,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
     let data = {
         email: this.email.value,
         password: this.password.value,
-        
+        role: this.role.value
     };
 
     fetch("https://cityshobackend.onrender.com/login", {
@@ -351,12 +472,10 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
             
             localStorage.setItem("user", JSON.stringify(res.user));
             
-            // Animation dekhne ke liye ek chhota sa delay (1.2 sec) ke baad redirection
             setTimeout(() => {
                 window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
             }, 1200);
         } else {
-            // Error handling par loader reset aur hide hoga
             loader.style.display = "none";
             alert("Invalid Credentials. Please try again.");
             btn.innerText = "Sign In";
@@ -364,7 +483,6 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
         }
     })
     .catch(err => {
-        // Network connection fail state handling
         loader.style.display = "none";
         console.error("Login Error:", err);
         alert("Server connection failed!");
