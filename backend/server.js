@@ -18,33 +18,31 @@ const ADMIN_EMAIL = "bhapkaromkar12@gmail.com";
 const ADMIN_PASS = "Chiku@2121";
 
 // --- GMAIL TRANSPORTER SETUP ---
-// Port 587 + STARTTLS is the most reliable path on Render/cloud hosts.
-// Gmail App Password required (not your regular Gmail password).
-// Generate at: https://myaccount.google.com/apppasswords
+const EMAIL_USER = process.env.EMAIL_USER || "agrotechh12@gmail.com";
+const EMAIL_PASS = process.env.EMAIL_PASS;   // set this in Render env vars — your 16-char App Password
+
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
-    secure: false,          // false = STARTTLS (upgrades after connect)
-    requireTLS: true,       // enforce TLS upgrade
-    family: 4,              // CRITICAL: force IPv4 — Render free tier blocks outbound IPv6
+    secure: false,
+    requireTLS: true,
+    family: 4,              // force IPv4 — Render free tier blocks outbound IPv6
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS  // must be a Gmail App Password, NOT your Gmail login password
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
     },
     connectionTimeout: 30000,
     greetingTimeout: 30000,
     socketTimeout: 45000,
-    tls: {
-        rejectUnauthorized: false  // allow on Render's dynamic IPs
-    }
+    tls: { rejectUnauthorized: false }
 });
 
 transporter.verify((err, success) => {
     if (err) {
-        console.error("SMTP Configuration Error:", err.message);
-        console.error("Fix: Set EMAIL_USER=youraddress@gmail.com and EMAIL_PASS=your_16_char_app_password in Render env vars.");
+        console.error("SMTP Error:", err.code, "|", err.message);
+        console.error("EMAIL_USER:", EMAIL_USER, "| EMAIL_PASS set:", !!EMAIL_PASS);
     } else {
-        console.log("SMTP Server Ready - Gmail connected via port 587 STARTTLS ✓");
+        console.log("SMTP Ready ✓ — sending as:", EMAIL_USER);
     }
 });
 
@@ -263,9 +261,9 @@ app.post('/send-otp', (req, res) => {
     otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"AgroTech" <${EMAIL_USER}>`,
         to: email,
-        subject: 'City Shop Agro - Registration OTP Verification',
+        subject: 'AgroTech - Your OTP Verification Code',
         html: `
             <div style="font-family: 'Inter', sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #161616; color: white; border-radius: 15px; border: 1px solid #74c947;">
                 <h2 style="color: #74c947; text-align: center;">CITY SHOP AGRO</h2>
@@ -280,12 +278,12 @@ app.post('/send-otp', (req, res) => {
 
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-            console.error("sendMail error:", err.message);
-            // Give the frontend a clean user-facing message
-            const userMsg = err.code === 'EAUTH'
-                ? "Email authentication failed. Please contact support."
-                : "Could not send OTP email. Please try again in a moment.";
-            return res.status(500).json({ success: false, message: userMsg });
+            console.error("sendMail error | code:", err.code, "| message:", err.message);
+            // Return the real error to the frontend for easier diagnosis
+            return res.status(500).json({
+                success: false,
+                message: "OTP email failed: [" + (err.code || "ERR") + "] " + err.message
+            });
         }
         console.log("OTP email sent to:", email, "| msgId:", info.messageId);
         res.json({ success: true, message: "OTP sent successfully to your email!" });
