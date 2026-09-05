@@ -24,209 +24,507 @@
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
             color: white;
-            padding: 70px 16px 30px;
-            padding-bottom: calc(30px + env(safe-area-inset-bottom));
+            padding: 80px 16px calc(36px + env(safe-area-inset-bottom));
             -webkit-text-size-adjust: 100%;
         }
 
-        /* Responsive body layout */
-        @media (min-height: 700px) {
-            body { align-items: center; }
+        /* ── Sticky Navbar ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            z-index: 1001;
+            background: rgba(10, 10, 10, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            padding-top: env(safe-area-inset-top);
         }
 
-        /* Top Left Back Icon */
-        .btn-back-top {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+        }
+        .navbar-logo .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-decoration: none;
-            z-index: 1000;
+            font-size: 16px;
+            color: #fff;
+        }
+        .navbar-logo span {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .navbar-logo span em {
+            color: var(--primary);
+            font-style: normal;
         }
 
-        .payment-box {
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.3px;
+        }
+        .navbar-title i { color: var(--primary); }
+
+        /* ── Main Card ── */
+        .checkout-wrap {
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        /* ── Product Summary Card ── */
+        .product-card {
             background: var(--dark-card);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            width: 100%;
-            max-width: 420px;
-            padding: 28px 24px;
-            border-radius: 22px;
-            box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .product-card img {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
+            flex-shrink: 0;
+            background: #1a1a1a;
         }
 
-        h2 { color: var(--primary); font-size: 22px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .order-summary { 
-            background: rgba(116, 201, 71, 0.1); 
-            padding: 15px; 
-            border-radius: 15px; 
-            margin-bottom: 20px; 
-            text-align: left; 
-            border-left: 4px solid var(--primary); 
-            font-size: 14px;
-            line-height: 1.6;
+        .product-card-info { flex-grow: 1; }
+        .product-card-info .p-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-gray);
+            margin-bottom: 4px;
+        }
+        .product-card-info .p-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .product-card-info .p-location {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        .product-card-price {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .product-card-price .unit-price {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-bottom: 2px;
+        }
+        .product-card-price .price-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
         }
 
-        .qr-section { 
-            margin: 20px 0; 
-            display: none; 
-            background: white; 
-            padding: 15px; 
+        /* ── Form Box ── */
+        .form-box {
+            background: var(--dark-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 20px;
-            display: inline-block;
-        } 
-        
-        .qr-section img { width: 180px; border-radius: 10px; }
+            padding: 22px 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 14px;
+        }
 
-        input {
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-gray);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .section-label i { color: var(--primary); }
+
+        input, select {
             width: 100%;
             padding: 14px;
-            margin: 10px 0;
+            margin: 8px 0;
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             color: white;
-            box-sizing: border-box;
             font-size: 16px; /* iOS no-zoom */
             -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
         }
-        input:focus { outline: none; border-color: var(--primary); }
+        input::placeholder { color: rgba(255,255,255,0.35); }
+        input:focus, select:focus { border-color: var(--primary); background: rgba(116,201,71,0.06); }
+        select option { background: #1a1a1a; color: white; }
 
-        .btn-pay { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            width: 100%; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: 800; 
-            font-size: 16px; 
-            margin-top: 15px; 
+        /* ── Quantity Selector ── */
+        .qty-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .qty-row label {
+            flex: 1;
+            padding: 0 14px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.55);
+            white-space: nowrap;
+        }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .qty-btn {
+            background: rgba(255,255,255,0.07);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .qty-btn:hover { background: rgba(116,201,71,0.2); color: var(--primary); }
+        .qty-btn:active { background: rgba(116,201,71,0.35); }
+        #qtyDisplay {
+            width: 44px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* ── Total Row ── */
+        .total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(116,201,71,0.08);
+            border: 1px solid rgba(116,201,71,0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+        .total-row .total-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+        .total-row .total-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* ── QR Section ── */
+        .qr-section {
+            margin: 12px 0 0;
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            display: none;
+        }
+        .qr-section img { width: 170px; border-radius: 10px; }
+        .scan-text { font-weight: 700; color: #1a1a1a; margin-bottom: 10px; font-size: 13px; }
+
+        .payment-apps {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .app-item { cursor: pointer; transition: transform 0.2s; text-align: center; }
+        .app-item:active { transform: scale(0.88); }
+        .app-item img { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 4px; }
+        .app-item span { display: block; font-size: 10px; color: #555; font-weight: 600; }
+
+        /* ── Trust Badges ── */
+        .trust-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .trust-badge {
+            flex: 1;
+            background: rgba(22,22,22,0.85);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .trust-badge .tb-icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+            display: block;
+            color: var(--primary);
+        }
+
+        /* ── Place Order Button ── */
+        .btn-place-order {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 17px;
+            width: 100%;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 16px;
             text-transform: uppercase;
-            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 28px rgba(116,201,71,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+        .btn-place-order:hover  { opacity: 0.92; }
+        .btn-place-order:active { transform: scale(0.98); }
+        .btn-place-order:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .payment-apps { 
-            display: flex; 
-            justify-content: space-around; 
-            margin-top: 20px; 
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .app-item { cursor: pointer; transition: 0.3s; text-align: center; }
-        .app-item:active { transform: scale(0.9); }
-        .app-item img { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 5px; }
-        .app-item span { display: block; font-size: 10px; color: var(--text-gray); }
-
-        .scan-text { font-weight: bold; color: #333; margin-bottom: 10px; font-size: 14px; }
-
-        /* Responsive */
+        /* ── Responsive ── */
         @media (max-width: 480px) {
-            .payment-box { padding: 22px 18px; border-radius: 18px; }
-            .qr-section img { width: 150px; }
-            .app-item img { width: 36px; height: 36px; }
-            h2 { font-size: 18px; }
+            .form-box { padding: 18px 16px; }
+            .product-card img { width: 60px; height: 60px; }
         }
         @media (max-width: 360px) {
-            .payment-box { padding: 18px 14px; }
-            .btn-pay { padding: 14px; font-size: 14px; }
+            .form-box { padding: 14px 12px; }
+            .btn-place-order { padding: 14px; font-size: 14px; }
+            .trust-badge { font-size: 9px; padding: 8px 4px; }
         }
     </style>
 </head>
 <body>
 
-<a href="view.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
+<!-- Sticky Navbar -->
+<nav class="navbar">
+    <a href="view.html" class="navbar-logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <span>Agro<em>Tech</em></span>
+    </a>
+    <div class="navbar-title">
+        <i class="fas fa-lock"></i> Secure Checkout
+    </div>
+</nav>
 
-<div class="payment-box">
-    <h2>Confirm & Pay</h2>
-    
-    <div id="summary" class="order-summary">
-        <p><i class="fas fa-spinner fa-spin"></i> Loading product details...</p>
+<div class="checkout-wrap">
+
+    <!-- Product Summary Card -->
+    <div class="product-card" id="productCard">
+        <img id="productImg" src="" alt="Product" onerror="this.src='https://via.placeholder.com/72?text=Agro'">
+        <div class="product-card-info">
+            <div class="p-label">You're ordering</div>
+            <div class="p-name" id="productName"><i class="fas fa-spinner fa-spin" style="color:var(--primary);"></i> Loading…</div>
+            <div class="p-location" id="productLocation"></div>
+        </div>
+        <div class="product-card-price">
+            <div class="unit-price">Unit price</div>
+            <div class="price-val" id="productPriceDisplay">—</div>
+        </div>
     </div>
 
-    <form id="orderForm">
-        <input type="text" id="custName" placeholder="Your Full Name" required>
-        <input type="text" id="custAddress" placeholder="Full Delivery Address" required>
-        <input type="text" id="custPhone" placeholder="Mobile Number" required>
-        
-        <div id="qrContainer" style="display:none; margin-top: 20px;">
-            <div class="qr-section">
-                <p class="scan-text">Scan QR to Pay</p>
-                <img id="qrCodeImg" src="" alt="Payment QR">
-            </div>
-
-            <div class="payment-apps">
-                <div class="app-item" onclick="payViaApp('gpay')">
-                    <img src="https://img.icons8.com/color/48/google-pay-india.png">
-                    <span>GPay</span>
-                </div>
-                <div class="app-item" onclick="payViaApp('phonepe')">
-                    <img src="https://img.icons8.com/color/48/phonepe.png">
-                    <span>PhonePe</span>
-                </div>
-                <div class="app-item" onclick="payViaApp('paytm')">
-                    <img src="https://img.icons8.com/color/48/paytm.png">
-                    <span>Paytm</span>
-                </div>
-            </div>
+    <!-- Form -->
+    <div class="form-box">
+        <div class="section-label">
+            <i class="fas fa-truck"></i> Delivery Details
         </div>
 
-        <button type="submit" id="mainBtn" class="btn-pay">Confirm Order</button>
-    </form>
+        <form id="orderForm">
+            <input type="text" id="custName" placeholder="Your Full Name" required>
+            <input type="text" id="custAddress" placeholder="Full Delivery Address" required>
+            <input type="tel"  id="custPhone" placeholder="Mobile Number" required>
+
+            <!-- Quantity Selector -->
+            <div class="qty-row">
+                <label>Quantity</label>
+                <div class="qty-controls">
+                    <button type="button" class="qty-btn" id="qtyMinus">−</button>
+                    <span id="qtyDisplay">1</span>
+                    <button type="button" class="qty-btn" id="qtyPlus">+</button>
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="total-row">
+                <span class="total-label">Order Total</span>
+                <span class="total-value" id="totalDisplay">₹—</span>
+            </div>
+
+            <!-- QR / UPI Section -->
+            <div id="qrContainer" style="display:none;">
+                <div class="qr-section" id="qrBox">
+                    <p class="scan-text">Scan QR to Pay</p>
+                    <img id="qrCodeImg" src="" alt="Payment QR">
+                    <div class="payment-apps">
+                        <div class="app-item" onclick="payViaApp('gpay')">
+                            <img src="https://img.icons8.com/color/48/google-pay-india.png" alt="GPay">
+                            <span>GPay</span>
+                        </div>
+                        <div class="app-item" onclick="payViaApp('phonepe')">
+                            <img src="https://img.icons8.com/color/48/phonepe.png" alt="PhonePe">
+                            <span>PhonePe</span>
+                        </div>
+                        <div class="app-item" onclick="payViaApp('paytm')">
+                            <img src="https://img.icons8.com/color/48/paytm.png" alt="Paytm">
+                            <span>Paytm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="trust-row" style="margin-top:18px;">
+                <div class="trust-badge">
+                    <i class="fas fa-lock tb-icon"></i>
+                    Secure<br>Payment
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-shipping-fast tb-icon"></i>
+                    Fast<br>Delivery
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-check-circle tb-icon"></i>
+                    Verified<br>Seller
+                </div>
+            </div>
+
+            <button type="submit" id="mainBtn" class="btn-place-order">
+                <i class="fas fa-lock"></i> Place Order Securely
+            </button>
+        </form>
+    </div>
+
 </div>
 
 <script>
     const productId = localStorage.getItem("selectedProductId");
     const user = JSON.parse(localStorage.getItem("user"));
     let productPrice = 0;
+    let quantity = 1;
 
-    // Base URL ko ek variable mein rakh lo taaki galti na ho
     const BASE_URL = "https://cityshobackend.onrender.com";
 
-    if(!user) window.location.href = "index1.html";
+    if (!user) window.location.href = "index1.html";
 
-    // 1. Fetch Product Details
+    function updateTotal() {
+        const total = (productPrice * quantity).toFixed(2);
+        document.getElementById("totalDisplay").textContent = productPrice > 0 ? `₹${total}` : "₹—";
+    }
+
+    // Quantity controls
+    document.getElementById("qtyMinus").addEventListener("click", () => {
+        if (quantity > 1) {
+            quantity--;
+            document.getElementById("qtyDisplay").textContent = quantity;
+            updateTotal();
+            if (productPrice > 0) generateQR(productPrice * quantity);
+        }
+    });
+
+    document.getElementById("qtyPlus").addEventListener("click", () => {
+        if (quantity < 99) {
+            quantity++;
+            document.getElementById("qtyDisplay").textContent = quantity;
+            updateTotal();
+            if (productPrice > 0) generateQR(productPrice * quantity);
+        }
+    });
+
+    // Fetch Product Details
     fetch(`${BASE_URL}/get-products`)
     .then(res => res.json())
     .then(data => {
         const products = data.products || data;
         const product = products.find(p => p.id == productId);
-        if(product) {
+        if (product) {
             productPrice = product.price;
-            document.getElementById("summary").innerHTML = `
-                <div style="color:var(--primary); font-weight:bold; margin-bottom:5px;">${product.name}</div>
-                <div style="font-size:18px; font-weight:800;">₹${product.price}</div>
-                <div style="color:var(--text-gray); font-size:12px;">Location: ${product.city}</div>
-            `;
-            generateQR(product.price);
+
+            document.getElementById("productName").textContent = product.name;
+            document.getElementById("productLocation").innerHTML =
+                `<i class="fas fa-map-marker-alt" style="font-size:10px;"></i> ${product.city}`;
+            document.getElementById("productPriceDisplay").textContent = `₹${product.price}`;
+
+            // Product image
+            const imgEl = document.getElementById("productImg");
+            if (product.image) {
+                imgEl.src = product.image.startsWith("http")
+                    ? product.image
+                    : `${BASE_URL}/uploads/${product.image}`;
+            }
+
+            updateTotal();
+            generateQR(product.price * quantity);
         }
     })
     .catch(err => console.error("Product fetch error:", err));
 
     function generateQR(amount) {
-        const upiId = "9699214024@ybl"; 
+        const upiId = "9699214024@ybl";
         const name = "City Shop";
         const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
         const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
-        
+
         document.getElementById("qrCodeImg").src = qrImg;
         document.getElementById("qrContainer").style.display = "block";
     }
@@ -234,7 +532,7 @@
     function payViaApp(app) {
         const upiId = "9699214024@ybl";
         const name = "City Shop";
-        const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${productPrice}&cu=INR`;
+        const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${productPrice * quantity}&cu=INR`;
 
         if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
             window.location.href = upiUrl;
@@ -245,26 +543,25 @@
 
     document.getElementById("orderForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        
-        if(!productId) {
+
+        if (!productId) {
             alert("No product selected!");
             return;
         }
 
         const btn = document.getElementById("mainBtn");
-        btn.innerText = "Processing...";
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing…';
         btn.disabled = true;
-        
+
         const orderData = {
             user_id: user.id,
             product_id: productId,
             name: document.getElementById("custName").value,
             address: document.getElementById("custAddress").value,
             phone: document.getElementById("custPhone").value,
-            price: productPrice // Backend ko price bhi bhej rahe hain security ke liye
+            price: productPrice * quantity
         };
 
-        // Yahan URL check karo: cityshobackend.onrender.com hona chahiye
         fetch(`${BASE_URL}/place-order`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -272,20 +569,20 @@
         })
         .then(res => res.json())
         .then(data => {
-            if(data.success) {
+            if (data.success) {
                 alert("Order Placed Successfully!");
-                localStorage.removeItem("selectedProductId"); // Order ke baad clean up
+                localStorage.removeItem("selectedProductId");
                 window.location.href = "my-orders.html";
             } else {
                 alert("Error: " + (data.message || "Something went wrong"));
-                btn.innerText = "Confirm Order";
+                btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
                 btn.disabled = false;
             }
         })
         .catch(err => {
             console.error("Order error:", err);
             alert("Server Error! Make sure your backend is running.");
-            btn.innerText = "Confirm Order";
+            btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
             btn.disabled = false;
         });
     });

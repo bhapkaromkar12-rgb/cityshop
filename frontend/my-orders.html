@@ -10,8 +10,11 @@
         :root {
             --primary: #74c947;
             --dark-bg: #0a0a0a;
-            --card-bg: rgba(22, 22, 22, 0.9);
+            --card-bg: rgba(22, 22, 22, 0.92);
             --text-gray: #a0a0a0;
+            --pending-color: #ffc107;
+            --delivered-color: #74c947;
+            --cancelled-color: #ff5c5c;
         }
 
         *, *::before, *::after { box-sizing: border-box; }
@@ -29,134 +32,324 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* Floating Back Icon (Top Left) */
-        .btn-back-top {
+        /* ── Sticky Navbar ── */
+        .navbar {
             position: fixed;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: white;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            z-index: 1001;
+            background: rgba(10, 10, 10, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+        }
+        .navbar-logo .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-decoration: none;
-            z-index: 1001;
+            font-size: 16px;
+            color: #fff;
+        }
+        .navbar-logo span {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .navbar-logo span em {
+            color: var(--primary);
+            font-style: normal;
         }
 
+        .navbar-back {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .navbar-back:hover { color: var(--primary); }
+
+        /* ── Filter Tabs ── */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .filter-row::-webkit-scrollbar { display: none; }
+
+        .filter-tab {
+            flex-shrink: 0;
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: var(--text-gray);
+            transition: all 0.2s;
+        }
+        .filter-tab.active,
+        .filter-tab:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* ── Container ── */
         .container {
             max-width: 640px;
             margin: 0 auto;
-            padding: 72px 16px 40px;
+            padding: 80px 16px 40px;
             padding-bottom: calc(40px + env(safe-area-inset-bottom));
         }
 
-        h2 { 
-            text-align: center; 
-            font-size: 22px; 
-            color: var(--primary); 
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-header h2 {
+            font-size: 22px;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 25px;
+            margin: 0 0 4px;
             font-weight: 800;
         }
 
-        /* Order Card - Phone Optimized */
-        .order-card { 
-            background: var(--card-bg); 
+        /* ── Order Count Summary ── */
+        .order-count {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 16px;
+            padding-left: 2px;
+        }
+        .order-count strong { color: #fff; }
+
+        /* ── Order Card ── */
+        .order-card {
+            background: var(--card-bg);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: slideIn 0.5s ease;
+            border-radius: 18px;
+            padding: 15px 15px 15px 0;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(14px);
+            animation: cardEnter 0.45s ease forwards;
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
-        .order-card img { 
-            width: 80px; 
-            height: 80px; 
-            object-fit: cover; 
-            border-radius: 12px; 
-            border: 1px solid #333;
+        @keyframes cardEnter {
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .order-info { flex-grow: 1; }
-        .order-info h3 { margin: 0 0 5px 0; font-size: 16px; color: #fff; }
-        .order-info p { margin: 2px 0; color: var(--text-gray); font-size: 13px; }
-        
-        /* Status Badges */
-        .status-badge { 
-            padding: 4px 10px; 
-            border-radius: 8px; 
-            font-size: 11px; 
-            font-weight: bold; 
-            display: inline-block; 
-            margin-top: 8px;
+
+        /* Colored left-border stripe */
+        .order-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+        .order-card.stripe-pending::before  { background: var(--pending-color); }
+        .order-card.stripe-delivered::before { background: var(--delivered-color); }
+        .order-card.stripe-cancelled::before { background: var(--cancelled-color); }
+
+        .order-card img {
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+            margin-left: 14px;
+        }
+
+        .order-info { flex-grow: 1; min-width: 0; }
+
+        .order-id {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .order-info h3 {
+            margin: 0 0 5px;
+            font-size: 15px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 80px; /* space for badge */
+        }
+        .order-info p {
+            margin: 2px 0;
+            color: var(--text-gray);
+            font-size: 12px;
+        }
+
+        /* Status badge — top right */
+        .status-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .status-pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
-        .status-delivered { background: rgba(116, 201, 71, 0.2); color: var(--primary); border: 1px solid rgba(116, 201, 71, 0.3); }
-        
-        .empty-msg { 
-            text-align: center; 
-            padding: 50px 20px; 
+        .status-pending   { background: rgba(255,193,7,0.18);  color: var(--pending-color);   border: 1px solid rgba(255,193,7,0.3); }
+        .status-delivered { background: rgba(116,201,71,0.18); color: var(--delivered-color); border: 1px solid rgba(116,201,71,0.3); }
+        .status-cancelled { background: rgba(255,92,92,0.18);  color: var(--cancelled-color); border: 1px solid rgba(255,92,92,0.3); }
+
+        /* Track Order button (delivered only) */
+        .btn-track {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(116,201,71,0.15);
+            color: var(--primary);
+            border: 1px solid rgba(116,201,71,0.3);
+            transition: background 0.2s;
+        }
+        .btn-track:hover { background: rgba(116,201,71,0.28); }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
             background: var(--card-bg);
             border-radius: 20px;
-            color: var(--text-gray); 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .empty-state .empty-icon {
+            font-size: 56px;
+            color: rgba(255,255,255,0.12);
+            margin-bottom: 16px;
+        }
+        .empty-state p {
+            color: var(--text-gray);
+            font-size: 15px;
+            margin: 0 0 6px;
+        }
+        .empty-state small {
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
         }
 
+        /* ── Continue Shopping Button ── */
         .continue-btn {
-            display: block;
-            text-align: center;
-            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 28px;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(116,201,71,0.1);
+            border: 1.5px solid rgba(116,201,71,0.3);
             color: var(--primary);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
+            transition: background 0.2s;
         }
+        .continue-btn:hover { background: rgba(116,201,71,0.2); }
 
-        /* Responsive */
+        /* ── Responsive ── */
         @media (max-width: 480px) {
-            .container { padding: 68px 12px 30px; }
-            .order-card { padding: 12px; gap: 12px; }
-            .order-card img { width: 68px; height: 68px; border-radius: 10px; }
+            .container { padding: 76px 12px 30px; }
+            .order-card { padding: 12px 12px 12px 0; gap: 11px; }
+            .order-card img { width: 66px; height: 66px; border-radius: 10px; margin-left: 12px; }
             .order-info h3 { font-size: 14px; }
-            .order-info p  { font-size: 12px; }
-            h2 { font-size: 18px; }
+            .order-info p  { font-size: 11px; }
         }
         @media (max-width: 360px) {
-            .order-card img { width: 58px; height: 58px; }
-            .container { padding: 64px 10px 25px; }
+            .order-card img { width: 56px; height: 56px; }
+            .container { padding: 72px 10px 25px; }
         }
     </style>
 </head>
 <body>
 
-<a href="view.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
+<!-- Sticky Navbar -->
+<nav class="navbar">
+    <a href="view.html" class="navbar-logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <span>Agro<em>Tech</em></span>
+    </a>
+    <a href="view.html" class="navbar-back">
+        <i class="fas fa-arrow-left"></i> Back to Shop
+    </a>
+</nav>
 
 <div class="container">
-    <h2><i class="fas fa-history"></i> My Orders</h2>
-    
+    <div class="page-header">
+        <h2><i class="fas fa-history"></i> My Orders</h2>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-row" id="filterRow">
+        <div class="filter-tab active" data-filter="all">All</div>
+        <div class="filter-tab" data-filter="Pending">Pending</div>
+        <div class="filter-tab" data-filter="Delivered">Delivered</div>
+        <div class="filter-tab" data-filter="Cancelled">Cancelled</div>
+    </div>
+
+    <!-- Order Count -->
+    <div class="order-count" id="orderCount"></div>
+
+    <!-- Orders List -->
     <div id="ordersList">
-        <div class="empty-msg">
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 30px; color: var(--primary);"></i>
-            <p>Fetching your orders...</p>
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-circle-notch fa-spin" style="font-size:36px; color:var(--primary);"></i></div>
+            <p>Fetching your orders…</p>
         </div>
     </div>
 
-    <a href="view.html" class="continue-btn">Continue Shopping</a>
+    <a href="view.html" class="continue-btn">
+        <i class="fas fa-store"></i> Continue Shopping
+    </a>
 </div>
 
 <script>
@@ -167,67 +360,112 @@
         window.location.href = "index1.html";
     }
 
+    let allOrders = [];
+    let activeFilter = "all";
+
+    function getStatusClass(status) {
+        if (!status) return "status-pending";
+        const s = status.toLowerCase();
+        if (s === "delivered")  return "status-delivered";
+        if (s === "cancelled")  return "status-cancelled";
+        return "status-pending";
+    }
+
+    function getStripeClass(status) {
+        if (!status) return "stripe-pending";
+        const s = status.toLowerCase();
+        if (s === "delivered")  return "stripe-delivered";
+        if (s === "cancelled")  return "stripe-cancelled";
+        return "stripe-pending";
+    }
+
+    function renderOrders(orders) {
+        const list = document.getElementById("ordersList");
+        const countEl = document.getElementById("orderCount");
+
+        if (!orders || orders.length === 0) {
+            countEl.innerHTML = "";
+            list.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-box-open"></i></div>
+                    <p>No orders found</p>
+                    <small>${activeFilter === "all" ? "You haven't placed any orders yet." : "No orders with status "" + activeFilter + "\"."}</small>
+                </div>`;
+            return;
+        }
+
+        countEl.innerHTML = `<strong>${orders.length}</strong> order${orders.length !== 1 ? "s" : ""} found`;
+        list.innerHTML = orders.map((order, idx) => {
+            const imgPath = order.image
+                ? (order.image.startsWith("http") ? order.image : `${BASE_URL}/uploads/${order.image}`)
+                : "https://via.placeholder.com/80?text=Agro";
+
+            const statusLabel = order.status || "Pending";
+            const statusCls   = getStatusClass(statusLabel);
+            const stripeCls   = getStripeClass(statusLabel);
+            const delay       = (idx * 0.07).toFixed(2);
+
+            const trackBtn = statusLabel.toLowerCase() === "delivered"
+                ? `<a href="#" class="btn-track"><i class="fas fa-truck"></i> Track Order</a>`
+                : "";
+
+            return `
+                <div class="order-card ${stripeCls}" style="animation-delay:${delay}s">
+                    <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
+                    <div class="order-info">
+                        <div class="order-id">ORDER #${order.id}</div>
+                        <h3>${order.product_name || "Product"}</h3>
+                        <p><i class="fas fa-rupee-sign" style="font-size:10px;"></i> ${parseFloat(order.price || 0).toFixed(2)}</p>
+                        <p><i class="fas fa-calendar-alt" style="font-size:10px;"></i> ${new Date(order.order_date).toLocaleDateString("en-IN", {day:"numeric", month:"short", year:"numeric"})}</p>
+                        ${trackBtn}
+                    </div>
+                    <span class="status-badge ${statusCls}">${statusLabel}</span>
+                </div>`;
+        }).join("");
+    }
+
+    function applyFilter(filter) {
+        activeFilter = filter;
+        const filtered = filter === "all"
+            ? allOrders
+            : allOrders.filter(o => (o.status || "Pending") === filter);
+        renderOrders(filtered);
+
+        document.querySelectorAll(".filter-tab").forEach(tab => {
+            tab.classList.toggle("active", tab.dataset.filter === filter);
+        });
+    }
+
+    document.getElementById("filterRow").addEventListener("click", e => {
+        if (e.target.classList.contains("filter-tab")) {
+            applyFilter(e.target.dataset.filter);
+        }
+    });
+
     function fetchOrders() {
         const list = document.getElementById("ordersList");
 
-        // URL theek kiya: cityshobackend use kiya hai
         fetch(`${BASE_URL}/my-orders/${user.id}`)
         .then(res => {
-            if (!res.ok) throw new Error('Network response was not ok');
+            if (!res.ok) throw new Error("Network response was not ok");
             return res.json();
         })
         .then(data => {
-            list.innerHTML = "";
-
-            // Check if data is an array or contains an orders property
-            const orders = data.orders || data;
-
-            if(!orders || orders.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-msg">
-                        <i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 15px; color: #444;"></i>
-                        <p>No orders found yet.</p>
-                    </div>`;
-                return;
-            }
-
-            orders.forEach(order => {
-                const statusClass = order.status === 'Pending' ? 'status-pending' : 'status-delivered';
-                
-                // Image path ko bhi BASE_URL se connect kiya
-                
-
-                    const imgPath = order.image
-    ? (order.image.startsWith("http")
-        ? order.image
-        : `${BASE_URL}/uploads/${order.image}`)
-    : "https://via.placeholder.com/80?text=Agro";
-
-                list.innerHTML += `
-                    <div class="order-card">
-                        <img src="${imgPath}" onerror="this.src='https://via.placeholder.com/80?text=Agro'" alt="Product">
-                        <div class="order-info">
-                            <h3>${order.product_name || 'Product'}</h3>
-                            <p><strong>ID:</strong> #${order.id}</p>
-                            <p><strong>Total:</strong> ₹${parseFloat(order.price || 0).toFixed(2)}</p>
-                            <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
-                            <span class="status-badge ${statusClass}">${order.status || 'Pending'}</span>
-                        </div>
-                    </div>
-                `;
-            });
+            allOrders = data.orders || data;
+            applyFilter("all");
         })
         .catch(err => {
             console.error("Fetch error:", err);
+            document.getElementById("orderCount").innerHTML = "";
             list.innerHTML = `
-                <div class='empty-msg'>
-                    <i class="fas fa-exclamation-triangle" style="color: #ffc107; font-size: 30px;"></i>
-                    <p>Connection Error!<br><small style="font-size:10px; color:gray;">Check if backend is awake at ${BASE_URL}</small></p>
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-exclamation-triangle" style="color:#ffc107;"></i></div>
+                    <p>Connection Error!</p>
+                    <small>Check if backend is awake at ${BASE_URL}</small>
                 </div>`;
         });
     }
 
-    // Initialize fetch
     fetchOrders();
 </script>
 

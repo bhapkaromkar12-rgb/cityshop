@@ -32,7 +32,7 @@
         overflow-x: hidden;
     }
 
-    /* NAVBAR */
+    /* ── NAVBAR ─────────────────────────────────────────── */
     .navbar {
         background: rgba(9,13,9,0.97);
         backdrop-filter: blur(20px);
@@ -49,6 +49,23 @@
         z-index: 1000;
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
+        /* glowing animated bottom border */
+        overflow: visible;
+    }
+    .navbar::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, var(--primary) 30%, rgba(116,201,71,0.9) 50%, var(--primary) 70%, transparent 100%);
+        box-shadow: 0 0 8px var(--primary), 0 0 18px rgba(116,201,71,0.4);
+        animation: navGlow 3s ease-in-out infinite;
+    }
+    @keyframes navGlow {
+        0%, 100% { opacity: 0.7; }
+        50%       { opacity: 1; box-shadow: 0 0 12px var(--primary), 0 0 30px rgba(116,201,71,0.5); }
     }
 
     .logo { font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
@@ -63,21 +80,53 @@
         letter-spacing: 0.5px;
     }
 
-    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+
+    /* Notification bell */
+    .notif-btn {
+        position: relative;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        color: var(--text-gray);
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        cursor: default;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+    .notif-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .notif-badge {
+        position: absolute;
+        top: 6px; right: 6px;
+        width: 8px; height: 8px;
+        background: var(--primary);
+        border-radius: 50%;
+        border: 2px solid var(--dark-bg);
+        box-shadow: 0 0 6px var(--primary);
+    }
+
     .profile-container { position: relative; }
     .profile-btn {
         background: rgba(255,255,255,0.06);
         color: white;
         border: 1px solid var(--border);
-        padding: 8px 14px;
+        padding: 7px 14px;
         border-radius: 20px;
         cursor: pointer;
         font-weight: 600;
         font-size: 13px;
         display: flex; align-items: center; gap: 8px;
         transition: 0.3s;
+        max-width: 200px;
     }
     .profile-btn:hover { border-color: var(--primary); }
+    .profile-btn .seller-name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .dropdown-content {
         display: none; position: absolute; right: 0;
         background: #131a13; min-width: 190px;
@@ -93,7 +142,7 @@
     .dropdown-content a:hover { background: rgba(255,255,255,0.04); color: var(--primary); }
     .show { display: block !important; }
 
-    /* TABS */
+    /* ── TABS ───────────────────────────────────────────── */
     .page-tabs {
         display: flex;
         gap: 0;
@@ -102,8 +151,10 @@
         padding: 0 5%;
         overflow-x: auto;
         scrollbar-width: none;
+        position: relative;
     }
     .page-tabs::-webkit-scrollbar { display: none; }
+
     .tab-btn {
         padding: 16px 22px;
         border: none;
@@ -113,18 +164,34 @@
         font-weight: 600;
         cursor: pointer;
         border-bottom: 2px solid transparent;
-        transition: 0.25s;
+        transition: color 0.25s;
         white-space: nowrap;
         display: flex; align-items: center; gap: 8px;
+        position: relative;
     }
-    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    /* sliding underline via ::after */
+    .tab-btn::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        box-shadow: 0 0 8px var(--primary-glow);
+        border-radius: 2px;
+        transform: translateX(-50%);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab-btn.active { color: var(--primary); }
+    .tab-btn.active::after { width: 100%; }
     .tab-btn:hover { color: white; }
 
-    /* CONTENT PANELS */
+    /* ── CONTENT PANELS ─────────────────────────────────── */
     .panel { display: none; padding: 30px 5%; }
     .panel.active { display: block; }
 
-    /* STATS */
+    /* ── STATS ──────────────────────────────────────────── */
     .stats-row {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -137,9 +204,32 @@
         border-radius: 18px;
         padding: 22px 20px;
         display: flex; align-items: center; justify-content: space-between;
+        border-top: 2px solid var(--primary);
+        transition: transform 0.25s, box-shadow 0.25s;
+        position: relative;
+        overflow: hidden;
     }
-    .stat-card .num { font-size: 30px; font-weight: 900; }
-    .stat-card .lbl { font-size: 12px; color: var(--text-gray); margin-top: 4px; }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary), rgba(116,201,71,0.4));
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(116,201,71,0.12);
+    }
+    .stat-card .num { font-size: 30px; font-weight: 900; line-height: 1; }
+    .stat-card .lbl { font-size: 12px; color: var(--text-gray); margin-top: 5px; }
+    .stat-card .trend {
+        margin-top: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex; align-items: center; gap: 4px;
+    }
+    .stat-card .trend i { font-size: 10px; }
     .stat-card .icon {
         width: 48px; height: 48px;
         border-radius: 14px;
@@ -147,9 +237,10 @@
         display: flex; align-items: center; justify-content: center;
         color: var(--primary); font-size: 20px;
         border: 1px solid rgba(116,201,71,0.2);
+        flex-shrink: 0;
     }
 
-    /* SECTION CARD */
+    /* ── SECTION CARD ───────────────────────────────────── */
     .section-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
@@ -160,15 +251,35 @@
     .section-card-header {
         display: flex; justify-content: space-between; align-items: center;
         margin-bottom: 22px;
+        flex-wrap: wrap; gap: 10px;
     }
     .section-card-header h3 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .section-card-header h3 i { color: var(--primary); }
 
-    /* ADD PRODUCT FORM */
+    /* Products header right side (timestamp) */
+    .header-meta {
+        display: flex; align-items: center; gap: 14px;
+    }
+    .last-updated {
+        font-size: 11px;
+        color: var(--text-gray);
+        white-space: nowrap;
+    }
+    .last-updated i { color: var(--primary); margin-right: 4px; }
+
+    /* ── ADD PRODUCT FORM ───────────────────────────────── */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .full { grid-column: span 2; }
     .form-group { position: relative; }
-    .form-group label { display: block; font-size: 11px; color: var(--text-gray); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group label {
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 11px; color: var(--text-gray); margin-bottom: 7px;
+        font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .char-counter { font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: none; letter-spacing: 0; }
+    .char-counter.warn { color: var(--warning); }
+    .char-counter.over  { color: var(--danger); }
+
     .form-group i.icon { position: absolute; left: 14px; bottom: 14px; color: var(--primary); font-size: 14px; }
     .form-group input, .form-group select, .form-group textarea {
         width: 100%;
@@ -184,6 +295,23 @@
     .form-group textarea { padding: 13px 14px; min-height: 85px; resize: vertical; }
     .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
     .form-group select option { background: #1a1a1a; }
+
+    /* Image preview thumbnail */
+    .img-preview-wrap {
+        display: none;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(116,201,71,0.3);
+        background: rgba(255,255,255,0.03);
+        width: 80px; height: 80px;
+    }
+    .img-preview-wrap.visible { display: block; }
+    .img-preview-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+    }
 
     .file-drop {
         border: 2px dashed rgba(255,255,255,0.15);
@@ -218,7 +346,7 @@
     .submit-btn:hover { background: var(--primary-dark); }
     .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* PRODUCT LIST */
+    /* ── PRODUCT LIST ───────────────────────────────────── */
     .product-item {
         background: rgba(255,255,255,0.03);
         border: 1px solid var(--border);
@@ -251,27 +379,43 @@
     .empty-msg { text-align: center; padding: 50px 20px; color: var(--text-gray); }
     .empty-msg i { font-size: 45px; margin-bottom: 15px; color: rgba(116,201,71,0.2); display: block; }
 
-    /* ORDERS TABLE */
+    /* ── ORDERS LIST ────────────────────────────────────── */
     .orders-list { display: flex; flex-direction: column; gap: 12px; }
     .order-row {
         background: rgba(255,255,255,0.03);
         border: 1px solid var(--border);
         border-radius: 14px;
-        padding: 16px;
+        padding: 16px 16px 16px 20px;
         display: flex; align-items: center; justify-content: space-between; gap: 15px;
         flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
     }
+    /* color-coded left border stripe */
+    .order-row::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 4px;
+        border-radius: 14px 0 0 14px;
+    }
+    .order-row.s-pending::before  { background: var(--warning); box-shadow: 2px 0 8px rgba(255,193,7,0.35); }
+    .order-row.s-received::before { background: #17a2b8;       box-shadow: 2px 0 8px rgba(23,162,184,0.35); }
+    .order-row.s-delivered::before{ background: var(--primary); box-shadow: 2px 0 8px rgba(116,201,71,0.35); }
+    .order-row.s-cancelled::before{ background: var(--danger);  box-shadow: 2px 0 8px rgba(255,77,77,0.35); }
+
     .order-id { font-weight: 700; color: var(--primary); font-size: 14px; }
     .order-customer { font-size: 13px; }
     .order-customer small { color: var(--text-gray); font-size: 11px; display: block; }
     .status-pill {
         padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase;
     }
-    .s-pending { background: rgba(255,193,7,0.15); color: var(--warning); border: 1px solid rgba(255,193,7,0.3); }
-    .s-received { background: rgba(23,162,184,0.15); color: #17a2b8; border: 1px solid rgba(23,162,184,0.3); }
-    .s-delivered { background: rgba(116,201,71,0.15); color: var(--primary); border: 1px solid rgba(116,201,71,0.3); }
-    .s-cancelled { background: rgba(255,77,77,0.15); color: var(--danger); border: 1px solid rgba(255,77,77,0.3); }
+    .s-pending  { background: rgba(255,193,7,0.15); color: var(--warning); border: 1px solid rgba(255,193,7,0.3); }
+    .s-received { background: rgba(23,162,184,0.15); color: #17a2b8;       border: 1px solid rgba(23,162,184,0.3); }
+    .s-delivered{ background: rgba(116,201,71,0.15); color: var(--primary); border: 1px solid rgba(116,201,71,0.3); }
+    .s-cancelled{ background: rgba(255,77,77,0.15);  color: var(--danger);  border: 1px solid rgba(255,77,77,0.3); }
 
+    /* ── RESPONSIVE ─────────────────────────────────────── */
     /* Tablet */
     @media (max-width: 900px) {
         .stats-row { grid-template-columns: 1fr 1fr; }
@@ -307,6 +451,7 @@
         .logo span:not(.role-badge) { display: none; }
         .tab-btn span { display: none; }
         .tab-btn { padding: 16px 10px; }
+        .notif-btn { display: none; }
     }
     </style>
 </head>
@@ -319,10 +464,16 @@
         <span class="role-badge">SELLER</span>
     </div>
     <div class="nav-right">
+        <!-- Notification bell (visual only) -->
+        <div class="notif-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notif-badge"></span>
+        </div>
         <div class="profile-container">
             <button class="profile-btn" onclick="toggleDropdown()">
                 <i class="fas fa-user-circle" style="color:var(--primary);"></i>
-                <span id="sellerName">Seller</span>
+                <span class="seller-name" id="sellerName">Seller</span>
+                <i class="fas fa-chevron-down" style="font-size:10px;color:var(--text-gray);"></i>
             </button>
             <div id="profileDropdown" class="dropdown-content">
                 <a href="edit-profilea.html"><i class="fas fa-user-cog"></i> Settings</a>
@@ -336,24 +487,36 @@
 
 <!-- TABS -->
 <div class="page-tabs">
-    <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus-circle"></i> Add Product</button>
-    <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-boxes"></i> My Products</button>
-    <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-clipboard-list"></i> Orders</button>
+    <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus-circle"></i> <span>Add Product</span></button>
+    <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-boxes"></i> <span>My Products</span></button>
+    <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-clipboard-list"></i> <span>Orders</span></button>
 </div>
 
 <!-- PANEL: ADD PRODUCT -->
 <div class="panel active" id="panel-add">
     <div class="stats-row" id="statsRow">
         <div class="stat-card">
-            <div><div class="num" id="statProducts">—</div><div class="lbl">Total Products</div></div>
+            <div>
+                <div class="num" id="statProducts">—</div>
+                <div class="lbl">Total Products</div>
+                <div class="trend"><i class="fas fa-arrow-trend-up"></i> +12% this week</div>
+            </div>
             <div class="icon"><i class="fas fa-boxes"></i></div>
         </div>
         <div class="stat-card">
-            <div><div class="num" id="statOrders">—</div><div class="lbl">Total Orders</div></div>
+            <div>
+                <div class="num" id="statOrders">—</div>
+                <div class="lbl">Total Orders</div>
+                <div class="trend"><i class="fas fa-arrow-trend-up"></i> +12% this week</div>
+            </div>
             <div class="icon"><i class="fas fa-shopping-cart"></i></div>
         </div>
         <div class="stat-card">
-            <div><div class="num" id="statRevenue">—</div><div class="lbl">Est. Revenue</div></div>
+            <div>
+                <div class="num" id="statRevenue">—</div>
+                <div class="lbl">Est. Revenue</div>
+                <div class="trend"><i class="fas fa-arrow-trend-up"></i> +12% this week</div>
+            </div>
             <div class="icon"><i class="fas fa-rupee-sign"></i></div>
         </div>
     </div>
@@ -364,16 +527,35 @@
         </div>
         <form id="productForm">
             <div class="form-grid">
+                <!-- Product Name with character counter -->
                 <div class="form-group full">
-                    <label>Product Name *</label>
+                    <label>
+                        Product Name *
+                        <span class="char-counter" id="nameCounter">0/60 chars</span>
+                    </label>
                     <i class="fas fa-tag icon"></i>
-                    <input type="text" name="name" placeholder="e.g. Organic Fertilizer 50kg" required>
+                    <input type="text" name="name" id="productName" placeholder="e.g. Organic Fertilizer 50kg" maxlength="60" required>
                 </div>
 
                 <div class="form-group">
                     <label>Price (₹) *</label>
                     <i class="fas fa-rupee-sign icon"></i>
                     <input type="number" name="price" placeholder="0.00" min="0" step="0.01" required>
+                </div>
+
+                <!-- Category select (new field) -->
+                <div class="form-group">
+                    <label>Category</label>
+                    <i class="fas fa-tag icon"></i>
+                    <select name="category">
+                        <option value="">Select category</option>
+                        <option value="Seeds">Seeds</option>
+                        <option value="Fertilizers">Fertilizers</option>
+                        <option value="Pesticides">Pesticides</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -388,11 +570,16 @@
                     <input type="text" name="city" placeholder="e.g. Pune, Maharashtra" required>
                 </div>
 
+                <!-- Image upload with live preview -->
                 <div class="form-group full">
                     <label>Product Image *</label>
+                    <!-- Preview thumbnail (shown once file is selected) -->
+                    <div class="img-preview-wrap" id="imgPreviewWrap">
+                        <img id="imgPreview" src="" alt="Preview">
+                    </div>
                     <div class="file-drop" id="fileDrop">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <p id="fileDropText">Click to upload or drag & drop image here</p>
+                        <p id="fileDropText">Click to upload or drag &amp; drop image here</p>
                         <input type="file" name="image" id="productImage" accept="image/*" required onchange="updateFileLabel(this)">
                     </div>
                 </div>
@@ -412,9 +599,12 @@
     <div class="section-card">
         <div class="section-card-header">
             <h3><i class="fas fa-boxes"></i> My Products</h3>
-            <button class="submit-btn" onclick="switchTab('add')" style="padding: 9px 18px; font-size: 12px;">
-                <i class="fas fa-plus"></i> Add New
-            </button>
+            <div class="header-meta">
+                <span class="last-updated"><i class="fas fa-clock"></i>Last updated: just now</span>
+                <button class="submit-btn" onclick="switchTab('add')" style="padding: 9px 18px; font-size: 12px;">
+                    <i class="fas fa-plus"></i> Add New
+                </button>
+            </div>
         </div>
         <div id="productsList">
             <div class="empty-msg"><i class="fas fa-spinner fa-spin"></i><p>Loading products...</p></div>
@@ -442,7 +632,7 @@
         alert("Seller access required!");
         window.location.href = "index1.html";
     } else {
-        document.getElementById("sellerName").innerText = user.username || "Seller";
+        document.getElementById("sellerName").innerText = user.companyName || user.username || "Seller";
     }
 
     function toggleDropdown() {
@@ -472,7 +662,31 @@
     function updateFileLabel(input) {
         const name = input.files[0] ? input.files[0].name : 'Click to upload or drag & drop image here';
         document.getElementById("fileDropText").innerText = name;
+
+        // Live image preview
+        const previewWrap = document.getElementById("imgPreviewWrap");
+        const previewImg  = document.getElementById("imgPreview");
+        if (input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewWrap.classList.add('visible');
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewWrap.classList.remove('visible');
+            previewImg.src = '';
+        }
     }
+
+    // Real-time character counter for product name
+    document.getElementById("productName").addEventListener("input", function() {
+        const len     = this.value.length;
+        const max     = 60;
+        const counter = document.getElementById("nameCounter");
+        counter.textContent = `${len}/${max} chars`;
+        counter.className   = 'char-counter' + (len >= max ? ' over' : len >= max * 0.85 ? ' warn' : '');
+    });
 
     // LOAD STATS
     function loadStats() {
@@ -512,6 +726,10 @@
                 }, 2000);
                 this.reset();
                 document.getElementById("fileDropText").innerText = 'Click to upload or drag & drop image here';
+                document.getElementById("imgPreviewWrap").classList.remove('visible');
+                document.getElementById("imgPreview").src = '';
+                document.getElementById("nameCounter").textContent = '0/60 chars';
+                document.getElementById("nameCounter").className = 'char-counter';
                 loadStats();
                 alert("Product published successfully!");
             })
@@ -581,7 +799,7 @@
                 list.innerHTML = orders.map(o => {
                     const sc = { Pending: 's-pending', Received: 's-received', Delivered: 's-delivered', Cancelled: 's-cancelled' }[o.status] || 's-pending';
                     return `
-                        <div class="order-row">
+                        <div class="order-row ${sc}">
                             <span class="order-id">#${o.id}</span>
                             <div class="order-customer">
                                 <span>${o.customer_name || o.buyer_name || 'Customer'}</span>

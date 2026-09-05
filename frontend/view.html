@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* NAVBAR */
+        /* ── NAVBAR ── */
         .navbar {
             background: rgba(9,13,9,0.96);
             backdrop-filter: blur(20px);
@@ -44,11 +44,45 @@
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 0 rgba(116,201,71,0.18), 0 4px 18px rgba(116,201,71,0.07);
             gap: 10px;
         }
 
-        .logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        /* Logo */
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
         .logo i { color: var(--primary); }
+        .logo-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(116,201,71,0.1);
+            border: 1px solid rgba(116,201,71,0.25);
+            border-radius: 20px;
+            padding: 2px 8px 2px 5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .logo-live-dot {
+            width: 6px; height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: livePulse 1.8s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(116,201,71,0.5); }
+            50%       { opacity: 0.7; transform: scale(1.25); box-shadow: 0 0 0 4px rgba(116,201,71,0); }
+        }
 
         /* Search Bar */
         .search-wrap {
@@ -134,7 +168,7 @@
         .dropdown-content a i { width: 16px; text-align: center; }
         .show { display: block !important; }
 
-        /* CATEGORY TABS */
+        /* ── CATEGORY TABS ── */
         .filters-bar {
             padding: 16px 5%;
             display: flex;
@@ -165,21 +199,94 @@
             border-color: var(--primary);
             color: white;
         }
+        /* Count badge on All Products chip */
+        .chip-count {
+            background: rgba(0,0,0,0.25);
+            color: inherit;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+        .filter-chip.active .chip-count,
+        .filter-chip:hover .chip-count { display: inline-block; }
 
-        /* HERO BANNER */
+        /* ── HERO BANNER ── */
         .shop-banner {
-            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,20,0,0.5) 100%),
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,20,0,0.55) 60%, rgba(0,0,0,0.8) 100%),
                         url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600');
             background-size: cover;
             background-position: center;
             padding: 50px 5%;
-            text-align: center;
         }
-        .shop-banner h2 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
-        .shop-banner h2 span { color: var(--primary); }
-        .shop-banner p { color: var(--text-gray); font-size: 15px; }
+        /* Shimmer overlay */
+        .shop-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                110deg,
+                transparent 20%,
+                rgba(116,201,71,0.06) 40%,
+                rgba(255,255,255,0.04) 50%,
+                rgba(116,201,71,0.06) 60%,
+                transparent 80%
+            );
+            background-size: 200% 100%;
+            animation: bannerShimmer 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes bannerShimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .banner-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .banner-text h2 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+        .banner-text h2 span { color: var(--primary); }
+        .banner-text p { color: var(--text-gray); font-size: 15px; }
+        .banner-stats {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .banner-stat {
+            background: rgba(0,0,0,0.45);
+            border: 1px solid rgba(116,201,71,0.2);
+            border-radius: 14px;
+            padding: 10px 16px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            min-width: 90px;
+        }
+        .banner-stat-val {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+        .banner-stat-val.live-count { color: white; }
+        .banner-stat-label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
 
-        /* PRODUCT GRID */
+        /* ── PRODUCT GRID ── */
         .main-content { padding: 30px 5%; }
         .grid-header {
             display: flex;
@@ -196,6 +303,7 @@
             gap: 18px;
         }
 
+        /* ── CARDS ── */
         .card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -203,8 +311,42 @@
             border: 1px solid var(--border);
             transition: 0.35s;
             cursor: pointer;
+            position: relative;
         }
-        .card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(116,201,71,0.1); }
+        /* Shimmer border on hover via pseudo-element */
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(116,201,71,0.6),
+                rgba(255,255,255,0.3),
+                rgba(116,201,71,0.6),
+                transparent
+            );
+            background-size: 300% 100%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.35s;
+            animation: cardBorderShimmer 2s linear infinite paused;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .card:hover::before {
+            opacity: 1;
+            animation-play-state: running;
+        }
+        @keyframes cardBorderShimmer {
+            0%   { background-position: 300% 0; }
+            100% { background-position: -300% 0; }
+        }
+        .card:hover { transform: translateY(-6px); border-color: transparent; box-shadow: 0 15px 30px rgba(116,201,71,0.12); }
 
         .card-img-wrap { position: relative; overflow: hidden; }
         .card img { width: 100%; height: 185px; object-fit: cover; transition: 0.5s; display: block; }
@@ -236,11 +378,54 @@
             margin-bottom: 9px;
             border: 1px solid var(--border);
         }
-        .card-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
-        .price { color: var(--primary); font-weight: 900; font-size: 22px; margin: 8px 0 14px; }
+        .card-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+        /* Seller / company name line */
+        .card-seller {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* Price pill */
+        .price {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 5px;
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 22px;
+            margin: 8px 0 14px;
+            background: rgba(116,201,71,0.08);
+            border: 1px solid rgba(116,201,71,0.18);
+            border-radius: 30px;
+            padding: 3px 14px 3px 10px;
+        }
         .price span { font-size: 12px; color: var(--text-gray); font-weight: 400; }
 
+        /* Card footer: "View Details" hint + sliding cart button */
+        .card-footer {
+            position: relative;
+            overflow: hidden;
+            height: 42px;
+        }
+        .view-hint {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 600;
+            gap: 5px;
+            letter-spacing: 0.3px;
+            transition: opacity 0.28s, transform 0.28s;
+        }
         .btn-cart {
+            position: absolute;
+            inset: 0;
             width: 100%;
             padding: 12px;
             background: var(--primary);
@@ -250,12 +435,16 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 14px;
-            transition: 0.3s;
+            transition: background 0.3s, transform 0.28s, opacity 0.28s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transform: translateY(100%);
+            opacity: 0;
         }
+        .card:hover .view-hint  { opacity: 0; transform: translateY(-8px); }
+        .card:hover .btn-cart   { transform: translateY(0); opacity: 1; }
         .btn-cart:hover { background: var(--primary-dark); }
         .btn-cart:active { transform: scale(0.97); }
 
@@ -347,6 +536,28 @@
         }
         .pd-close:hover { background: rgba(255,77,77,0.7); }
 
+        /* Share chip in modal header area */
+        .pd-share-btn {
+            position: absolute;
+            top: 12px; left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: background 0.2s, border-color 0.2s;
+            letter-spacing: 0.3px;
+        }
+        .pd-share-btn:hover { background: rgba(116,201,71,0.2); border-color: var(--primary); color: var(--primary); }
+        .pd-share-btn i { font-size: 10px; }
+
         .pd-badge {
             position: absolute;
             bottom: 12px; left: 14px;
@@ -380,9 +591,22 @@
             font-size: 28px;
             font-weight: 900;
             color: var(--primary);
-            margin-bottom: 16px;
+            margin-bottom: 8px;
         }
         .pd-price span { font-size: 13px; color: var(--text-gray); font-weight: 400; }
+
+        /* Freshness guarantee line */
+        .pd-freshness {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+        .pd-freshness i { font-size: 11px; }
 
         .pd-meta {
             display: flex;
@@ -414,6 +638,7 @@
 
         .pd-actions { display: flex; gap: 12px; }
 
+        /* Pulsing Buy Now button */
         .pd-btn-buy {
             flex: 1;
             padding: 14px;
@@ -430,8 +655,13 @@
             transition: transform 0.2s, box-shadow 0.2s;
             font-family: inherit;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            animation: buyPulse 2.6s ease-in-out infinite;
         }
-        .pd-btn-buy:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(116,201,71,0.45); }
+        @keyframes buyPulse {
+            0%, 100% { box-shadow: 0 8px 20px rgba(116,201,71,0.35); }
+            50%       { box-shadow: 0 8px 28px rgba(116,201,71,0.6); }
+        }
+        .pd-btn-buy:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(116,201,71,0.45); animation: none; }
         .pd-btn-buy:active { transform: scale(0.97); }
 
         .pd-btn-close {
@@ -448,6 +678,7 @@
         }
         .pd-btn-close:hover { background: rgba(255,77,77,0.1); color: #ff6b6b; border-color: rgba(255,77,77,0.2); }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 480px) {
             .pd-modal { border-radius: 20px; max-height: 95vh; }
             .pd-img-wrap img { height: 200px; border-radius: 20px 20px 0 0; }
@@ -472,8 +703,11 @@
             .search-wrap { max-width: 190px; }
             .main-content { padding: 20px 4%; }
             .shop-banner { padding: 36px 4%; }
-            .shop-banner h2 { font-size: 20px; }
+            .banner-text h2 { font-size: 20px; }
             .filters-bar { padding: 12px 4%; }
+            .banner-stats { gap: 8px; }
+            .banner-stat { min-width: 76px; padding: 8px 10px; }
+            .banner-stat-val { font-size: 15px; }
         }
 
         /* Small phones ≤ 420 */
@@ -489,8 +723,9 @@
             .price { font-size: 18px; }
             .btn-cart { padding: 10px 8px; font-size: 12px; }
             .shop-banner { padding: 28px 4% 32px; }
-            .shop-banner h2 { font-size: 18px; }
-            .shop-banner p { font-size: 13px; }
+            .banner-text h2 { font-size: 18px; }
+            .banner-text p { font-size: 13px; }
+            .banner-stats { display: none; }
         }
 
         /* iPhone SE / very small ≤ 375 */
@@ -513,6 +748,9 @@
     <div class="pd-modal" id="pdModal">
         <div class="pd-img-wrap">
             <img id="pdImg" src="" alt="Product">
+            <button class="pd-share-btn" onclick="event.stopPropagation(); navigator.share && navigator.share({title: document.getElementById('pdName').textContent, url: window.location.href})">
+                <i class="fas fa-share-alt"></i> Share
+            </button>
             <button class="pd-close" onclick="closeDetail()" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
@@ -525,6 +763,9 @@
             </div>
             <div class="pd-name" id="pdName"></div>
             <div class="pd-price" id="pdPrice"></div>
+            <div class="pd-freshness">
+                <i class="fas fa-check-circle"></i> Freshness Guaranteed
+            </div>
             <div class="pd-meta" id="pdMeta"></div>
             <div class="pd-desc" id="pdDesc"></div>
             <div class="pd-actions">
@@ -541,7 +782,10 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
-    <div class="logo"><i class="fas fa-leaf"></i><span>AgroTech</span></div>
+    <div class="logo">
+        <i class="fas fa-leaf"></i><span>AgroTech</span>
+        <span class="logo-live"><span class="logo-live-dot"></span>Live</span>
+    </div>
 
     <div class="search-wrap">
         <i class="fas fa-search search-icon"></i>
@@ -570,7 +814,7 @@
 <!-- CATEGORY FILTERS -->
 <div class="filters-bar" id="filtersBar">
     <button class="filter-chip active" data-cat="all" onclick="setCategory(this, 'all')">
-        <i class="fas fa-th"></i> All Products
+        <i class="fas fa-th"></i> All Products <span class="chip-count" id="allChipCount">0</span>
     </button>
     <button class="filter-chip" data-cat="seeds" onclick="setCategory(this, 'seeds')">
         <i class="fas fa-seedling"></i> Seeds
@@ -591,8 +835,26 @@
 
 <!-- HERO BANNER -->
 <div class="shop-banner">
-    <h2>Welcome to <span>AgroTech</span> Marketplace</h2>
-    <p>Premium agricultural products from verified sellers, delivered to your farm.</p>
+    <div class="banner-inner">
+        <div class="banner-text">
+            <h2>Welcome to <span>AgroTech</span> Marketplace</h2>
+            <p>Premium agricultural products from verified sellers, delivered to your farm.</p>
+        </div>
+        <div class="banner-stats">
+            <div class="banner-stat">
+                <div class="banner-stat-val live-count" id="bannerProductCount">—</div>
+                <div class="banner-stat-label">Live Products</div>
+            </div>
+            <div class="banner-stat">
+                <div class="banner-stat-val">15+</div>
+                <div class="banner-stat-label">Cities Served</div>
+            </div>
+            <div class="banner-stat">
+                <div class="banner-stat-val">100%</div>
+                <div class="banner-stat-label">Verified</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -665,6 +927,12 @@
 
         document.getElementById("productCount").innerText = `${filtered.length} product${filtered.length !== 1 ? 's' : ''} found`;
 
+        // Update All Products chip count and banner count
+        const allCount = document.getElementById("allChipCount");
+        if (allCount) allCount.textContent = filtered.length;
+        const bannerCount = document.getElementById("bannerProductCount");
+        if (bannerCount) bannerCount.textContent = allProducts.length || filtered.length;
+
         if (!filtered.length) {
             container.innerHTML = `
                 <div class="empty-state">
@@ -678,6 +946,9 @@
             const imgUrl = p.image && p.image.startsWith('http')
                 ? p.image
                 : `${BASE_URL}/uploads/${p.image}`;
+            const sellerLine = (p.company_name || p.seller_name)
+                ? `<div class="card-seller"><i class="fas fa-store" style="font-size:10px;margin-right:3px;color:var(--primary);opacity:0.7;"></i>${p.company_name || p.seller_name}</div>`
+                : '';
             return `
                 <div class="card" onclick="showDetail(${p.id})">
                     <div class="card-img-wrap">
@@ -687,10 +958,14 @@
                     <div class="card-body">
                         <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${p.city || 'India'}</div>
                         <h4>${p.name}</h4>
+                        ${sellerLine}
                         <div class="price">₹${parseFloat(p.price).toFixed(2)} <span>per unit</span></div>
-                        <button class="btn-cart" onclick="event.stopPropagation(); goToCheckout(${p.id})">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                        </button>
+                        <div class="card-footer">
+                            <div class="view-hint"><i class="fas fa-eye"></i> View Details</div>
+                            <button class="btn-cart" onclick="event.stopPropagation(); goToCheckout(${p.id})">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
                     </div>
                 </div>`;
         }).join('');
