@@ -461,11 +461,13 @@ app.post('/add-product', upload.single('image'), (req, res) => {
 
 app.get('/get-products', (req, res) => {
     const city = req.query.city || 'All';
-    let sql = "SELECT * FROM products";
+    let sql = `SELECT p.*, u.company_name, u.username AS seller_name
+               FROM products p
+               LEFT JOIN users u ON p.admin_id = u.id`;
     let params = [];
 
     if (city !== 'All') {
-        sql = "SELECT * FROM products WHERE city = ?";
+        sql += " WHERE p.city = ?";
         params = [city];
     }
 

@@ -717,6 +717,10 @@
 
         // Meta chips
         const metaItems = [];
+        if (p.company_name)
+            metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-store"></i> ${p.company_name}</div>`);
+        else if (p.seller_name)
+            metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-user-tie"></i> ${p.seller_name}</div>`);
         if (p.quantity !== undefined && p.quantity !== null)
             metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-cubes"></i> Stock: ${p.quantity} units</div>`);
         if (p.city)
