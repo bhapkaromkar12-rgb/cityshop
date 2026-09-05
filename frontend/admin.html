@@ -3,227 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Agro City Shop</title>
+    <title>Seller Dashboard - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
     :root {
         --primary: #74c947;
-        --dark-card: rgba(15, 15, 15, 0.85);
-        --border-glow: rgba(116, 201, 71, 0.3);
+        --primary-dark: #5ea33a;
+        --primary-glow: rgba(116, 201, 71, 0.25);
+        --dark-bg: #090d09;
+        --card-bg: rgba(18, 24, 18, 0.97);
+        --text-gray: #9aaa9a;
+        --border: rgba(255,255,255,0.08);
+        --danger: #ff4d4d;
+        --warning: #ffc107;
     }
 
-    body { 
-        margin:0; 
-        font-family: 'Inter', sans-serif; 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Inter', -apple-system, sans-serif;
+        background: var(--dark-bg);
+        color: white;
         min-height: 100vh;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)), 
-                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
         display: flex;
         flex-direction: column;
-        color: white;
-    }
-    
-    /* Glassmorphism Navbar - Optimized for Mobile */
-    .navbar { 
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(15px);
-        padding: 12px 5%; /* Mobile par side gap dene ke liye 5% kiya */
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        position: sticky; 
-        top: 0; 
-        width: 100%;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-sizing: border-box;
     }
 
-    .logo { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-    .logo i { color: var(--primary); }
-    .logo span { font-size: 10px; background: var(--primary); color: black; padding: 1px 6px; border-radius: 4px; }
-
-    /* Form Container - Mobile Padding Fix */
-    .container { 
-        width: 92%; 
-        max-width: 450px; 
-        margin: 30px auto; 
-        background: var(--dark-card); 
+    /* NAVBAR */
+    .navbar {
+        background: rgba(9,13,9,0.96);
         backdrop-filter: blur(20px);
-        padding: 30px 20px; /* Mobile par padding kam ki */
-        border-radius: 20px; 
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255,255,255,0.1);
-        box-sizing: border-box;
+        padding: 14px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--border);
     }
 
-    h2 { text-align: center; margin-bottom: 25px; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+    .logo { font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .logo i { color: var(--primary); }
+    .logo .role-badge {
+        font-size: 10px;
+        background: var(--primary);
+        color: #090d09;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
 
-    .input-group { position: relative; margin-bottom: 15px; }
-    .input-group i { position: absolute; left: 15px; top: 16px; color: var(--primary); }
-
-    input { 
-        width: 100%; 
-        padding: 14px 15px 14px 45px; 
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px; 
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .profile-container { position: relative; }
+    .profile-btn {
+        background: rgba(255,255,255,0.06);
         color: white;
-        font-size: 16px; /* iOS zoom issue fix */
+        border: 1px solid var(--border);
+        padding: 8px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+        display: flex; align-items: center; gap: 8px;
+        transition: 0.3s;
+    }
+    .profile-btn:hover { border-color: var(--primary); }
+    .dropdown-content {
+        display: none; position: absolute; right: 0;
+        background: #131a13; min-width: 190px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        z-index: 100; border-radius: 14px; margin-top: 10px;
+        overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .dropdown-content a {
+        color: #eee; padding: 12px 16px; text-decoration: none;
+        display: flex; align-items: center; gap: 10px;
+        font-size: 13px; transition: 0.3s;
+    }
+    .dropdown-content a:hover { background: rgba(255,255,255,0.04); color: var(--primary); }
+    .show { display: block !important; }
+
+    /* TABS */
+    .page-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        background: rgba(9,13,9,0.8);
+        padding: 0 5%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .page-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+        padding: 16px 22px;
+        border: none;
+        background: transparent;
+        color: var(--text-gray);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: 0.25s;
+        white-space: nowrap;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-btn:hover { color: white; }
+
+    /* CONTENT PANELS */
+    .panel { display: none; padding: 30px 5%; }
+    .panel.active { display: block; }
+
+    /* STATS */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px 20px;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .stat-card .num { font-size: 30px; font-weight: 900; }
+    .stat-card .lbl { font-size: 12px; color: var(--text-gray); margin-top: 4px; }
+    .stat-card .icon {
+        width: 48px; height: 48px;
+        border-radius: 14px;
+        background: rgba(116,201,71,0.12);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--primary); font-size: 20px;
+        border: 1px solid rgba(116,201,71,0.2);
+    }
+
+    /* SECTION CARD */
+    .section-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+    .section-card-header {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 22px;
+    }
+    .section-card-header h3 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .section-card-header h3 i { color: var(--primary); }
+
+    /* ADD PRODUCT FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .full { grid-column: span 2; }
+    .form-group { position: relative; }
+    .form-group label { display: block; font-size: 11px; color: var(--text-gray); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group i.icon { position: absolute; left: 14px; bottom: 14px; color: var(--primary); font-size: 14px; }
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 13px 14px 13px 42px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: white;
+        font-size: 14px;
         outline: none;
         transition: 0.3s;
-        box-sizing: border-box;
     }
+    .form-group textarea { padding: 13px 14px; min-height: 85px; resize: vertical; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
+    .form-group select option { background: #1a1a1a; }
 
-    input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+    .file-drop {
+        border: 2px dashed rgba(255,255,255,0.15);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        position: relative;
+        background: rgba(255,255,255,0.02);
+    }
+    .file-drop:hover { border-color: var(--primary); background: rgba(116,201,71,0.04); }
+    .file-drop i { font-size: 28px; color: var(--primary); margin-bottom: 8px; display: block; }
+    .file-drop p { font-size: 13px; color: var(--text-gray); margin: 0; }
+    .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 
-    .file-label { display: block; font-size: 12px; color: #bbb; margin: 15px 0 8px 5px; font-weight: 600; }
-
-    input[type="file"] { padding: 10px; background: rgba(116, 201, 71, 0.05); border: 1px dashed var(--primary); }
-
-    .submit-btn { 
-        width: 100%; 
-        padding: 15px; 
-        background: var(--primary); 
-        color: white; 
-        border: none; 
-        border-radius: 12px; 
-        cursor: pointer; 
-        font-size: 16px; 
-        font-weight: 800;
-        margin-top: 15px;
-        transition: 0.4s;
+    .submit-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
         text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 20px var(--primary-glow);
+        transition: 0.3s;
+        display: flex; align-items: center; gap: 8px;
     }
+    .submit-btn:hover { background: var(--primary-dark); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Mobile Dropdown Fix */
-    .profile-container { position: relative; }
-    .profile-btn { 
-        background: rgba(255,255,255,0.1); 
-        color: white; 
-        border: 1px solid rgba(255,255,255,0.2); 
-        padding: 8px 12px; 
-        border-radius: 20px; 
-        font-size: 13px; /* Mobile par chota button */
-        cursor: pointer; 
-        font-weight: bold;
-        display: flex; align-items: center; gap: 6px;
+    /* PRODUCT LIST */
+    .product-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        transition: 0.3s;
+        animation: slideIn 0.4s ease;
     }
-    
-    .dropdown-content {
-        display: none; position: absolute; right: 0; background: #1a1a1a; min-width: 180px; 
-        box-shadow: 0px 10px 30px rgba(0,0,0,0.5); z-index: 100; border-radius: 12px; 
-        margin-top: 10px; overflow: hidden; border: 1px solid #333;
+    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .product-item:hover { border-color: rgba(116,201,71,0.3); background: rgba(116,201,71,0.03); }
+    .prod-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+    .prod-img { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; background: rgba(255,255,255,0.05); border: 1px solid var(--border); flex-shrink: 0; }
+    .prod-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .prod-details .meta { display: flex; gap: 10px; align-items: center; }
+    .prod-details .meta .price-tag { color: var(--primary); font-weight: 800; font-size: 15px; }
+    .prod-details .meta .qty-tag { color: var(--text-gray); font-size: 12px; }
+    .prod-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-edit, .btn-del {
+        border: none; padding: 9px 14px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.3s; display: flex; align-items: center; gap: 6px;
     }
-    
-    .dropdown-content a { color: #eee; padding: 12px 15px; text-decoration: none; display: block; font-size: 13px; }
-    .show { display: block; }
-</style>
+    .btn-edit { background: rgba(255,193,7,0.12); color: var(--warning); border: 1px solid rgba(255,193,7,0.25); }
+    .btn-del { background: rgba(255,77,77,0.12); color: var(--danger); border: 1px solid rgba(255,77,77,0.25); }
+    .btn-edit:hover { background: rgba(255,193,7,0.2); }
+    .btn-del:hover { background: rgba(255,77,77,0.2); }
+
+    .empty-msg { text-align: center; padding: 50px 20px; color: var(--text-gray); }
+    .empty-msg i { font-size: 45px; margin-bottom: 15px; color: rgba(116,201,71,0.2); display: block; }
+
+    /* ORDERS TABLE */
+    .orders-list { display: flex; flex-direction: column; gap: 12px; }
+    .order-row {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        flex-wrap: wrap;
+    }
+    .order-id { font-weight: 700; color: var(--primary); font-size: 14px; }
+    .order-customer { font-size: 13px; }
+    .order-customer small { color: var(--text-gray); font-size: 11px; display: block; }
+    .status-pill {
+        padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    }
+    .s-pending { background: rgba(255,193,7,0.15); color: var(--warning); border: 1px solid rgba(255,193,7,0.3); }
+    .s-received { background: rgba(23,162,184,0.15); color: #17a2b8; border: 1px solid rgba(23,162,184,0.3); }
+    .s-delivered { background: rgba(116,201,71,0.15); color: var(--primary); border: 1px solid rgba(116,201,71,0.3); }
+    .s-cancelled { background: rgba(255,77,77,0.15); color: var(--danger); border: 1px solid rgba(255,77,77,0.3); }
+
+    @media (max-width: 600px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .full { grid-column: span 1; }
+        .stats-row { grid-template-columns: 1fr 1fr; }
+        .prod-details h4 { max-width: 120px; }
+        .order-row { flex-direction: column; align-items: flex-start; }
+    }
+    </style>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="logo"><i class="fas fa-tools"></i> AGRO SHOP <span>ADMIN</span></div>
-    
-    <div class="profile-container">
-        <button class="profile-btn" onclick="toggleDropdown()">
-            <i class="fas fa-user-shield"></i> 
-            <span id="adminNameDisplay">Master</span>
-        </button>
-        <div id="profileDropdown" class="dropdown-content">
-            <p id="adminEmail">admin@cityshop.com</p>
-            <a href="admin_dash.html"><i class="fas fa-chart-line"></i> Dashboard</a> 
-            <a href="all-orders.html"><i class="fas fa-shopping-basket"></i> View Orders</a> 
-            <a href="edit-profilea.html"><i class="fas fa-user-cog"></i> Settings</a> 
-            <a href="#" onclick="logout()" style="color: #ff5f5f;"><i class="fas fa-power-off"></i> Logout</a>
+    <div class="logo">
+        <i class="fas fa-store"></i>
+        <span>AGRO SELLER</span>
+        <span class="role-badge">SELLER</span>
+    </div>
+    <div class="nav-right">
+        <div class="profile-container">
+            <button class="profile-btn" onclick="toggleDropdown()">
+                <i class="fas fa-user-circle" style="color:var(--primary);"></i>
+                <span id="sellerName">Seller</span>
+            </button>
+            <div id="profileDropdown" class="dropdown-content">
+                <a href="edit-profilea.html"><i class="fas fa-user-cog"></i> Settings</a>
+                <a href="all-orders.html"><i class="fas fa-clipboard-list"></i> All Orders</a>
+                <a href="adminom.html"><i class="fas fa-cogs"></i> Admin Panel</a>
+                <a href="#" onclick="logout()" style="color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <h2>Add New Product</h2>
-    <form id="productForm">
-        <div class="input-group">
-            <i class="fas fa-tag"></i>
-            <input type="text" name="name" placeholder="Product Name" required>
-        </div>
-        
-        <div class="input-group">
-            <i class="fas fa-rupee-sign"></i>
-            <input type="number" name="price" placeholder="Price (₹)" required>
-        </div>
+<!-- TABS -->
+<div class="page-tabs">
+    <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus-circle"></i> Add Product</button>
+    <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-boxes"></i> My Products</button>
+    <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-clipboard-list"></i> Orders</button>
+</div>
 
-        <div class="input-group">
-            <i class="fas fa-map-marker-alt"></i>
-            <input type="text" name="city" placeholder="City Name" required>
+<!-- PANEL: ADD PRODUCT -->
+<div class="panel active" id="panel-add">
+    <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+            <div><div class="num" id="statProducts">—</div><div class="lbl">Total Products</div></div>
+            <div class="icon"><i class="fas fa-boxes"></i></div>
         </div>
+        <div class="stat-card">
+            <div><div class="num" id="statOrders">—</div><div class="lbl">Total Orders</div></div>
+            <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+        <div class="stat-card">
+            <div><div class="num" id="statRevenue">—</div><div class="lbl">Est. Revenue</div></div>
+            <div class="icon"><i class="fas fa-rupee-sign"></i></div>
+        </div>
+    </div>
 
-        <div class="input-group">
-            <i class="fas fa-boxes"></i>
-            <input type="number" name="quantity" placeholder="Stock Quantity" required>
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
         </div>
-        
-        <label class="file-label">Product Showcase Image</label>
-        <input type="file" name="image" accept="image/*" required>
-        
-        <button type="submit" class="submit-btn">Publish Product</button>
-    </form>
+        <form id="productForm">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Product Name *</label>
+                    <i class="fas fa-tag icon"></i>
+                    <input type="text" name="name" placeholder="e.g. Organic Fertilizer 50kg" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (₹) *</label>
+                    <i class="fas fa-rupee-sign icon"></i>
+                    <input type="number" name="price" placeholder="0.00" min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Stock Quantity *</label>
+                    <i class="fas fa-cubes icon"></i>
+                    <input type="number" name="quantity" placeholder="Available stock" min="1" required>
+                </div>
+
+                <div class="form-group full">
+                    <label>City / Location *</label>
+                    <i class="fas fa-map-marker-alt icon"></i>
+                    <input type="text" name="city" placeholder="e.g. Pune, Maharashtra" required>
+                </div>
+
+                <div class="form-group full">
+                    <label>Product Image *</label>
+                    <div class="file-drop" id="fileDrop">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p id="fileDropText">Click to upload or drag & drop image here</p>
+                        <input type="file" name="image" id="productImage" accept="image/*" required onchange="updateFileLabel(this)">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="submit-btn" id="submitProductBtn">
+                    <i class="fas fa-rocket"></i> Publish Product
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- PANEL: MY PRODUCTS -->
+<div class="panel" id="panel-products">
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3><i class="fas fa-boxes"></i> My Products</h3>
+            <button class="submit-btn" onclick="switchTab('add')" style="padding: 9px 18px; font-size: 12px;">
+                <i class="fas fa-plus"></i> Add New
+            </button>
+        </div>
+        <div id="productsList">
+            <div class="empty-msg"><i class="fas fa-spinner fa-spin"></i><p>Loading products...</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL: ORDERS -->
+<div class="panel" id="panel-orders">
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3><i class="fas fa-clipboard-list"></i> Manage Orders</h3>
+        </div>
+        <div class="orders-list" id="ordersList">
+            <div class="empty-msg"><i class="fas fa-spinner fa-spin"></i><p>Loading orders...</p></div>
+        </div>
+    </div>
 </div>
 
 <script>
+    const BASE_URL = "https://cityshobackend.onrender.com";
+
     const user = JSON.parse(localStorage.getItem("user"));
-    if(!user || user.role !== "admin"){
-        alert("Admin Access Required!");
+    if (!user || (user.role !== "seller" && user.role !== "admin")) {
+        alert("Seller access required!");
         window.location.href = "index1.html";
     } else {
-        document.getElementById("adminNameDisplay").innerText = user.username;
-        document.getElementById("adminEmail").innerText = user.email;
+        document.getElementById("sellerName").innerText = user.username || "Seller";
     }
 
     function toggleDropdown() {
         document.getElementById("profileDropdown").classList.toggle("show");
     }
-
+    window.onclick = function(e) {
+        if (!e.target.closest('.profile-container')) {
+            document.getElementById("profileDropdown").classList.remove("show");
+        }
+    };
     function logout() {
         localStorage.removeItem("user");
         window.location.href = "index1.html";
     }
 
-    window.onclick = function(event) {
-        if (!event.target.closest('.profile-container')) {
-            document.getElementById("profileDropdown").classList.remove("show");
-        }
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+            const tabs = ['add', 'products', 'orders'];
+            b.classList.toggle('active', tabs[i] === tab);
+        });
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`panel-${tab}`).classList.add('active');
+        if (tab === 'products') loadProducts();
+        if (tab === 'orders') loadOrders();
     }
 
-    document.getElementById("productForm").addEventListener("submit", function(e){
+    function updateFileLabel(input) {
+        const name = input.files[0] ? input.files[0].name : 'Click to upload or drag & drop image here';
+        document.getElementById("fileDropText").innerText = name;
+    }
+
+    // LOAD STATS
+    function loadStats() {
+        fetch(`${BASE_URL}/get-products`)
+            .then(r => r.json())
+            .then(d => {
+                const products = d.products || d || [];
+                document.getElementById("statProducts").innerText = products.length;
+            });
+        fetch(`${BASE_URL}/get-all-orders`)
+            .then(r => r.json())
+            .then(d => {
+                const orders = d.orders || d || [];
+                document.getElementById("statOrders").innerText = orders.length;
+                const revenue = orders.reduce((sum, o) => sum + parseFloat(o.price || 0), 0);
+                document.getElementById("statRevenue").innerText = `₹${revenue.toFixed(0)}`;
+            });
+    }
+
+    // ADD PRODUCT
+    document.getElementById("productForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        const btn = this.querySelector('.submit-btn');
-        btn.innerText = "Processing...";
+        const btn = document.getElementById("submitProductBtn");
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
         btn.disabled = true;
 
-        let formData = new FormData(this);
+        const formData = new FormData(this);
+        formData.append("admin_id", user.id || 1);
 
-        fetch("https://cityshobackend.onrender.com/add-product", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.text())
-        .then(data => {
-            alert(data);
-            btn.innerText = "Publish Product";
-            btn.disabled = false;
-            if(data.toLowerCase().includes("success")) this.reset();
-        })
-        .catch(err => {
-            alert("Server Error!");
-            btn.innerText = "Publish Product";
-            btn.disabled = false;
-        });
+        fetch(`${BASE_URL}/add-product`, { method: "POST", body: formData })
+            .then(res => res.text())
+            .then(msg => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Published!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-rocket"></i> Publish Product';
+                    btn.disabled = false;
+                }, 2000);
+                this.reset();
+                document.getElementById("fileDropText").innerText = 'Click to upload or drag & drop image here';
+                loadStats();
+                alert("Product published successfully!");
+            })
+            .catch(() => {
+                alert("Server error! Try again.");
+                btn.innerHTML = '<i class="fas fa-rocket"></i> Publish Product';
+                btn.disabled = false;
+            });
     });
-</script>
 
+    // LOAD PRODUCTS
+    function loadProducts() {
+        fetch(`${BASE_URL}/get-products`)
+            .then(r => r.json())
+            .then(d => {
+                const products = d.products || d || [];
+                const list = document.getElementById("productsList");
+                if (!products.length) {
+                    list.innerHTML = `<div class="empty-msg"><i class="fas fa-box-open"></i><p>No products yet.<br><small>Add your first product!</small></p></div>`;
+                    return;
+                }
+                list.innerHTML = products.map(p => {
+                    const img = p.image && p.image.startsWith('http') ? p.image : `${BASE_URL}/uploads/${p.image}`;
+                    return `
+                        <div class="product-item">
+                            <div class="prod-info">
+                                <img src="${img}" class="prod-img" onerror="this.src='https://placehold.co/58/161e16/74c947?text=A'" alt="">
+                                <div class="prod-details">
+                                    <h4>${p.name}</h4>
+                                    <div class="meta">
+                                        <span class="price-tag">₹${parseFloat(p.price).toFixed(2)}</span>
+                                        <span class="qty-tag"><i class="fas fa-cubes"></i> ${p.quantity || 0} units</span>
+                                        <span class="qty-tag"><i class="fas fa-map-marker-alt"></i> ${p.city || ''}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prod-actions">
+                                <button class="btn-edit" onclick="editProd(${p.id})"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-del" onclick="deleteProd(${p.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                }).join('');
+            });
+    }
+
+    function editProd(id) { window.location.href = `edit-product.html?id=${id}`; }
+
+    function deleteProd(id) {
+        if (!confirm("Delete this product?")) return;
+        fetch(`${BASE_URL}/delete-product/${id}`, { method: 'DELETE' })
+            .then(r => r.text())
+            .then(() => { loadProducts(); loadStats(); })
+            .catch(() => alert("Delete failed!"));
+    }
+
+    // LOAD ORDERS
+    function loadOrders() {
+        fetch(`${BASE_URL}/get-all-orders`)
+            .then(r => r.json())
+            .then(d => {
+                const orders = d.orders || d || [];
+                const list = document.getElementById("ordersList");
+                if (!orders.length) {
+                    list.innerHTML = `<div class="empty-msg"><i class="fas fa-inbox"></i><p>No orders yet.</p></div>`;
+                    return;
+                }
+                list.innerHTML = orders.map(o => {
+                    const sc = { Pending: 's-pending', Received: 's-received', Delivered: 's-delivered', Cancelled: 's-cancelled' }[o.status] || 's-pending';
+                    return `
+                        <div class="order-row">
+                            <span class="order-id">#${o.id}</span>
+                            <div class="order-customer">
+                                <span>${o.customer_name || o.buyer_name || 'Customer'}</span>
+                                <small>${o.product_name || `Product #${o.product_id}`}</small>
+                            </div>
+                            <span>₹${parseFloat(o.price || o.total_price || 0).toFixed(2)}</span>
+                            <span class="status-pill ${sc}">${o.status || 'Pending'}</span>
+                            ${o.status !== 'Delivered' && o.status !== 'Cancelled' ? `
+                                <div style="display:flex;gap:6px;">
+                                    <button onclick="updateOrder(${o.id},'Delivered')" style="background:rgba(116,201,71,0.15);color:var(--primary);border:1px solid rgba(116,201,71,0.3);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;">Deliver</button>
+                                    <button onclick="updateOrder(${o.id},'Cancelled')" style="background:rgba(255,77,77,0.12);color:var(--danger);border:1px solid rgba(255,77,77,0.25);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;">Cancel</button>
+                                </div>` : ''}
+                        </div>`;
+                }).join('');
+            });
+    }
+
+    function updateOrder(id, status) {
+        fetch(`${BASE_URL}/update-order-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: id, status })
+        }).then(() => loadOrders());
+    }
+
+    loadStats();
+</script>
 </body>
 </html>

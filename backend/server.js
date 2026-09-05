@@ -489,13 +489,30 @@ app.delete('/delete-product/:id', (req, res) => {
     });
 });
 
+// ALIAS: /register maps to /register-user for frontend compatibility
+app.post('/register', (req, res) => {
+    const { username, email, password, role, phone } = req.body;
+
+    const checkSql = "SELECT * FROM users WHERE email = ?";
+    db.query(checkSql, [email], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (results.length > 0) return res.json({ success: false, message: "Email already registered!" });
+
+        const insertSql = "INSERT INTO users (username, email, password, role, phone, status) VALUES (?, ?, ?, ?, ?, 'approved')";
+        db.query(insertSql, [username, email, password, role || 'farmer', phone || null], (err, result) => {
+            if (err) return res.status(500).json({ success: false, message: err.message });
+            res.json({ success: true, message: "Account created successfully!" });
+        });
+    });
+});
+
 // ORDERS
 app.post('/place-order', (req, res) => {
-    const { user_id, product_id, name, address, phone } = req.body;
+    const { user_id, product_id, name, address, phone, price } = req.body;
     const sql = "INSERT INTO orders (user_id, product_id, customer_name, address, phone) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [user_id, product_id, name, address, phone], (err, result) => {
-        if (err) return res.json({ success: false });
-        res.json({ success: true, message: "Order Placed!" });
+        if (err) return res.json({ success: false, message: err.message });
+        res.json({ success: true, message: "Order Placed!", orderId: result.insertId });
     });
 });
 
@@ -515,10 +532,25 @@ app.get('/my-orders/:userId', (req, res) => {
 });
 
 app.get('/get-all-orders', (req, res) => {
-    const sql = "SELECT * FROM orders ORDER BY id DESC";
+    const sql = `SELECT orders.*, products.name AS product_name, products.image, users.username AS buyer_name
+                 FROM orders
+                 LEFT JOIN products ON orders.product_id = products.id
+                 LEFT JOIN users ON orders.user_id = users.id
+                 ORDER BY orders.id DESC`;
     db.query(sql, (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.json(results);
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({ success: true, orders: results });
+    });
+});
+
+// UPDATE ORDER STATUS
+app.post('/update-order-status', (req, res) => {
+    const { orderId, status } = req.body;
+    if (!orderId || !status) return res.status(400).json({ success: false, message: "Missing orderId or status" });
+    const sql = "UPDATE orders SET status = ? WHERE id = ?";
+    db.query(sql, [status, orderId], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({ success: true, message: `Order #${orderId} marked as ${status}` });
     });
 });
 

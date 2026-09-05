@@ -3,224 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroTech - Growing the Future</title>
+    <title>AgroTech - Growing the Future of Agriculture</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-green: #74c947;
-            --dark-bg: #0a0a0a;
-            --card-bg: #161616;
-            --text-gray: #a0a0a0;
+            --primary: #74c947;
+            --primary-dark: #5ea33a;
+            --primary-glow: rgba(116, 201, 71, 0.35);
+            --dark-bg: #090d09;
+            --card-bg: rgba(20, 26, 20, 0.92);
+            --text-gray: #9eab9e;
+            --border: rgba(255,255,255,0.08);
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--dark-bg);
             color: white;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* --- Navbar --- */
+        /* ── NAVBAR ── */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 6%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
+            padding: 18px 6%;
+            background: rgba(9, 13, 9, 0.92);
+            backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .logo i { color: var(--primary-green); }
+        .logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
+        .logo i { color: var(--primary); font-size: 26px; }
+        .logo span { color: white; }
 
-        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary-green); }
+        .nav-links a:hover { color: var(--primary); }
 
-        /* Login & Contact Buttons (Right Side) */
-        .nav-actions { display: flex; align-items: center; gap: 15px; }
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
 
-        .login-link { 
-            text-decoration: none; 
-            color: white; 
-            font-size: 14px; 
-            font-weight: 600; 
-            margin-right: 2px;
-            transition: 0.3s;
-        }
-        .login-link:hover { color: var(--primary-green); }
-
-        .contact-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #444;
+        .login-link {
+            text-decoration: none;
             color: white;
-            padding: 10px 22px;
-            border-radius: 8px;
-            cursor: pointer;
             font-size: 14px;
             font-weight: 600;
+            padding: 9px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
             transition: 0.3s;
         }
-        .contact-btn:hover { background: white; color: black; border-color: white; }
+        .login-link:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* --- Hero Section --- */
+        .cta-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 18px var(--primary-glow);
+            transition: 0.3s;
+        }
+        .cta-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* ── HERO ── */
         .hero {
-            height: 85vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            min-height: 90vh;
+            background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,20,0,0.6) 100%),
+                        url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=2000');
             background-size: cover;
             background-position: center;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            align-items: center;
             padding: 0 8%;
-        }
-
-        .hero h1 { font-size: 56px; margin: 0; line-height: 1.1; font-weight: 900; max-width: 700px; text-transform: uppercase; }
-        .hero p { color: #ccc; margin: 25px 0; font-size: 18px; max-width: 500px; }
-        
-        .btn-green {
-            background: var(--primary-green);
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
-            width: fit-content;
-        }
-
-        /* --- Section Titles --- */
-        section { padding: 80px 8%; text-align: center; }
-        .section-title { font-size: 32px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        .section-subtitle { color: var(--text-gray); font-size: 14px; margin-bottom: 50px; display: block; }
-
-        /* --- Grid Layout --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-
-        .service-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            text-align: left;
-            transition: 0.4s;
-            border: 1px solid #222;
-        }
-        .service-card:hover { transform: translateY(-10px); border-color: var(--primary-green); }
-        .service-card img { width: 100%; height: 200px; object-fit: cover; }
-        .service-content { padding: 25px; }
-        .service-content h3 { margin: 0 0 12px; font-size: 20px; }
-        .service-content p { color: var(--text-gray); font-size: 14px; line-height: 1.5; }
-
-        /* --- Crops/Products Grid --- */
-        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
-        .product-card {
             position: relative;
-            border-radius: 12px;
             overflow: hidden;
-            height: 140px;
-            cursor: pointer;
         }
-        .product-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .product-card:hover img { transform: scale(1.1); }
-        .product-card .label {
+
+        .hero::after {
+            content: '';
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            padding: 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            font-weight: bold;
-            font-size: 15px;
-            text-align: left;
+            height: 120px;
+            background: linear-gradient(transparent, var(--dark-bg));
         }
 
-        @media (max-width: 768px) {
-            .product-grid { grid-template-columns: repeat(2, 1fr); }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(116, 201, 71, 0.15);
+            border: 1px solid rgba(116, 201, 71, 0.35);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-content { max-width: 680px; z-index: 1; }
+        .hero h1 { font-size: 62px; font-weight: 900; line-height: 1.05; text-transform: uppercase; letter-spacing: -1px; margin-bottom: 22px; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { color: #c5d4c5; font-size: 18px; max-width: 480px; margin-bottom: 40px; }
+
+        .hero-btns { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn-primary { background: var(--primary); color: white; padding: 15px 36px; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 12px 24px var(--primary-glow); transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: white; padding: 15px 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ── STATS BAND ── */
+        .stats-band {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .stat-item {
+            background: var(--dark-bg);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .stat-item h3 { font-size: 36px; font-weight: 900; color: var(--primary); }
+        .stat-item p { font-size: 13px; color: var(--text-gray); margin-top: 4px; }
+
+        /* ── SECTIONS ── */
+        section { padding: 90px 8%; }
+        .section-tag { display: inline-block; color: var(--primary); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .section-title { font-size: 40px; font-weight: 900; margin-bottom: 12px; line-height: 1.1; }
+        .section-sub { color: var(--text-gray); font-size: 16px; max-width: 500px; }
+
+        /* ── HOW IT WORKS ── */
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 60px; }
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 35px 30px;
+            text-align: center;
+            position: relative;
+            transition: 0.4s;
+        }
+        .step-card:hover { border-color: var(--primary); transform: translateY(-6px); }
+        .step-number {
+            font-size: 60px;
+            font-weight: 900;
+            color: rgba(116, 201, 71, 0.12);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        .step-icon {
+            width: 58px; height: 58px;
+            background: rgba(116, 201, 71, 0.15);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 24px;
+            border: 1px solid rgba(116, 201, 71, 0.25);
+        }
+        .step-card h3 { font-size: 20px; margin-bottom: 12px; }
+        .step-card p { color: var(--text-gray); font-size: 14px; line-height: 1.6; }
+
+        /* ── SERVICES ── */
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 55px; }
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+        .service-card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(116, 201, 71, 0.1); }
+        .service-card img { width: 100%; height: 210px; object-fit: cover; }
+        .service-content { padding: 25px; }
+        .service-content h3 { font-size: 19px; margin-bottom: 10px; }
+        .service-content p { color: var(--text-gray); font-size: 14px; line-height: 1.6; }
+        .service-content .tag { display: inline-block; background: rgba(116, 201, 71, 0.12); color: var(--primary); font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; font-weight: 600; }
+
+        /* ── CROPS SHOWCASE ── */
+        .crops-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 55px; }
+        .crop-card {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            height: 180px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+        .crop-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .crop-card:hover img { transform: scale(1.1); }
+        .crop-card .label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 20px 15px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        /* ── CTA SECTION ── */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(116, 201, 71, 0.12) 0%, rgba(9, 13, 9, 0.8) 100%);
+            border: 1px solid rgba(116, 201, 71, 0.2);
+            border-radius: 28px;
+            margin: 0 8% 80px;
+            padding: 70px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 250px; height: 250px;
+            background: var(--primary-glow);
+            border-radius: 50%;
+            filter: blur(70px);
+        }
+        .cta-section h2 { font-size: 42px; font-weight: 900; margin-bottom: 15px; }
+        .cta-section p { color: var(--text-gray); font-size: 16px; margin-bottom: 35px; }
+        .cta-btns { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(9, 13, 9, 0.98);
+            border-top: 1px solid var(--border);
+            padding: 40px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        footer .footer-logo { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        footer .footer-logo i { color: var(--primary); }
+        footer p { color: var(--text-gray); font-size: 13px; }
+        .footer-links { display: flex; gap: 25px; }
+        .footer-links a { color: var(--text-gray); text-decoration: none; font-size: 13px; transition: 0.3s; }
+        .footer-links a:hover { color: var(--primary); }
+
+        @media (max-width: 900px) {
+            .steps-grid, .services-grid { grid-template-columns: 1fr; }
+            .stats-band { grid-template-columns: repeat(2, 1fr); }
+            .crops-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 40px; }
             .nav-links { display: none; }
-            .hero h1 { font-size: 36px; }
+            .cta-section { margin: 0 4% 60px; padding: 50px 25px; }
+            .cta-section h2 { font-size: 28px; }
+            footer { flex-direction: column; text-align: center; }
+            .section-title { font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo"><i class="fas fa-leaf"></i> AGROTECH</div>
-        
-        <ul class="nav-links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Our Services</a></li>
-            <li><a href="#">Our Crops</a></li>
-            <li><a href="#">Sustainability</a></li>
-        </ul>
+<nav>
+    <div class="logo"><i class="fas fa-leaf"></i><span>AGROTECH</span></div>
+    <ul class="nav-links">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Our Services</a></li>
+        <li><a href="#crops">Our Crops</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <a href="index1.html" class="login-link">Sign In</a>
+        <a href="register.html" class="cta-btn">Join Now</a>
+    </div>
+</nav>
 
-        <div class="nav-actions">
-            <a href="index1.html" class="login-link">Login</a>
-            <a href="contact.html" class="contact-btn">Contact Us</a>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-seedling"></i> India's Premier Agri-Tech Platform</div>
+        <h1>Growing the <span>Future</span> of Agriculture</h1>
+        <p>Connect directly with verified sellers, access premium agri-inputs, and manage your farm from anywhere.</p>
+        <div class="hero-btns">
+            <a href="register.html" class="btn-primary"><i class="fas fa-tractor"></i> Start Farming</a>
+            <a href="index1.html" class="btn-outline"><i class="fas fa-store"></i> Sell with Us</a>
         </div>
-    </nav>
+    </div>
+</section>
 
-    <header class="hero">
-        <h1>Growing the Future <br> of Agriculture</h1>
-        <p>Innovative Solutions for Modern Farming and Sustainable Growth.</p>
-        <button class="btn-green">Get Started</button>
-    </header>
+<!-- STATS BAND -->
+<div class="stats-band">
+    <div class="stat-item"><h3>50K+</h3><p>Registered Farmers</p></div>
+    <div class="stat-item"><h3>1.2K+</h3><p>Verified Sellers</p></div>
+    <div class="stat-item"><h3>28</h3><p>States Covered</p></div>
+    <div class="stat-item"><h3>₹8Cr+</h3><p>Transactions Done</p></div>
+</div>
 
-    <section>
-        <h2 class="section-title">Our Services</h2>
-        <span class="section-subtitle">Leading the Way in Agriculture</span>
-        
-        <div class="grid">
+<!-- HOW IT WORKS -->
+<section id="about">
+    <div class="section-tag"><i class="fas fa-circle-dot"></i> HOW IT WORKS</div>
+    <h2 class="section-title">Simple. Fast. Profitable.</h2>
+    <p class="section-sub">AgroTech connects farmers directly to markets and quality suppliers — no middlemen, no delays.</p>
+
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="step-number">01</div>
+            <h3>Register</h3>
+            <p>Create your free account as a Farmer or Seller. Sellers undergo a quick verification to ensure trust.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-search"></i></div>
+            <div class="step-number">02</div>
+            <h3>Browse & Order</h3>
+            <p>Explore thousands of agricultural products — seeds, fertilizers, equipment — at competitive prices.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-truck"></i></div>
+            <div class="step-number">03</div>
+            <h3>Grow & Profit</h3>
+            <p>Get products delivered to your doorstep and track every order in real-time through your dashboard.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background: rgba(5,10,5,0.6); padding-top: 80px; padding-bottom: 80px;">
+    <div style="padding: 0 8%;">
+        <div class="section-tag"><i class="fas fa-circle-dot"></i> OUR SERVICES</div>
+        <h2 class="section-title">Leading the Way in Agriculture</h2>
+        <p class="section-sub">Innovative technology combined with deep agricultural knowledge.</p>
+
+        <div class="services-grid">
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&q=80&w=600" alt="Precision">
+                <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&q=80&w=600" alt="Precision Farming">
                 <div class="service-content">
+                    <div class="tag">AI-Powered</div>
                     <h3>Precision Farming</h3>
-                    <p>Advanced GPS & AI technology for optimized crop management.</p>
+                    <p>Advanced GPS & AI technology for optimized crop management, soil analysis, and yield prediction.</p>
                 </div>
             </div>
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&q=80&w=600" alt="Consulting">
+                <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&q=80&w=600" alt="Crop Consulting">
                 <div class="service-content">
+                    <div class="tag">Expert Advice</div>
                     <h3>Crop Consulting</h3>
-                    <p>Expert advice and support to maximize your yields.</p>
+                    <p>Get expert advice from certified agronomists to maximize yields and minimize crop loss.</p>
                 </div>
             </div>
             <div class="service-card">
-                <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=600" alt="Solutions">
+                <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=600" alt="Agri Solutions">
                 <div class="service-content">
-                    <h3>Agri Solutions</h3>
-                    <p>Innovative technologies for smarter farming.</p>
+                    <div class="tag">Direct Market</div>
+                    <h3>Agri Marketplace</h3>
+                    <p>Buy quality seeds, fertilizers, pesticides, and equipment directly from verified sellers.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section style="background-color: #0d0d0d;">
-        <h2 class="section-title">Our Crops & Products</h2>
-        
-        <div class="product-grid">
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=400" alt="Corn">
-                <div class="label">Corn</div>
-            </div>
-            <div class="product-card">
-                <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ-p_W79_z21pygmQUvyow_bSvAUkml6uwjEVW4BYciOyW6Wtc6zoPbHWLrFzfh" alt="Wheat">
-                <div class="label">Wheat</div>
-            </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=400" alt="Vegetables">
-                <div class="label">Vegetables</div>
-            </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=400" alt="Soybeans">
-                <div class="label">Soybeans</div>
-            </div>
+<!-- CROPS SHOWCASE -->
+<section id="crops">
+    <div class="section-tag"><i class="fas fa-circle-dot"></i> OUR PRODUCTS</div>
+    <h2 class="section-title">Browse by Category</h2>
+    <div class="crops-grid">
+        <div class="crop-card">
+            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=400" alt="Corn">
+            <div class="label"><i class="fas fa-seedling" style="color:var(--primary);"></i> Corn</div>
         </div>
-    </section>
+        <div class="crop-card">
+            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=400" alt="Wheat">
+            <div class="label"><i class="fas fa-seedling" style="color:var(--primary);"></i> Wheat</div>
+        </div>
+        <div class="crop-card">
+            <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=400" alt="Vegetables">
+            <div class="label"><i class="fas fa-seedling" style="color:var(--primary);"></i> Vegetables</div>
+        </div>
+        <div class="crop-card">
+            <img src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=400" alt="Soybeans">
+            <div class="label"><i class="fas fa-seedling" style="color:var(--primary);"></i> Soybeans</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+    <div class="section-tag"><i class="fas fa-rocket"></i> GET STARTED TODAY</div>
+    <h2>Ready to Transform Your Farm?</h2>
+    <p>Join thousands of farmers who are already growing smarter with AgroTech.</p>
+    <div class="cta-btns">
+        <a href="register.html" class="btn-primary"><i class="fas fa-tractor"></i> Register as Farmer</a>
+        <a href="register.html" class="btn-outline"><i class="fas fa-store"></i> Become a Seller</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-logo"><i class="fas fa-leaf"></i> AGROTECH</div>
+    <p>&copy; 2024 AgroTech. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="contact.html">Contact</a>
+        <a href="index1.html">Sign In</a>
+        <a href="register.html">Register</a>
+    </div>
+</footer>
 
 </body>
 </html>

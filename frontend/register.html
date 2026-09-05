@@ -372,15 +372,12 @@
         </div>
 
         <!-- Role Tabs -->
-        <div class="role-switcher">
+        <div class="role-switcher" style="grid-template-columns: repeat(2, 1fr);">
             <button type="button" class="role-tab active" data-role="farmer">
                 <i class="fas fa-tractor"></i> <span>Farmer</span>
             </button>
             <button type="button" class="role-tab" data-role="seller">
                 <i class="fas fa-store"></i> <span>Seller</span>
-            </button>
-            <button type="button" class="role-tab" data-role="admin">
-                <i class="fas fa-user-shield"></i> <span>Admin</span>
             </button>
         </div>
 
@@ -392,7 +389,7 @@
                 <!-- Common Base Inputs -->
                 <div class="input-group full-width">
                     <i class="fas fa-user left-icon"></i>
-                    <input type="text" name="name" placeholder="Full Name / Person Name" required>
+                    <input type="text" name="username" placeholder="Full Name / Person Name" required>
                 </div>
 
                 <div class="input-group full-width">
@@ -562,14 +559,6 @@ roleTabs.forEach(tab => {
             heroDesc.innerText = 'Fill in company & address details. Admin approval is required for verified seller accounts.';
             googleSection.style.display = 'none'; // Hide Google Auth for Seller Applications
             setSellerRequirements(true);
-        } else if(selectedRole === 'admin') {
-            sellerFields.style.display = 'none';
-            submitBtn.innerText = 'Register as Admin';
-            heroIcon.className = 'fas fa-user-shield';
-            heroTitle.innerText = 'Admin Management';
-            heroDesc.innerText = 'Manage applications, users, products and orders seamlessly.';
-            googleSection.style.display = 'block';
-            setSellerRequirements(false);
         } else {
             sellerFields.style.display = 'none';
             submitBtn.innerText = 'Register Now';
@@ -651,21 +640,28 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
     // Endpoint selection
     const targetEndpoint = isSeller ? "/apply-seller" : "/register";
 
-    fetch("https://cityshobackend.onrender.com" + targetEndpoint, {
-        method: "POST",
-        body: formData
-    })
+    // For farmer registration, send JSON to /register; for seller send FormData to /apply-seller
+    const fetchOptions = isSeller
+        ? { method: "POST", body: formData }
+        : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+            username: formData.get('username'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            password: formData.get('password'),
+            role: formData.get('role') || 'farmer'
+        })};
+
+    fetch("https://cityshobackend.onrender.com" + targetEndpoint, fetchOptions)
     .then(res => res.json())
     .then(res => {
         loader.style.display = "none";
         if(res.success){
             if(isSeller) {
-                alert("Application Submitted! Admin will review your document and details.");
-                window.location.href = "index1.html";
+                alert("Seller Application Submitted! Admin will review your details.");
             } else {
                 alert("Account Created Successfully! Please Sign In.");
-                window.location.href = "index1.html";
             }
+            window.location.href = "index1.html";
         } else {
             alert(res.message || "Registration failed!");
         }

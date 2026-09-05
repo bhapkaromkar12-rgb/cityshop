@@ -142,11 +142,9 @@
 
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
-    
-    // Base URL ko payment page wale URL se match kiya hai
     const BASE_URL = "https://cityshobackend.onrender.com";
 
-    if(!user) {
+    if (!user) {
         window.location.href = "index1.html";
     }
 

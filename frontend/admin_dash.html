@@ -169,9 +169,13 @@
 
 
 <div class="navbar">
-      <a href="admin.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
-    <div style="font-weight: bold; font-size: 20px;">City Shop Admin</div>
-    <a href="#" onclick="logout()" style="color: white; font-size: 14px;">Logout</a>
+    <a href="admin.html" style="text-decoration:none; color:white; font-size:18px; display:flex; align-items:center; gap:6px;">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div style="font-weight: bold; font-size: 20px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-leaf" style="color:var(--primary);"></i> AgroTech Seller
+    </div>
+    <a href="#" onclick="logout()" style="color: var(--text-gray); font-size: 13px;">Logout</a>
 </div>
 
 <div class="container">
@@ -232,21 +236,15 @@
     }
 
     function deleteProduct(id) {
-    if (confirm("Bhai, kya aap sach mein is product ko nikalna chahte ho?")) {
-        fetch(`https://cityshobackend.onrender.com/delete-product/${id}`, {
-            method: 'DELETE',
-        })
-        .then(res => res.text())
-        .then(data => {
-            alert(data);
-            loadAdminProducts(); // List refresh karne ke liye taaki deleted item gayab ho jaye
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Kuch gadbad ho gayi delete karte waqt!");
-        });
+        if (confirm("Are you sure you want to delete this product?")) {
+            fetch(`https://cityshobackend.onrender.com/delete-product/${id}`, {
+                method: 'DELETE',
+            })
+            .then(res => res.text())
+            .then(() => loadAdminProducts())
+            .catch(() => alert("Delete failed!"));
+        }
     }
-}
 
     function editProduct(id) {
         window.location.href = `edit-product.html?id=${id}`;

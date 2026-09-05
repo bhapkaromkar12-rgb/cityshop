@@ -242,9 +242,10 @@
         </div>
 
         <ul class="nav-links">
-            <li class="active"><i class="fas fa-chart-line"></i> Dashboard</li>
-            <li><i class="fas fa-store"></i> Seller Requests</li>
-            <li><i class="fas fa-users"></i> All Users</li>
+            <li class="active" onclick="showSection('overview')"><i class="fas fa-chart-line"></i> Dashboard</li>
+            <li onclick="showSection('seller-requests')"><i class="fas fa-store"></i> Seller Requests</li>
+            <li onclick="showSection('approved-sellers')"><i class="fas fa-users"></i> All Sellers</li>
+            <li onclick="window.location.href='all-orders.html'"><i class="fas fa-clipboard-list"></i> Orders</li>
             <li onclick="adminLogout()" style="margin-top: 50px; color: var(--red);"><i class="fas fa-sign-out-alt"></i> Logout</li>
         </ul>
     </div>
@@ -252,15 +253,15 @@
     <div class="main-content">
         <div class="header-bar">
             <div>
-                <h1 style="margin: 0; font-size: 24px;">Welcome, Omkar Bhapkar</h1>
-                <p style="color: var(--text-gray); font-size: 13px; margin-top: 4px;">AgroTech Platform Admin Control</p>
+                <h1 style="margin: 0; font-size: 24px;" id="adminWelcome">Welcome, Admin</h1>
+                <p style="color: var(--text-gray); font-size: 13px; margin-top: 4px;">AgroTech Platform Control Center</p>
             </div>
             <div style="background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; font-size: 13px;">
                 <i class="fas fa-user-shield" style="color: var(--primary);"></i> Super Admin
             </div>
         </div>
 
-        <div class="stats-grid">
+        <div class="stats-grid" id="section-overview">
             <div class="stat-card">
                 <div>
                     <p>Total Farmers</p>
@@ -286,7 +287,9 @@
             </div>
         </div>
 
-        <div class="section-card">
+        </div>
+
+        <div class="section-card" id="section-seller-requests">
             <h3><i class="fas fa-user-clock" style="color: var(--primary);"></i> Pending Seller Applications</h3>
             <table>
                 <thead>
@@ -305,7 +308,7 @@
             </table>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" id="section-approved-sellers">
             <h3><i class="fas fa-check-circle" style="color: var(--primary);"></i> Approved Sellers</h3>
             <table>
                 <thead>
@@ -331,6 +334,18 @@
 <script>
 const BACKEND_URL = "https://cityshobackend.onrender.com";
 
+// SECTION NAVIGATION
+function showSection(section) {
+    document.querySelectorAll('.nav-links li').forEach((li, i) => {
+        const sects = ['overview', 'seller-requests', 'approved-sellers', 'orders'];
+        li.classList.toggle('active', sects[i] === section);
+    });
+    const allSections = document.querySelectorAll('[id^="section-"]');
+    allSections.forEach(s => s.style.display = 'none');
+    const target = document.getElementById(`section-${section}`);
+    if (target) target.style.display = '';
+}
+
 // LOGIN HANDLER
 document.getElementById("adminLoginForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -348,6 +363,7 @@ document.getElementById("adminLoginForm").addEventListener("submit", function(e)
             localStorage.setItem("adminLoggedIn", "true");
             document.getElementById("adminLoginOverlay").style.display = "none";
             document.getElementById("dashboard").style.display = "flex";
+            document.getElementById("adminWelcome").innerText = `Welcome, ${data.user.name || 'Admin'}`;
             loadAdminData();
         } else {
             alert(data.message || "Invalid Admin Login!");
@@ -467,6 +483,17 @@ function adminLogout() {
 if(localStorage.getItem("adminLoggedIn") === "true") {
     document.getElementById("adminLoginOverlay").style.display = "none";
     document.getElementById("dashboard").style.display = "flex";
+    loadAdminData();
+}
+
+// Also support redirect from login page via localStorage user object
+const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+if (storedUser && storedUser.role === "admin") {
+    document.getElementById("adminLoginOverlay").style.display = "none";
+    document.getElementById("dashboard").style.display = "flex";
+    if (document.getElementById("adminWelcome")) {
+        document.getElementById("adminWelcome").innerText = `Welcome, ${storedUser.username || 'Admin'}`;
+    }
     loadAdminData();
 }
 </script>

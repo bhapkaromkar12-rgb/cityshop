@@ -155,7 +155,7 @@
 </head>
 <body>
 
-<a href="admin.html" class="btn-back-top"><i class="fas fa-arrow-left"></i></a>
+<a href="admin.html" class="btn-back-top" style="text-decoration:none;"><i class="fas fa-arrow-left"></i></a>
 
 <div class="container">
     <h2><i class="fas fa-tasks"></i> Manage Orders</h2>
@@ -166,47 +166,62 @@
 </div>
 
 <script>
+    const BASE_URL = "https://cityshobackend.onrender.com";
+
     function loadOrders() {
-        fetch('https://cityshobackend.onrender.com/get-all-orders')
+        fetch(`${BASE_URL}/get-all-orders`)
         .then(res => res.json())
-        .then(orders => {
+        .then(data => {
+            const orders = data.orders || data || [];
             const tbody = document.getElementById("orderTableBody");
             tbody.innerHTML = "";
-            orders.reverse().forEach(order => { // Reverse to show latest first
+            if (!orders.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: #666;">No orders found.</td></tr>`;
+                return;
+            }
+            orders.forEach(order => {
+                const statusLower = (order.status || 'pending').toLowerCase();
+                const productName = order.product_name || `Product #${order.product_id}`;
+                const imgUrl = order.image
+                    ? (order.image.startsWith('http') ? order.image : `${BASE_URL}/uploads/${order.image}`)
+                    : '';
                 tbody.innerHTML += `
                     <tr>
                         <td data-label="Order ID">#${order.id}</td>
-                        <td data-label="Customer">${order.customer_name || 'User'}</td>
-                        <td data-label="Product">#${order.product_id}</td>
-                        <td data-label="Amount">₹${order.total_price}</td>
-                        <td data-label="Status"><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td data-label="Customer">${order.customer_name || order.buyer_name || 'User'}</td>
+                        <td data-label="Product">${productName}</td>
+                        <td data-label="Amount">₹${parseFloat(order.price || order.total_price || 0).toFixed(2)}</td>
+                        <td data-label="Status"><span class="status-badge ${statusLower}">${order.status || 'Pending'}</span></td>
                         <td data-label="Actions">
                             <div class="btn-group">
                                 ${order.status !== 'Delivered' && order.status !== 'Cancelled' ? `
                                     <button class="btn btn-receive" onclick="updateStatus(${order.id}, 'Received')">Receive</button>
                                     <button class="btn btn-deliver" onclick="updateStatus(${order.id}, 'Delivered')">Deliver</button>
                                     <button class="btn btn-cancel" onclick="updateStatus(${order.id}, 'Cancelled')">Cancel</button>
-                                ` : '<div class="order-closed"><i class="fas fa-check-circle"></i> Order Completed</div>'}
+                                ` : '<div class="order-closed"><i class="fas fa-check-circle"></i> Completed</div>'}
                             </div>
                         </td>
                     </tr>
                 `;
             });
+        })
+        .catch(err => {
+            document.getElementById("orderTableBody").innerHTML =
+                `<tr><td colspan="6" style="text-align:center;padding:30px;color:#ffc107;"><i class="fas fa-exclamation-triangle"></i> Failed to load orders.</td></tr>`;
         });
     }
 
     function updateStatus(orderId, newStatus) {
-        if(!confirm(`Mark order #${orderId} as ${newStatus}?`)) return;
+        if (!confirm(`Mark order #${orderId} as ${newStatus}?`)) return;
 
-        fetch('https://cityshobackend.onrender.com/update-order-status', {
+        fetch(`${BASE_URL}/update-order-status`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ orderId, status: newStatus })
         })
-        .then(res => res.text())
-        .then(msg => {
-            loadOrders(); 
-        });
+        .then(res => res.json())
+        .then(() => loadOrders())
+        .catch(() => alert("Update failed!"));
     }
 
     loadOrders();

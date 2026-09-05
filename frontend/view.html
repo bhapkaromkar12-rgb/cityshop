@@ -3,293 +3,486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agro Shop - Premium Products</title>
+    <title>AgroTech Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #74c947;
-            --dark-bg: #0a0a0a;
-            --card-bg: #161616;
-            --text-gray: #a0a0a0;
+            --primary-dark: #5ea33a;
+            --primary-glow: rgba(116, 201, 71, 0.25);
+            --dark-bg: #090d09;
+            --card-bg: rgba(18, 22, 18, 0.95);
+            --text-gray: #9aaa9a;
+            --border: rgba(255,255,255,0.08);
         }
 
-        body { 
-            margin:0; 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(9,13,9,0.95);
+            backdrop-filter: blur(20px);
+            padding: 14px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            gap: 15px;
+        }
+
+        .logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .logo i { color: var(--primary); }
+
+        /* Search Bar */
+        .search-wrap {
+            flex: 1;
+            max-width: 420px;
+            position: relative;
+        }
+        .search-wrap input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px 10px 42px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-wrap input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+        .search-wrap input::placeholder { color: var(--text-gray); }
+        .search-wrap .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px; }
+
+        /* Profile */
+        .profile-container { position: relative; }
+        .profile-btn {
+            background: rgba(255,255,255,0.06);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 9px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .profile-btn:hover { border-color: var(--primary); }
+        .profile-btn .avatar {
+            width: 30px; height: 30px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800;
             color: white;
         }
-        
-        /* Modern Glassmorphism Navbar */
-        .navbar { 
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            color: white; 
-            padding: 15px 6%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            border-bottom: 1px solid #222;
-        }
 
-        .logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
-        .logo i { color: var(--primary); }
-        
-        /* Container Setup - Optimized for 2 per row on Mobile */
-        .container { 
-            display: grid; 
-            /* Desktop par auto-fill rahega */
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
-            gap: 15px; /* Mobile par gap thoda kam kar diya taaki space bache */
-            padding: 20px 4%; 
-        }
-
-        /* Mobile Specific Adjustment */
-        @media (max-width: 600px) {
-            .container {
-                /* Exact 2 columns in one row */
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 12px;
-                padding: 15px 3%;
-            }
-            
-            .card {
-                padding: 10px;
-                border-radius: 15px;
-            }
-
-            .card img {
-                height: 140px; /* Choti screen par image height thodi kam taaki 4 product screen par fit ho jayein */
-                border-radius: 10px;
-            }
-
-            .card h4 {
-                font-size: 14px; /* Text size thoda chota */
-            }
-
-            .price {
-                font-size: 18px;
-            }
-
-            .btn-select {
-                padding: 10px;
-                font-size: 12px;
-            }
-            
-            .city-tag {
-                font-size: 10px;
-                padding: 2px 8px;
-            }
-        }
-        
-        /* Premium Card Design */
-        .card { 
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            padding: 15px; 
-            text-align: center; 
-            transition: 0.4s; 
-            border: 1px solid #222;
-            position: relative;
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: #131a13;
+            min-width: 210px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 100;
+            border-radius: 16px;
+            margin-top: 12px;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: dropIn 0.25s ease;
         }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(116, 201, 71, 0.1);
+        @keyframes dropIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-content .dd-user {
+            padding: 16px;
+            background: rgba(116,201,71,0.08);
+            border-bottom: 1px solid var(--border);
         }
-
-        .card img { 
-            width: 100%; 
-            height: 180px; 
-            object-fit: cover; 
-            border-radius: 15px; 
-            margin-bottom: 15px;
+        .dropdown-content .dd-user p { font-size: 13px; font-weight: 700; }
+        .dropdown-content .dd-user span { font-size: 11px; color: var(--text-gray); }
+        .dropdown-content a {
+            color: #eee;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            transition: 0.3s;
         }
-        
-        .card h4 { margin: 10px 0 5px; font-size: 18px; color: #fff; }
+        .dropdown-content a:hover { background: rgba(255,255,255,0.04); color: var(--primary); }
+        .dropdown-content a i { width: 16px; text-align: center; }
+        .show { display: block !important; }
 
-        .city-tag {
-            font-size: 12px;
+        /* CATEGORY TABS */
+        .filters-bar {
+            padding: 16px 5%;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            border-bottom: 1px solid var(--border);
+            background: rgba(9,13,9,0.8);
+        }
+        .filters-bar::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            padding: 7px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
             color: var(--text-gray);
-            background: #222;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-chip.active, .filter-chip:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* HERO BANNER */
+        .shop-banner {
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,20,0,0.5) 100%),
+                        url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
+            padding: 50px 5%;
+            text-align: center;
+        }
+        .shop-banner h2 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+        .shop-banner h2 span { color: var(--primary); }
+        .shop-banner p { color: var(--text-gray); font-size: 15px; }
+
+        /* PRODUCT GRID */
+        .main-content { padding: 30px 5%; }
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        .grid-header h3 { font-size: 18px; font-weight: 700; }
+        .grid-header span { color: var(--text-gray); font-size: 13px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: 0.35s;
+            cursor: pointer;
+        }
+        .card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(116,201,71,0.1); }
+
+        .card-img-wrap { position: relative; overflow: hidden; }
+        .card img { width: 100%; height: 185px; object-fit: cover; transition: 0.5s; display: block; }
+        .card:hover img { transform: scale(1.06); }
+
+        .card-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: rgba(9,13,9,0.85);
+            backdrop-filter: blur(8px);
             padding: 4px 10px;
             border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            border: 1px solid rgba(116,201,71,0.3);
         }
 
-        .price { 
-            color: var(--primary); 
-            font-weight: 800; 
-            font-size: 22px; 
-            margin: 10px 0; 
+        .card-body { padding: 16px; }
+        .city-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-gray);
+            background: rgba(255,255,255,0.05);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 9px;
+            border: 1px solid var(--border);
         }
+        .card-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .price { color: var(--primary); font-weight: 900; font-size: 22px; margin: 8px 0 14px; }
+        .price span { font-size: 12px; color: var(--text-gray); font-weight: 400; }
 
-        .btn-select { 
-            width: 100%; 
-            padding: 12px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 15px;
+        .btn-cart {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
             transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
+        .btn-cart:hover { background: var(--primary-dark); }
+        .btn-cart:active { transform: scale(0.97); }
 
-        .btn-select:hover { 
-            background: #5ea33a; 
-            box-shadow: 0 5px 15px rgba(116, 201, 71, 0.3);
+        /* Empty & Error State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-gray);
         }
+        .empty-state i { font-size: 50px; margin-bottom: 20px; color: rgba(116,201,71,0.3); display: block; }
+        .empty-state p { font-size: 16px; }
 
-        /* Profile Dropdown Styling */
-        .profile-container { position: relative; }
-        .profile-btn { 
-            background: rgba(255,255,255,0.05); 
-            color: white; 
-            border: 1px solid #333; 
-            padding: 10px 20px; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            font-weight: 600;
-            display: flex;
+        /* LOADER OVERLAY */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(9,13,9,0.97);
+            display: none;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            transition: 0.3s;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 15px;
         }
-        .profile-btn:hover { border-color: var(--primary); background: rgba(255,255,255,0.1); }
-        
-        .dropdown-content {
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            background-color: #1a1a1a;
-            min-width: 200px; 
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
-            z-index: 100; 
-            border-radius: 15px; 
-            margin-top: 15px;
-            overflow: hidden;
-            border: 1px solid #333;
-            animation: fadeIn 0.3s ease;
+        .loader-overlay.show { display: flex; }
+        .loader-spinner {
+            width: 52px; height: 52px;
+            border: 3px solid rgba(116,201,71,0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .dropdown-content p { margin: 0; padding: 15px; background: #222; font-size: 12px; color: var(--text-gray); border-bottom: 1px solid #333; }
-        .dropdown-content a { color: #eee; padding: 12px 20px; text-decoration: none; display: block; font-size: 14px; transition: 0.3s; }
-        .dropdown-content a:hover { background-color: #252525; color: var(--primary); }
-        .show { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 600px) {
-            .navbar { padding: 10px 4%; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card img { height: 145px; }
+            .search-wrap { max-width: 180px; }
             .logo span { display: none; }
+            .shop-banner { padding: 35px 4%; }
+            .shop-banner h2 { font-size: 22px; }
         }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo"><i class="fas fa-leaf"></i> <span>City Shop</span></div>
-    
+<!-- Loader -->
+<div class="loader-overlay" id="cartLoader">
+    <div class="loader-spinner"></div>
+    <p style="color: var(--text-gray); font-size: 14px;">Adding to cart...</p>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-leaf"></i><span>AgroTech</span></div>
+
+    <div class="search-wrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()">
+    </div>
+
     <div class="profile-container">
         <button class="profile-btn" onclick="toggleDropdown()">
-            <i class="fas fa-user-circle" style="font-size: 20px; color: var(--primary);"></i> 
+            <div class="avatar" id="userAvatarLetter">A</div>
             <span id="userNameDisplay">Account</span>
+            <i class="fas fa-chevron-down" style="font-size:10px; color:var(--text-gray);"></i>
         </button>
         <div id="profileDropdown" class="dropdown-content">
-            <p id="userEmail">Loading...</p>
-            <a href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a> 
+            <div class="dd-user">
+                <p id="ddUserName">Loading...</p>
+                <span id="ddUserEmail">Loading...</span>
+            </div>
+            <a href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a href="my-orders.html"><i class="fas fa-box-open"></i> My Orders</a>
-            <a href="#" onclick="logout()" style="color: #ff5f5f;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <a href="contact.html"><i class="fas fa-headset"></i> Support</a>
+            <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- CATEGORY FILTERS -->
+<div class="filters-bar" id="filtersBar">
+    <button class="filter-chip active" data-cat="all" onclick="setCategory(this, 'all')">
+        <i class="fas fa-th"></i> All Products
+    </button>
+    <button class="filter-chip" data-cat="seeds" onclick="setCategory(this, 'seeds')">
+        <i class="fas fa-seedling"></i> Seeds
+    </button>
+    <button class="filter-chip" data-cat="fertilizer" onclick="setCategory(this, 'fertilizer')">
+        <i class="fas fa-flask"></i> Fertilizers
+    </button>
+    <button class="filter-chip" data-cat="pesticide" onclick="setCategory(this, 'pesticide')">
+        <i class="fas fa-shield-virus"></i> Pesticides
+    </button>
+    <button class="filter-chip" data-cat="equipment" onclick="setCategory(this, 'equipment')">
+        <i class="fas fa-tractor"></i> Equipment
+    </button>
+    <button class="filter-chip" data-cat="organic" onclick="setCategory(this, 'organic')">
+        <i class="fas fa-leaf"></i> Organic
+    </button>
+</div>
+
+<!-- HERO BANNER -->
+<div class="shop-banner">
+    <h2>Welcome to <span>AgroTech</span> Marketplace</h2>
+    <p>Premium agricultural products from verified sellers, delivered to your farm.</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div class="grid-header">
+        <h3>Available Products</h3>
+        <span id="productCount">Loading...</span>
+    </div>
+    <div class="product-grid" id="productContainer">
+        <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading products...</p>
         </div>
     </div>
 </div>
 
-<div class="container" id="productContainer"></div>
-
 <script>
-    // 1. Auth Check
+    const BASE_URL = "https://cityshobackend.onrender.com";
+    let allProducts = [];
+    let currentCategory = 'all';
+
+    // AUTH CHECK
     const user = JSON.parse(localStorage.getItem("user"));
-    if(!user) {
+    if (!user) {
         window.location.href = "index1.html";
     } else {
-        document.getElementById("userNameDisplay").innerText = user.username;
-        document.getElementById("userEmail").innerText = user.email;
+        document.getElementById("userNameDisplay").innerText = user.username || "Account";
+        document.getElementById("userAvatarLetter").innerText = (user.username || "A")[0].toUpperCase();
+        document.getElementById("ddUserName").innerText = user.username || "User";
+        document.getElementById("ddUserEmail").innerText = user.email || "";
     }
 
     function toggleDropdown() {
         document.getElementById("profileDropdown").classList.toggle("show");
     }
 
+    window.onclick = function(e) {
+        if (!e.target.closest('.profile-container')) {
+            document.getElementById("profileDropdown").classList.remove('show');
+        }
+    };
+
     function logout() {
         localStorage.removeItem("user");
         window.location.href = "index1.html";
     }
 
-    window.onclick = function(event) {
-        if (!event.target.closest('.profile-container')) {
-            document.getElementById("profileDropdown").classList.remove('show');
-        }
+    function setCategory(btn, cat) {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = cat;
+        renderProducts(allProducts);
     }
 
-    // 2. Load Products Logic
-    function loadProducts() {
-        fetch(`https://cityshobackend.onrender.com/get-products`)
-        .then(res => res.json())
-        .then(data => {
-            const container = document.getElementById("productContainer");
-            container.innerHTML = ""; 
-            const products = data.products || data; 
+    function filterProducts() {
+        renderProducts(allProducts);
+    }
 
-            if(!products || products.length === 0) {
-                container.innerHTML = "<h3 style='grid-column: 1/-1;'>No products available right now.</h3>";
-                return;
-            }
+    function renderProducts(products) {
+        const container = document.getElementById("productContainer");
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
 
-            products.forEach(product => {
-                // --- SMART IMAGE URL LOGIC ---
-                // Agar path 'http' se shuru hota hai (Cloudinary full URL), toh direct wahi use hoga
-                // Varna purana default local uploads ka prefix lagega
-                const imageUrl = product.image && product.image.startsWith('http') 
-                    ? product.image 
-                    : `https://cityshobackend.onrender.com/uploads/${product.image}`;
-                
-                container.innerHTML += `
-                    <div class="card">
-                        <img src="${imageUrl}" 
-                             onerror="this.src='https://via.placeholder.com/240x180?text=No+Image'" 
-                             alt="${product.name}">
-                        <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${product.city}</div>
-                        <h4>${product.name}</h4>
-                        <div class="price">₹${parseFloat(product.price).toFixed(2)}</div>
-                        <button class="btn-select" onclick="addToCart(${product.id})">
+        let filtered = products.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(searchTerm) ||
+                                  (p.city && p.city.toLowerCase().includes(searchTerm));
+            const matchesCat = currentCategory === 'all' ||
+                               p.name.toLowerCase().includes(currentCategory);
+            return matchesSearch && matchesCat;
+        });
+
+        document.getElementById("productCount").innerText = `${filtered.length} product${filtered.length !== 1 ? 's' : ''} found`;
+
+        if (!filtered.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <p>No products found.<br><small>Try a different search or category.</small></p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(p => {
+            const imgUrl = p.image && p.image.startsWith('http')
+                ? p.image
+                : `${BASE_URL}/uploads/${p.image}`;
+            return `
+                <div class="card" onclick="goToCheckout(${p.id})">
+                    <div class="card-img-wrap">
+                        <img src="${imgUrl}" onerror="this.src='https://placehold.co/240x185/161e16/74c947?text=AgroTech'" alt="${p.name}">
+                        <div class="card-badge"><i class="fas fa-check-circle"></i> Verified</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${p.city || 'India'}</div>
+                        <h4>${p.name}</h4>
+                        <div class="price">₹${parseFloat(p.price).toFixed(2)} <span>per unit</span></div>
+                        <button class="btn-cart" onclick="event.stopPropagation(); addToCart(${p.id})">
                             <i class="fas fa-shopping-cart"></i> Add to Cart
                         </button>
                     </div>
-                `;
-            });
-        })
-        .catch(err => {
-            document.getElementById("productContainer").innerHTML = "<h3>Unable to connect to server.</h3>";
-        });
+                </div>`;
+        }).join('');
     }
 
     function addToCart(id) {
         localStorage.setItem("selectedProductId", id);
         window.location.href = "checkout.html";
+    }
+
+    function goToCheckout(id) {
+        localStorage.setItem("selectedProductId", id);
+        window.location.href = "checkout.html";
+    }
+
+    function loadProducts() {
+        fetch(`${BASE_URL}/get-products`)
+            .then(res => res.json())
+            .then(data => {
+                allProducts = data.products || data || [];
+                renderProducts(allProducts);
+            })
+            .catch(() => {
+                document.getElementById("productContainer").innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle" style="color:#ffc107;"></i>
+                        <p>Unable to connect to server.<br><small>Please try again later.</small></p>
+                    </div>`;
+            });
     }
 
     loadProducts();

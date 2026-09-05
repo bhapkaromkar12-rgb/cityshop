@@ -211,20 +211,28 @@
     </a>
 </div>
 
+    </div><!-- end contact-container -->
+
     <script>
         document.getElementById("contactForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const btn = document.querySelector(".btn-submit");
-            btn.innerText = "Sending...";
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             btn.disabled = true;
 
-            // Abhi ke liye bas alert dikhayega
+            // Simulate send with visual feedback
             setTimeout(() => {
-                alert("Thank you! Your message has been sent.");
-                btn.innerText = "Send Message";
-                btn.disabled = false;
-                this.reset();
-            }, 1500);
+                btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+                setTimeout(() => {
+                    btn.innerHTML = 'Send Message';
+                    btn.disabled = false;
+                    this.reset();
+                }, 2000);
+            }, 1200);
         });
     </script>
 

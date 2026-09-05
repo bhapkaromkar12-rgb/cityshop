@@ -188,25 +188,26 @@
 </div>
 
 <script>
-    // 1. Current user data load karna
+    // Load user data
     const user = JSON.parse(localStorage.getItem("user"));
-    if(!user) {
+    if (!user) {
         window.location.href = "index1.html";
     } else {
-        document.getElementById("username").value = user.username;
-        document.getElementById("email").value = user.email;
+        document.getElementById("username").value = user.username || "";
+        document.getElementById("email").value = user.email || "";
         document.getElementById("phone").value = user.phone || "";
     }
 
-    // Dynamic Navigation
-    const backBtn = document.getElementById("backBtn");
-    backBtn.href = user.role === 'admin' ? 'add-product.html' : 'view.html';
+    // Dynamic back navigation
+    const backPath = user && (user.role === 'seller' || user.role === 'admin') ? 'admin.html' : 'view.html';
+    document.querySelector('.btn-back-top').href = backPath;
+    document.querySelector('.back-link').href = backPath;
 
-    // 2. Update Submit Logic
+    // Update submit
     document.getElementById("profileForm").addEventListener("submit", function(e) {
         e.preventDefault();
         
-        const saveBtn = e.target.querySelector('.save-btn');
+        const saveBtn = this.querySelector('.save-btn');
         saveBtn.innerText = "Saving...";
         saveBtn.disabled = true;
 
@@ -216,22 +217,21 @@
             phone: document.getElementById("phone").value,
             password: document.getElementById("password").value
         };
-       
-         
-        
-        fetch(`https://cityshobackend.onrender.com/update-profile/${admin.id}`, {
+
+        fetch(`https://cityshobackend.onrender.com/update-profile/${user.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData)
         })
         .then(res => res.json())
         .then(data => {
-            alert("Success! " + data.message);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            window.location.href = backBtn.href;
+            const newUser = { ...user, username: updatedData.username, email: updatedData.email, phone: updatedData.phone };
+            localStorage.setItem("user", JSON.stringify(newUser));
+            alert("Profile updated successfully!");
+            window.location.href = backPath;
         })
-        .catch(err => {
-            alert("Something went wrong!");
+        .catch(() => {
+            alert("Server error! Please try again.");
             saveBtn.innerText = "Update Profile";
             saveBtn.disabled = false;
         });
