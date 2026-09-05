@@ -673,7 +673,10 @@ function handleGoogleResponse(response) {
             if (res.token) localStorage.setItem("token", res.token);
 
             setTimeout(() => {
-                window.location.href = res.user.role === "seller" ? "admin.html" : "view.html";
+                const role = res.user.role;
+                if (role === "admin")       window.location.href = "adminom.html";
+                else if (role === "seller") window.location.href = "admin.html";
+                else                        window.location.href = "view.html";
             }, 1200);
         } else {
             loader.style.display = "none";
