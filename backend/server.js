@@ -277,6 +277,24 @@ app.post('/send-otp', (req, res) => {
     });
 });
 
+// ROUTE: STANDALONE OTP VERIFY (used by seller flow before apply-seller)
+app.post('/verify-otp', (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.json({ success: false, message: "Email and OTP required." });
+
+    const entry = otpStore[email];
+    if (!entry) return res.json({ success: false, message: "OTP not found. Please request a new one." });
+    if (Date.now() > entry.expires) {
+        delete otpStore[email];
+        return res.json({ success: false, message: "OTP expired. Please request a new one." });
+    }
+    if (entry.otp !== otp) return res.json({ success: false, message: "Incorrect OTP. Please try again." });
+
+    // Mark as verified (don't delete yet — apply-seller will consume it)
+    otpStore[email].verified = true;
+    res.json({ success: true, message: "OTP verified!" });
+});
+
 // ROUTE: REGISTER USER WITH OTP
 app.post('/register-user', (req, res) => {
     const { username, email, password, role, otp } = req.body;

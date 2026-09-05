@@ -331,6 +331,121 @@
     .loader-icon { font-size: 65px; color: var(--primary); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
+    /* ── OTP Panel ── */
+    #otpPanel {
+        display: none;
+        animation: fadeIn 0.4s ease-out;
+    }
+    .otp-info-banner {
+        background: rgba(116,201,71,0.08);
+        border: 1px solid rgba(116,201,71,0.25);
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .otp-info-banner i { color: var(--primary); margin-top: 2px; font-size: 16px; flex-shrink: 0; }
+    .otp-info-banner p { margin: 0; font-size: 13px; color: #d0d0d0; line-height: 1.5; }
+    .otp-info-banner strong { color: var(--primary); }
+
+    /* 6-box OTP input */
+    .otp-boxes {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    .otp-boxes input {
+        width: 48px;
+        height: 56px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        padding: 0;
+        border-radius: 12px;
+        border: 2px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.07);
+        color: white;
+        caret-color: var(--primary);
+        transition: border-color 0.2s, background 0.2s;
+        -webkit-appearance: none;
+    }
+    .otp-boxes input:focus {
+        border-color: var(--primary);
+        background: rgba(116,201,71,0.1);
+        box-shadow: 0 0 0 3px rgba(116,201,71,0.15);
+        outline: none;
+    }
+    .otp-boxes input.filled { border-color: var(--primary); }
+    .otp-boxes input.error  { border-color: #ff4d4d; background: rgba(255,77,77,0.08); }
+
+    .btn-verify-otp {
+        background: var(--primary);
+        color: #0a180a;
+        padding: 13px;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        width: 100%;
+        box-shadow: 0 10px 20px rgba(116,201,71,0.3);
+        transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+        font-family: inherit;
+    }
+    .btn-verify-otp:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(116,201,71,0.4); }
+    .btn-verify-otp:active { transform: scale(0.97); }
+    .btn-verify-otp:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .otp-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        font-size: 13px;
+    }
+    .btn-back-form {
+        background: none;
+        border: none;
+        color: var(--text-gray);
+        cursor: pointer;
+        font-size: 13px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: inherit;
+        transition: color 0.2s;
+    }
+    .btn-back-form:hover { color: white; }
+
+    #resendTimer { color: var(--text-gray); font-size: 13px; }
+    #resendBtn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 13px;
+        padding: 0;
+        font-family: inherit;
+        text-decoration: underline;
+    }
+
+    .otp-msg {
+        text-align: center;
+        font-size: 13px;
+        margin-top: 12px;
+        min-height: 18px;
+    }
+    .otp-msg.success { color: var(--primary); }
+    .otp-msg.error   { color: #ff4d4d; }
+
     /* Tablet */
     @media (max-width: 900px) {
         .app-container { max-width: 620px; }
@@ -513,6 +628,39 @@
             </button>
         </div>
 
+        <!-- ── OTP Verification Panel (hidden until form submits) ── -->
+        <div id="otpPanel">
+            <div class="otp-info-banner">
+                <i class="fas fa-envelope-open-text"></i>
+                <p>A 6-digit OTP has been sent to<br><strong id="otpEmailDisplay"></strong>.<br>Check your inbox (and spam folder).</p>
+            </div>
+
+            <div class="otp-boxes" id="otpBoxes">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            </div>
+
+            <button class="btn-verify-otp" id="verifyOtpBtn" onclick="verifyOTP()">
+                <i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account
+            </button>
+
+            <div class="otp-actions">
+                <button class="btn-back-form" onclick="showFormPanel()">
+                    <i class="fas fa-arrow-left"></i> Edit details
+                </button>
+                <div>
+                    <span id="resendTimer">Resend in <b id="timerCount">60</b>s</span>
+                    <button id="resendBtn" onclick="resendOTP()">Resend OTP</button>
+                </div>
+            </div>
+
+            <div class="otp-msg" id="otpMsg"></div>
+        </div>
+
         <div class="footer-links">
             Already have an account? <a href="index1.html">Sign In</a>
         </div>
@@ -521,114 +669,386 @@
 </div>
 
 <script>
+const API = 'https://cityshobackend.onrender.com';
 const GOOGLE_CLIENT_ID = "926493004740-b049qpm9kg1ofsuqpi414hbuuhjfd8o4.apps.googleusercontent.com";
 
-// ALL INDIA STATES LIST
+// ── Cached form data (passed from step 1 → step 2) ──
+let pendingFormData = null;   // FormData (for sellers)
+let pendingJsonData = null;   // plain object (for farmers)
+let pendingIsSeller = false;
+let resendInterval  = null;
+
+// ── ALL INDIA STATES ──
 const indianStates = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+    "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+    "Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh",
+    "Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab",
+    "Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"
 ];
 
 const stateSelect = document.getElementById("stateSelect");
 indianStates.forEach(st => {
-    let opt = document.createElement("option");
-    opt.value = st;
-    opt.innerText = st;
+    const opt = document.createElement("option");
+    opt.value = opt.innerText = st;
     stateSelect.appendChild(opt);
 });
 
-// Dynamic District Mock Options
 stateSelect.addEventListener("change", function() {
     const districtSelect = document.getElementById("districtSelect");
     districtSelect.innerHTML = '<option value="">Select District</option>';
-    if(this.value) {
-        let sampleDistricts = [this.value + " Central", this.value + " North", this.value + " South"];
-        sampleDistricts.forEach(d => {
-            let opt = document.createElement("option");
-            opt.value = d;
-            opt.innerText = d;
+    if (this.value) {
+        [this.value + " Central", this.value + " North", this.value + " South"].forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = opt.innerText = d;
             districtSelect.appendChild(opt);
         });
     }
 });
 
-// File Name Display
 document.getElementById("docInput").addEventListener("change", function() {
-    const fileName = this.files[0] ? this.files[0].name : "Click or Drag & Drop document to upload";
-    document.getElementById("fileNameText").innerText = fileName;
+    document.getElementById("fileNameText").innerText =
+        this.files[0] ? this.files[0].name : "Click or Drag & Drop document to upload";
 });
 
-// Role Switcher Dynamics
-const roleTabs = document.querySelectorAll('.role-tab');
-const roleSelect = document.getElementById('roleSelect');
+// ── Role Switcher ──
+const roleTabs     = document.querySelectorAll('.role-tab');
+const roleSelect   = document.getElementById('roleSelect');
 const sellerFields = document.getElementById('sellerFields');
-const submitBtn = document.getElementById('submitBtn');
-const heroIcon = document.getElementById('heroIcon');
-const heroTitle = document.getElementById('heroTitle');
-const heroDesc = document.getElementById('heroDesc');
-const googleSection = document.getElementById('googleAuthSection');
+const submitBtn    = document.getElementById('submitBtn');
+const heroIcon     = document.getElementById('heroIcon');
+const heroTitle    = document.getElementById('heroTitle');
+const heroDesc     = document.getElementById('heroDesc');
+const googleSection= document.getElementById('googleAuthSection');
 
-// Require or Remove Required from Seller Fields
-function setSellerRequirements(isRequired) {
-    document.getElementById('companyName').required = isRequired;
-    document.getElementById('stateSelect').required = isRequired;
-    document.getElementById('districtSelect').required = isRequired;
-    document.getElementById('talukaInput').required = isRequired;
-    document.getElementById('villageInput').required = isRequired;
-    document.getElementById('pincodeInput').required = isRequired;
-    document.getElementById('docInput').required = isRequired;
+function setSellerRequirements(on) {
+    ['companyName','stateSelect','districtSelect','talukaInput','villageInput','pincodeInput','docInput']
+        .forEach(id => { const el = document.getElementById(id); if(el) el.required = on; });
 }
 
 roleTabs.forEach(tab => {
     tab.addEventListener('click', () => {
-        const selectedRole = tab.dataset.role;
-        roleTabs.forEach(item => item.classList.toggle('active', item === tab));
-        roleSelect.value = selectedRole;
-
-        if(selectedRole === 'seller') {
+        const role = tab.dataset.role;
+        roleTabs.forEach(t => t.classList.toggle('active', t === tab));
+        roleSelect.value = role;
+        if (role === 'seller') {
             sellerFields.style.display = 'block';
-            submitBtn.innerText = 'Submit Seller Application';
+            submitBtn.textContent = 'Continue →  Get OTP';
             heroIcon.className = 'fas fa-store';
-            heroTitle.innerText = 'Partner with Us';
-            heroDesc.innerText = 'Fill in company & address details. Admin approval is required for verified seller accounts.';
-            googleSection.style.display = 'none'; // Hide Google Auth for Seller Applications
+            heroTitle.textContent = 'Partner with Us';
+            heroDesc.textContent = 'Fill in company & address details. Admin approval is required for verified seller accounts.';
+            googleSection.style.display = 'none';
             setSellerRequirements(true);
         } else {
             sellerFields.style.display = 'none';
-            submitBtn.innerText = 'Register Now';
+            submitBtn.textContent = 'Continue →  Get OTP';
             heroIcon.className = 'fas fa-tractor';
-            heroTitle.innerText = 'Join Agro Community';
-            heroDesc.innerText = 'Connect directly with trusted farmers, sellers, and agricultural supply chains across India.';
+            heroTitle.textContent = 'Join Agro Community';
+            heroDesc.textContent = 'Connect directly with trusted farmers, sellers, and agricultural supply chains across India.';
             googleSection.style.display = 'block';
             setSellerRequirements(false);
         }
     });
 });
 
-// Password Toggle Functionality
+// Update default submit button label
+submitBtn.textContent = 'Continue →  Get OTP';
+
+// ── Password Toggle ──
 function togglePass(inputId, icon) {
-    const passInput = document.getElementById(inputId);
-    if (passInput.type === "password") {
-        passInput.type = "text";
-        icon.classList.replace("fa-eye", "fa-eye-slash");
+    const el = document.getElementById(inputId);
+    el.type = el.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+}
+
+// ── Panel switchers ──
+function showFormPanel() {
+    document.getElementById('registerForm').style.display = 'block';
+    document.getElementById('googleAuthSection').style.display =
+        roleSelect.value === 'seller' ? 'none' : 'block';
+    document.getElementById('otpPanel').style.display = 'none';
+    document.querySelector('.form-header h2').textContent = 'Create Account';
+    document.getElementById('formSubheading').textContent = 'Choose your role and enter basic information';
+    clearInterval(resendInterval);
+    setOtpMsg('', '');
+}
+
+function showOtpPanel(email) {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('googleAuthSection').style.display = 'none';
+    document.getElementById('otpPanel').style.display = 'block';
+    document.querySelector('.form-header h2').textContent = 'Verify Email';
+    document.getElementById('formSubheading').textContent = 'Enter the 6-digit code we sent you';
+    document.getElementById('otpEmailDisplay').textContent = email;
+
+    // Clear boxes
+    document.querySelectorAll('#otpBoxes input').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('filled','error');
+    });
+    document.querySelectorAll('#otpBoxes input')[0].focus();
+
+    startResendTimer(60);
+}
+
+// ── OTP Box keyboard handling ──
+document.querySelectorAll('#otpBoxes input').forEach((inp, idx, all) => {
+    inp.addEventListener('input', function() {
+        // Allow only digits
+        this.value = this.value.replace(/\D/g, '').slice(-1);
+        this.classList.toggle('filled', this.value !== '');
+        this.classList.remove('error');
+        if (this.value && idx < all.length - 1) all[idx + 1].focus();
+        // Auto-verify when all 6 filled
+        if ([...all].every(b => b.value)) verifyOTP();
+    });
+    inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && idx > 0) all[idx - 1].focus();
+    });
+    inp.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0, 6);
+        [...text].forEach((ch, i) => {
+            if (all[i]) { all[i].value = ch; all[i].classList.add('filled'); }
+        });
+        if (text.length === 6) { verifyOTP(); } else if (all[text.length]) all[text.length].focus();
+    });
+});
+
+// ── Resend countdown ──
+function startResendTimer(seconds) {
+    clearInterval(resendInterval);
+    document.getElementById('resendBtn').style.display = 'none';
+    document.getElementById('resendTimer').style.display = 'inline';
+    document.getElementById('timerCount').textContent = seconds;
+
+    resendInterval = setInterval(() => {
+        seconds--;
+        document.getElementById('timerCount').textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(resendInterval);
+            document.getElementById('resendTimer').style.display = 'none';
+            document.getElementById('resendBtn').style.display = 'inline';
+        }
+    }, 1000);
+}
+
+function setOtpMsg(type, msg) {
+    const el = document.getElementById('otpMsg');
+    el.className = 'otp-msg' + (type ? ' ' + type : '');
+    el.textContent = msg;
+}
+
+// ── STEP 1: Form submit → send OTP ──
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const isSeller = roleSelect.value === 'seller';
+    const formData = new FormData(this);
+    const email    = formData.get('email').trim();
+
+    // Store for step 2
+    pendingIsSeller = isSeller;
+    if (isSeller) {
+        pendingFormData = formData;
+        pendingJsonData = null;
     } else {
-        passInput.type = "password";
-        icon.classList.replace("fa-eye-slash", "fa-eye");
+        pendingJsonData = {
+            username: formData.get('username').trim(),
+            email,
+            phone:    formData.get('phone').trim(),
+            password: formData.get('password'),
+            role:     formData.get('role') || 'farmer'
+        };
+        pendingFormData = null;
+    }
+
+    // Show loader
+    const loader     = document.getElementById("registerLoader");
+    const loaderText = document.getElementById("loaderText");
+    loader.style.display = "flex";
+    loaderText.textContent = "Sending OTP to your email...";
+    submitBtn.disabled = true;
+
+    fetch(`${API}/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+    .then(r => r.json())
+    .then(res => {
+        loader.style.display = "none";
+        submitBtn.disabled = false;
+        if (res.success) {
+            showOtpPanel(email);
+        } else {
+            alert(res.message || "Could not send OTP. Try again.");
+        }
+    })
+    .catch(() => {
+        loader.style.display = "none";
+        submitBtn.disabled = false;
+        alert("Server connection failed. Please try again.");
+    });
+});
+
+// ── STEP 2: Verify OTP → register ──
+function verifyOTP() {
+    const boxes = document.querySelectorAll('#otpBoxes input');
+    const otp   = [...boxes].map(b => b.value).join('');
+
+    if (otp.length < 6) {
+        boxes.forEach(b => { if (!b.value) b.classList.add('error'); });
+        setOtpMsg('error', 'Please enter all 6 digits.');
+        return;
+    }
+
+    const btn = document.getElementById('verifyOtpBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Verifying...';
+    btn.disabled  = true;
+    setOtpMsg('', '');
+
+    const email = document.getElementById('otpEmailDisplay').textContent;
+
+    if (pendingIsSeller) {
+        // Seller path: /apply-seller (FormData, no OTP param needed — seller approval goes to admin)
+        // For sellers we skip OTP verification on register-user and directly apply-seller
+        // But we still verify the OTP first via register-user (no-insert check not needed here)
+        // Simplest: verify OTP with a lightweight check then submit seller form
+        verifyOtpThen(email, otp, () => submitSellerApplication(otp));
+    } else {
+        // Farmer path: POST to /register-user with OTP
+        registerWithOtp(email, otp);
     }
 }
 
-// Google Sign-Up Trigger
+function verifyOtpThen(email, otp, onSuccess) {
+    // Verify OTP via dedicated /verify-otp endpoint, then proceed to apply-seller
+    fetch(`${API}/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            onSuccess();
+        } else {
+            const btn = document.getElementById('verifyOtpBtn');
+            btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+            btn.disabled  = false;
+            document.querySelectorAll('#otpBoxes input').forEach(b => b.classList.add('error'));
+            setOtpMsg('error', res.message || 'Incorrect OTP. Please try again.');
+        }
+    })
+    .catch(() => {
+        const btn = document.getElementById('verifyOtpBtn');
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+        btn.disabled  = false;
+        setOtpMsg('error', 'Server error. Please try again.');
+    });
+}
+
+function registerWithOtp(email, otp) {
+    const btn = document.getElementById('verifyOtpBtn');
+    const data = { ...pendingJsonData, otp };
+
+    fetch(`${API}/register-user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+        btn.disabled  = false;
+        if (res.success) {
+            setOtpMsg('success', '✓ Account created! Redirecting to sign in...');
+            setTimeout(() => window.location.href = 'index1.html', 1800);
+        } else {
+            // Wrong OTP — shake boxes
+            document.querySelectorAll('#otpBoxes input').forEach(b => b.classList.add('error'));
+            setOtpMsg('error', res.message || 'Incorrect OTP. Please try again.');
+        }
+    })
+    .catch(() => {
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+        btn.disabled  = false;
+        setOtpMsg('error', 'Server error. Please try again.');
+    });
+}
+
+function submitSellerApplication(otp) {
+    const btn = document.getElementById('verifyOtpBtn');
+
+    // Add otp to form data for backend verification if needed
+    if (pendingFormData) pendingFormData.set('otp', otp);
+
+    fetch(`${API}/apply-seller`, {
+        method: 'POST',
+        body: pendingFormData
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+        btn.disabled  = false;
+        if (res.success) {
+            setOtpMsg('success', '✓ Application submitted! Awaiting admin approval...');
+            setTimeout(() => window.location.href = 'index1.html', 2200);
+        } else {
+            document.querySelectorAll('#otpBoxes input').forEach(b => b.classList.add('error'));
+            setOtpMsg('error', res.message || 'Submission failed. Try again.');
+        }
+    })
+    .catch(() => {
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i>&nbsp; Verify &amp; Create Account';
+        btn.disabled  = false;
+        setOtpMsg('error', 'Server error. Please try again.');
+    });
+}
+
+// ── Resend OTP ──
+function resendOTP() {
+    const email = document.getElementById('otpEmailDisplay').textContent;
+    if (!email) return;
+
+    document.getElementById('resendBtn').style.display = 'none';
+    setOtpMsg('', 'Sending new OTP...');
+
+    fetch(`${API}/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            // Clear boxes
+            document.querySelectorAll('#otpBoxes input').forEach(b => {
+                b.value = ''; b.classList.remove('filled','error');
+            });
+            document.querySelectorAll('#otpBoxes input')[0].focus();
+            setOtpMsg('success', 'New OTP sent to your email!');
+            startResendTimer(60);
+            setTimeout(() => setOtpMsg('', ''), 3000);
+        } else {
+            setOtpMsg('error', res.message || 'Could not resend. Try again.');
+            document.getElementById('resendBtn').style.display = 'inline';
+        }
+    })
+    .catch(() => {
+        setOtpMsg('error', 'Server error. Try again.');
+        document.getElementById('resendBtn').style.display = 'inline';
+    });
+}
+
+// ── Google Sign-Up (bypasses OTP — Google already verifies email) ──
 function googleSignUp() {
     if (typeof google === "undefined" || !google.accounts) {
         alert("Google SDK loading... Please wait a second.");
         return;
     }
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse
-    });
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse });
     google.accounts.id.prompt();
 }
 
@@ -636,78 +1056,31 @@ function handleGoogleResponse(response) {
     const loader = document.getElementById("registerLoader");
     const loaderText = document.getElementById("loaderText");
     loader.style.display = "flex";
-    loaderText.innerText = "Processing Google Authentication...";
+    loaderText.textContent = "Processing Google Sign-Up...";
 
-    fetch("https://cityshobackend.onrender.com/google-auth", {
+    fetch(`${API}/google-auth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: response.credential, role: roleSelect.value })
     })
-    .then(res => res.json())
+    .then(r => r.json())
     .then(res => {
         loader.style.display = "none";
         if (res.success) {
-            alert("Registration Successful!");
             localStorage.setItem("user", JSON.stringify(res.user));
-            window.location.href = res.user.role === "admin" ? "admin.html" : "view.html";
+            const role = res.user.role;
+            window.location.href = role === "admin" ? "adminom.html"
+                                 : role === "seller" ? "admin.html"
+                                 : "view.html";
         } else {
             alert(res.message || "Google auth failed.");
         }
     })
-    .catch(err => {
+    .catch(() => {
         loader.style.display = "none";
-        alert("Server Error during Google Login!");
+        alert("Server error during Google Sign-Up.");
     });
 }
-
-// FORM SUBMISSION (Supports multipart/form-data for files)
-document.getElementById("registerForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    
-    const loader = document.getElementById("registerLoader");
-    const loaderText = document.getElementById("loaderText");
-    const isSeller = roleSelect.value === 'seller';
-    
-    loader.style.display = "flex";
-    loaderText.innerText = isSeller ? "Submitting Seller Application to Admin..." : "Creating Account...";
-
-    const formData = new FormData(this);
-
-    // Endpoint selection
-    const targetEndpoint = isSeller ? "/apply-seller" : "/register";
-
-    // For farmer registration, send JSON to /register; for seller send FormData to /apply-seller
-    const fetchOptions = isSeller
-        ? { method: "POST", body: formData }
-        : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
-            username: formData.get('username'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            password: formData.get('password'),
-            role: formData.get('role') || 'farmer'
-        })};
-
-    fetch("https://cityshobackend.onrender.com" + targetEndpoint, fetchOptions)
-    .then(res => res.json())
-    .then(res => {
-        loader.style.display = "none";
-        if(res.success){
-            if(isSeller) {
-                alert("Seller Application Submitted! Admin will review your details.");
-            } else {
-                alert("Account Created Successfully! Please Sign In.");
-            }
-            window.location.href = "index1.html";
-        } else {
-            alert(res.message || "Registration failed!");
-        }
-    })
-    .catch(err => {
-        loader.style.display = "none";
-        console.error("Error:", err);
-        alert("Server connection failed!");
-    });
-});
 </script>
 
 </body>
