@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
     <title>Admin Command Center - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,12 +16,16 @@
         --red: #ff4d4d;
     }
 
+    *, *::before, *::after { box-sizing: border-box; }
+
     body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         background: var(--dark-bg);
         color: white;
         min-height: 100vh;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
     }
 
     /* --- LOGIN OVERLAY --- */
@@ -97,13 +102,16 @@
     }
 
     .sidebar {
-        width: 250px;
+        width: 240px;
         background: rgba(18, 22, 18, 0.98);
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 25px 20px;
+        border-right: 1px solid rgba(255,255,255,0.08);
+        padding: 22px 18px;
         position: fixed;
         height: 100vh;
+        overflow-y: auto;
         box-sizing: border-box;
+        z-index: 900;
+        transition: transform 0.3s ease;
     }
 
     .logo {
@@ -137,8 +145,9 @@
     }
 
     .main-content {
-        margin-left: 250px;
-        padding: 30px 40px;
+        margin-left: 240px;
+        padding: 28px 32px;
+        min-width: 0;
     }
 
     .header-bar {
@@ -209,6 +218,48 @@
     .btn-reject { background: var(--red); color: white; }
     .btn-doc { background: rgba(255,255,255,0.1); color: white; text-decoration: none; display: inline-block; }
 
+    /* Sidebar overlay on mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 899;
+    }
+    .sidebar-overlay.show { display: block; }
+
+    /* Mobile hamburger for admin panel */
+    .admin-ham {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 6px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .sidebar {
+            transform: translateX(-100%);
+            width: 260px;
+        }
+        .sidebar.mobile-open { transform: translateX(0); }
+        .main-content { margin-left: 0; padding: 20px 16px; }
+        .admin-ham { display: block; }
+        .stats-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+        .stat-card { padding: 16px; }
+        .stat-card h3 { font-size: 24px; }
+        .section-card { padding: 18px; }
+        table { font-size: 12px; overflow-x: auto; display: block; }
+        th, td { padding: 10px 8px; white-space: nowrap; }
+    }
+    @media (max-width: 480px) {
+        .main-content { padding: 16px 12px; }
+        .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+        .btn-action { padding: 5px 10px; font-size: 11px; }
+    }
     </style>
 </head>
 <body>
@@ -233,12 +284,18 @@
     </div>
 </div>
 
+<!-- Sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
 <div class="dashboard-container" id="dashboard">
     
-    <div class="sidebar">
-        <div class="logo">
-            <i class="fas fa-leaf"></i>
-            <span>AGRO ADMIN</span>
+    <div class="sidebar" id="sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <div class="logo" style="margin-bottom:0;">
+                <i class="fas fa-leaf"></i>
+                <span>AGRO ADMIN</span>
+            </div>
+            <button onclick="closeSidebar()" style="display:none; background:none; border:none; color:#888; font-size:18px; cursor:pointer;" id="sidebarClose"><i class="fas fa-times"></i></button>
         </div>
 
         <ul class="nav-links">
@@ -252,9 +309,12 @@
 
     <div class="main-content">
         <div class="header-bar">
-            <div>
-                <h1 style="margin: 0; font-size: 24px;" id="adminWelcome">Welcome, Admin</h1>
-                <p style="color: var(--text-gray); font-size: 13px; margin-top: 4px;">AgroTech Platform Control Center</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="admin-ham" id="adminHam" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
+                <div>
+                    <h1 style="margin: 0; font-size: clamp(18px,3vw,24px);" id="adminWelcome">Welcome, Admin</h1>
+                    <p style="color: var(--text-gray); font-size: 13px; margin-top: 4px;">AgroTech Control Center</p>
+                </div>
             </div>
             <div style="background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; font-size: 13px;">
                 <i class="fas fa-user-shield" style="color: var(--primary);"></i> Super Admin
@@ -333,6 +393,18 @@
 
 <script>
 const BACKEND_URL = "https://cityshobackend.onrender.com";
+
+// MOBILE SIDEBAR
+function openSidebar() {
+    document.getElementById('sidebar').classList.add('mobile-open');
+    document.getElementById('sidebarOverlay').classList.add('show');
+    document.getElementById('sidebarClose').style.display = 'block';
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+    document.getElementById('sidebarClose').style.display = 'none';
+}
 
 // SECTION NAVIGATION
 function showSection(section) {

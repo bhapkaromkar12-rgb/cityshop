@@ -2,261 +2,585 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - City Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>My Products - AgroTech Seller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-   <style>
-    :root {
-        --primary: #74c947;
-        --dark-bg: #0a0a0a;
-        --card-bg: rgba(25, 25, 25, 0.9);
-        --text-gray: #b0b0b0;
-        --danger: #ff4d4d;
-        --warning: #ffc107;
-    }
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
 
-    body { 
-        margin: 0; 
-        font-family: 'Inter', sans-serif; 
-       background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
-                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-        background-size: cover;
-        background-position: center; 
-        color: white; 
-        min-height: 100vh;
-    }
-    
-    /* Premium Navbar */
-    .navbar { 
-        background: rgba(0, 0, 0, 0.85); 
-        backdrop-filter: blur(15px);
-        padding: 15px 5%; 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-sizing: border-box;
-    }
+        :root {
+            --primary: #74c947;
+            --primary-dark: #5aab32;
+            --dark-bg: #090d09;
+            --card-bg: rgba(18, 28, 18, 0.94);
+            --text-gray: #a0a0a0;
+            --danger: #ff4d4d;
+            --warning: #ffc107;
+            --border: rgba(255,255,255,0.08);
+        }
 
-    /* Dashboard Layout */
-    .container { 
-        padding: 20px 15px; 
-        max-width: 600px; /* Mobile focused width */
-        margin: auto; 
-    }
-    
-    .header-section { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        margin-bottom: 25px; 
-        padding-top: 10px;
-    }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.5)),
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: white;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
 
-    .header-section h3 { margin: 0; font-size: 20px; color: var(--primary); }
+        @media (max-width: 768px) {
+            body { background-attachment: scroll; }
+        }
 
-    .btn-add { 
-        background: var(--primary); 
-        color: white; 
-        padding: 10px 15px; 
-        border-radius: 10px; 
-        text-decoration: none; 
-        font-weight: bold;
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 5px 15px rgba(116, 201, 71, 0.3);
-    }
+        /* ── Navbar ── */
+        .navbar {
+            background: rgba(6,14,6,0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 0 20px;
+            padding-top: env(safe-area-inset-top);
+            height: calc(62px + env(safe-area-inset-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(116,201,71,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    /* Product Card - Premium Mobile Design */
-    .product-item { 
-        background: var(--card-bg); 
-        backdrop-filter: blur(10px);
-        margin-bottom: 15px; 
-        padding: 15px; 
-        border-radius: 18px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between;
-        border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        animation: fadeIn 0.5s ease-out;
-    }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .nav-left i { color: var(--text-gray); font-size: 16px; }
+        .nav-left:hover i { color: var(--primary); }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        .nav-brand {
+            font-weight: 800;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-brand i { color: var(--primary); }
 
-    .product-info { display: flex; align-items: center; gap: 15px; }
-    
-    .product-img { 
-        width: 60px; 
-        height: 60px; 
-        border-radius: 12px; 
-        object-fit: cover; 
-        background: #1a1a1a;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
+        .btn-logout {
+            background: rgba(255,77,77,0.1);
+            border: 1px solid rgba(255,77,77,0.25);
+            color: var(--danger);
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-logout:hover { background: rgba(255,77,77,0.2); }
 
-    .product-details h4 { 
-        margin: 0; 
-        font-size: 16px; 
-        font-weight: 600;
-        color: #fff;
-    }
-    .product-details p { 
-        margin: 4px 0 0; 
-        color: var(--primary); 
-        font-weight: 800; 
-        font-size: 15px;
-    }
+        /* ── Page Container ── */
+        .page-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
 
-    /* Actions - Mobile Optimized Buttons */
-    .actions { display: flex; gap: 10px; }
-    
-    .btn-edit, .btn-delete { 
-        border: none; 
-        padding: 10px; 
-        border-radius: 10px; 
-        cursor: pointer; 
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.3s;
-    }
+        /* ── Page Header ── */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-    .btn-edit { 
-        background: rgba(255, 193, 7, 0.1); 
-        color: var(--warning); 
-        border: 1px solid rgba(255, 193, 7, 0.3);
-    }
+        .page-header h2 {
+            margin: 0;
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 800;
+            color: white;
+        }
 
-    .btn-delete { 
-        background: rgba(255, 77, 77, 0.1); 
-        color: var(--danger); 
-        border: 1px solid rgba(255, 77, 77, 0.3);
-    }
+        .page-header .product-count {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 2px;
+        }
 
-    .btn-edit:active, .btn-delete:active { transform: scale(0.9); }
+        .btn-add-product {
+            background: var(--primary);
+            color: #0a180a;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 18px rgba(116,201,71,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .btn-add-product:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(116,201,71,0.45); }
+        .btn-add-product:active { transform: scale(0.95); }
 
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-        .product-item { 
+        /* ── Search bar ── */
+        .search-bar {
             position: relative;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
-        /* Mobile par buttons ko align karne ke liye */
-        .actions {
+        .search-bar i {
             position: absolute;
-            right: 15px;
-            bottom: 15px;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 14px;
         }
-        .product-details {
-            margin-bottom: 10px;
+        .search-bar input {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px; /* iOS zoom prevention */
+            font-family: 'Inter', sans-serif;
+            -webkit-appearance: none;
+            transition: border-color 0.2s;
         }
-    }
-</style>
+        .search-bar input::placeholder { color: #555; }
+        .search-bar input:focus { outline: none; border-color: var(--primary); }
+
+        /* ── Product Card ── */
+        .product-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin-bottom: 14px;
+            padding: 16px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+            animation: fadeUp 0.4s ease-out both;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .product-card:hover {
+            border-color: rgba(116,201,71,0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-img {
+            width: 68px;
+            height: 68px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            margin: 0 0 4px;
+            font-size: 15px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: white;
+        }
+
+        .product-price {
+            margin: 0 0 4px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .product-meta {
+            font-size: 12px;
+            color: var(--text-gray);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .product-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ── Stock Badge ── */
+        .badge-stock {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge-in  { background: rgba(116,201,71,0.15); color: var(--primary); }
+        .badge-low { background: rgba(255,193,7,0.15);  color: var(--warning); }
+        .badge-out { background: rgba(255,77,77,0.15);  color: var(--danger);  }
+
+        /* ── Action Buttons ── */
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-edit, .btn-delete {
+            border: none;
+            padding: 9px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.15s, background 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .btn-edit {
+            background: rgba(255,193,7,0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255,193,7,0.25);
+        }
+        .btn-edit:hover  { background: rgba(255,193,7,0.2); }
+
+        .btn-delete {
+            background: rgba(255,77,77,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255,77,77,0.25);
+        }
+        .btn-delete:hover  { background: rgba(255,77,77,0.2); }
+
+        .btn-edit:active, .btn-delete:active { transform: scale(0.9); }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-gray);
+        }
+        .empty-state .empty-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: rgba(116,201,71,0.08);
+            border: 1px solid rgba(116,201,71,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--primary);
+            margin: 0 auto 20px;
+        }
+        .empty-state h3 { margin: 0 0 10px; color: white; font-size: 20px; }
+        .empty-state p  { margin: 0 0 24px; font-size: 14px; }
+
+        /* ── Loading Skeleton ── */
+        .skeleton {
+            background: rgba(255,255,255,0.05);
+            border-radius: 18px;
+            margin-bottom: 14px;
+            padding: 16px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+        .skel-img  { width: 68px; height: 68px; border-radius: 12px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
+        .skel-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .skel-line { height: 12px; border-radius: 6px; background: rgba(255,255,255,0.06); animation: shimmer 1.4s infinite; }
+        .skel-line.w60 { width: 60%; }
+        .skel-line.w40 { width: 40%; }
+
+        @keyframes shimmer {
+            0%,100% { opacity: 0.5; } 50% { opacity: 1; }
+        }
+
+        /* ── Delete Confirm Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: rgba(18,28,18,0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,77,77,0.3);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+        }
+        .modal-box .modal-icon { font-size: 32px; color: var(--danger); margin-bottom: 12px; }
+        .modal-box h3 { margin: 0 0 10px; font-size: 18px; color: white; }
+        .modal-box p  { margin: 0 0 24px; color: var(--text-gray); font-size: 14px; }
+        .modal-actions { display: flex; gap: 12px; }
+        .modal-actions button {
+            flex: 1; padding: 12px; border-radius: 12px; border: none;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: opacity 0.2s;
+        }
+        .modal-actions .btn-cancel-modal { background: rgba(255,255,255,0.08); color: white; }
+        .modal-actions .btn-confirm-delete { background: var(--danger); color: white; }
+        .modal-actions button:hover { opacity: 0.85; }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .page-container { padding: 18px 14px; }
+            .product-img { width: 58px; height: 58px; }
+            .btn-edit, .btn-delete { padding: 8px 10px; font-size: 12px; }
+            .btn-edit span, .btn-delete span { display: none; } /* icon only */
+        }
+
+        @media (max-width: 360px) {
+            .page-container { padding: 14px 10px; }
+            .product-name { font-size: 14px; }
+            .product-price { font-size: 14px; }
+        }
+    </style>
 </head>
 <body>
-    
 
-
-<div class="navbar">
-    <a href="admin.html" style="text-decoration:none; color:white; font-size:18px; display:flex; align-items:center; gap:6px;">
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="admin.html" class="nav-left" aria-label="Back to dashboard">
         <i class="fas fa-arrow-left"></i>
     </a>
-    <div style="font-weight: bold; font-size: 20px; display:flex; align-items:center; gap:8px;">
-        <i class="fas fa-leaf" style="color:var(--primary);"></i> AgroTech Seller
+    <div class="nav-brand">
+        <i class="fas fa-leaf"></i> AgroTech Seller
     </div>
-    <a href="#" onclick="logout()" style="color: var(--text-gray); font-size: 13px;">Logout</a>
+    <button class="btn-logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+</nav>
+
+<!-- Page Body -->
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2>My Products</h2>
+            <div class="product-count" id="productCountLabel">Loading...</div>
+        </div>
+        <a href="admin.html" class="btn-add-product">
+            <i class="fas fa-plus"></i> <span>Add New</span>
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="search" id="searchInput" placeholder="Search products..." autocomplete="off">
+    </div>
+
+    <!-- Product List -->
+    <div id="productList">
+        <!-- skeleton loaders -->
+        <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+        <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+        <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+    </div>
 </div>
 
-<div class="container">
-    <div class="header-section">
-        <h3>Your Products</h3>
-        <a href="admin.html" class="btn-add"><i class="fas fa-plus"></i> Add New</a>
-    </div>
-
-    <div id="list">
-        <p style="text-align: center; color: #888;">Loading products...</p>
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-icon"><i class="fas fa-trash-alt"></i></div>
+        <h3>Delete Product?</h3>
+        <p>This action cannot be undone. The product will be permanently removed.</p>
+        <div class="modal-actions">
+            <button class="btn-cancel-modal" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn-confirm-delete" id="confirmDeleteBtn">Delete</button>
+        </div>
     </div>
 </div>
 
 <script>
-    function loadAdminProducts() {
-        const admin = JSON.parse(localStorage.getItem("user"));
-        if(!admin) { window.location.href = "index.html"; return; }
+    const API = 'https://cityshobackend.onrender.com';
+    let allProducts = [];
+    let pendingDeleteId = null;
 
-        // Note: Check karo ki endpoint yahi hai ya /get-products?
-        // Agar aapko specific admin ke products chahiye toh ye sahi hai
-        fetch(`https://cityshobackend.onrender.com/get-products`) 
-        .then(res => res.json())
-        .then(data => {
-            const listContainer = document.getElementById("list");
-            listContainer.innerHTML = '';
-            
-            const products = data.products || data;
-
-            if(products.length === 0) {
-                listContainer.innerHTML = "<p>No products found. Start adding!</p>";
-                return;
-            }
-
-            products.forEach(p => {
-                listContainer.innerHTML += `
-                    <div class="product-item">
-                        <div class="product-info">
-                           <img src="${p.image && p.image.startsWith('http') ? p.image : 'https://cityshobackend.onrender.com/uploads/' + p.image}" class="product-img" onerror="this.src='https://via.placeholder.com/50'" alt="img">
-                            <div class="product-details">
-                                <h4>${p.name}</h4>
-                                <p>₹${p.price}</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <button class="btn-edit" onclick="editProduct(${p.id})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn-delete" onclick="deleteProduct(${p.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>`;
-            });
-        })
-        .catch(err => {
-            document.getElementById("list").innerHTML = "Error loading products.";
-        });
+    function getUser() {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user) { window.location.href = "index1.html"; return null; }
+        return user;
     }
 
-    function deleteProduct(id) {
-        if (confirm("Are you sure you want to delete this product?")) {
-            fetch(`https://cityshobackend.onrender.com/delete-product/${id}`, {
-                method: 'DELETE',
-            })
-            .then(res => res.text())
-            .then(() => loadAdminProducts())
-            .catch(() => alert("Delete failed!"));
+    function stockBadge(qty) {
+        if (!qty || qty <= 0) return `<span class="badge-stock badge-out">Out of stock</span>`;
+        if (qty < 5)          return `<span class="badge-stock badge-low">Low stock</span>`;
+        return                        `<span class="badge-stock badge-in">In stock</span>`;
+    }
+
+    function imgSrc(image) {
+        if (!image) return 'https://via.placeholder.com/68x68/1a1a1a/555?text=No+Img';
+        if (image.startsWith('http')) return image;
+        return `${API}/uploads/${image}`;
+    }
+
+    function renderProducts(list) {
+        const container = document.getElementById("productList");
+        const countLabel = document.getElementById("productCountLabel");
+        countLabel.textContent = `${list.length} product${list.length !== 1 ? 's' : ''}`;
+
+        if (list.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-box-open"></i></div>
+                    <h3>No products yet</h3>
+                    <p>Start listing your agricultural products to reach customers.</p>
+                    <a href="admin.html" class="btn-add-product" style="display:inline-flex; margin:0 auto;">
+                        <i class="fas fa-plus"></i> Add First Product
+                    </a>
+                </div>`;
+            return;
         }
+
+        container.innerHTML = list.map((p, i) => `
+            <div class="product-card" style="animation-delay:${i * 0.05}s">
+                <img src="${imgSrc(p.image)}" class="product-img"
+                     onerror="this.src='https://via.placeholder.com/68x68/1a1a1a/555?text=?'"
+                     alt="${p.name || 'Product'}">
+                <div class="product-info">
+                    <h4 class="product-name">${p.name || 'Unnamed Product'}</h4>
+                    <p class="product-price">₹${parseFloat(p.price || 0).toLocaleString('en-IN')}</p>
+                    <div class="product-meta">
+                        ${p.city ? `<span><i class="fas fa-map-marker-alt"></i>${p.city}</span>` : ''}
+                        ${p.quantity !== undefined ? `<span><i class="fas fa-cubes"></i>Qty: ${p.quantity}</span>` : ''}
+                        ${stockBadge(p.quantity)}
+                    </div>
+                </div>
+                <div class="product-actions">
+                    <button class="btn-edit" onclick="editProduct(${p.id})">
+                        <i class="fas fa-pen"></i><span> Edit</span>
+                    </button>
+                    <button class="btn-delete" onclick="openDeleteModal(${p.id})">
+                        <i class="fas fa-trash"></i><span> Del</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
     }
 
+    function loadProducts() {
+        const user = getUser();
+        if (!user) return;
+
+        // Use seller-specific endpoint if available, fall back to all products
+        const endpoint = user.id
+            ? `${API}/admin-products/${user.id}`
+            : `${API}/get-products`;
+
+        fetch(endpoint)
+            .then(res => res.json())
+            .then(data => {
+                allProducts = data.products || data || [];
+                renderProducts(allProducts);
+            })
+            .catch(() => {
+                document.getElementById("productList").innerHTML =
+                    `<div class="empty-state"><div class="empty-icon"><i class="fas fa-wifi"></i></div><h3>Failed to load</h3><p>Check your connection and try again.</p></div>`;
+                document.getElementById("productCountLabel").textContent = '';
+            });
+    }
+
+    /* ── Search ── */
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const q = this.value.toLowerCase().trim();
+        const filtered = q
+            ? allProducts.filter(p => (p.name || '').toLowerCase().includes(q) || (p.city || '').toLowerCase().includes(q))
+            : allProducts;
+        renderProducts(filtered);
+    });
+
+    /* ── Edit ── */
     function editProduct(id) {
         window.location.href = `edit-product.html?id=${id}`;
     }
 
+    /* ── Delete Modal ── */
+    function openDeleteModal(id) {
+        pendingDeleteId = id;
+        document.getElementById("deleteModal").classList.add("open");
+    }
+
+    function closeDeleteModal() {
+        pendingDeleteId = null;
+        document.getElementById("deleteModal").classList.remove("open");
+    }
+
+    document.getElementById("confirmDeleteBtn").addEventListener("click", function() {
+        if (!pendingDeleteId) return;
+        const btn = this;
+        btn.textContent = 'Deleting...';
+        btn.disabled = true;
+
+        fetch(`${API}/delete-product/${pendingDeleteId}`, { method: 'DELETE' })
+            .then(() => {
+                closeDeleteModal();
+                loadProducts();
+            })
+            .catch(() => {
+                alert("Delete failed. Please try again.");
+                btn.textContent = 'Delete';
+                btn.disabled = false;
+            });
+    });
+
+    // Close modal on overlay click
+    document.getElementById("deleteModal").addEventListener("click", function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    /* ── Logout ── */
     function logout() {
         localStorage.removeItem("user");
         window.location.href = "index.html";
     }
 
-    // Load products on start
-    loadAdminProducts();
+    // Init
+    loadProducts();
 </script>
 
 </body>

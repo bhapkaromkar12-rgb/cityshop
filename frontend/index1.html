@@ -3,8 +3,9 @@
 <head>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - City Shop Agro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
+    <title>Login - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
     :root {
@@ -14,10 +15,13 @@
         --text-gray: #b0b0b0;
     }
 
+    *, *::before, *::after { box-sizing: border-box; }
+
     body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.62)),
+                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=1400');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -27,23 +31,25 @@
         justify-content: center;
         color: white;
         overflow-x: hidden;
-        padding: 20px;
-        box-sizing: border-box;
+        padding: 16px;
+        padding-top: calc(16px + env(safe-area-inset-top));
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        -webkit-text-size-adjust: 100%;
     }
 
     /* Split Screen Container */
     .app-container {
         display: flex;
         width: 100%;
-        max-width: 950px;
+        max-width: 920px;
         background: var(--dark-card);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border-radius: 28px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.1);
         box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         overflow: hidden;
-        animation: fadeIn 0.8s ease-out;
+        animation: fadeIn 0.7s ease-out;
     }
 
     @keyframes fadeIn {
@@ -265,14 +271,16 @@
     input, select {
         width: 100%;
         padding: 13px 15px 13px 45px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px;
         color: white;
-        font-size: 15px;
+        font-size: 16px; /* prevents iOS auto-zoom */
         transition: 0.3s;
         outline: none;
         box-sizing: border-box;
+        -webkit-appearance: none;
+        appearance: none;
     }
 
     input:focus {
@@ -436,28 +444,44 @@
         50% { transform: scale(1.08); }
     }
 
-    /* Mobile Responsive Logic */
-    @media (max-width: 768px) {
+    /* Tablet */
+    @media (max-width: 900px) {
+        .app-container { max-width: 600px; }
+        .hero-side { padding: 32px 28px; }
+        .hero-body h1 { font-size: 26px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 680px) {
+        body { align-items: flex-start; padding: 0; background-attachment: scroll; }
         .app-container {
             flex-direction: column;
-            max-width: 420px;
+            max-width: 100%;
+            min-height: 100vh;
+            border-radius: 0;
+            border: none;
         }
         .hero-side {
-            padding: 30px 25px;
+            padding: 28px 22px 22px;
             text-align: center;
             border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
-        .hero-header, .animated-icon-box {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .hero-badges {
-            justify-content: center;
-        }
+        .hero-header, .animated-icon-box { margin-left: auto; margin-right: auto; }
+        .hero-badges { justify-content: center; flex-wrap: wrap; }
+        .hero-body { margin: 22px 0 18px; }
+        .hero-body h1 { font-size: 22px; }
         .login-side {
-            padding: 30px 25px;
+            padding: 24px 22px;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
         }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+        .hero-side { padding: 22px 16px 18px; }
+        .login-side { padding: 20px 16px; }
+        .hero-body h1 { font-size: 20px; }
     }
 </style>
 </head>

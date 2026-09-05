@@ -2,233 +2,432 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product - City Shop</title>
-  <style>
-    :root {
-        --primary: #74c947;
-        --dark-card: rgba(18, 18, 18, 0.9);
-        --text-gray: #b0b0b0;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Edit Product - AgroTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
 
-    body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        /* Custom Background jo tumne mangi thi */
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
-                    url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        padding: 20px 0;
-    }
+        :root {
+            --primary: #74c947;
+            --dark-bg: #090d09;
+            --card-bg: rgba(18, 28, 18, 0.96);
+            --text-gray: #a0a0a0;
+            --danger: #ff4d4d;
+            --border: rgba(255,255,255,0.1);
+        }
 
-    .container {
-        background: var(--dark-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        width: 90%;
-        max-width: 400px;
-        padding: 30px 25px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        animation: slideUp 0.6s ease-out;
-        box-sizing: border-box;
-    }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.55)),
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            color: white;
+            padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
+        }
 
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        @media (max-width: 768px) {
+            body { background-attachment: scroll; }
+        }
 
-    h2 {
-        text-align: center;
-        font-size: 24px;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--primary);
-    }
+        /* ── Card ── */
+        .edit-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 32px;
+            border-radius: 24px;
+            border: 1px solid rgba(116,201,71,0.18);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+            animation: slideUp 0.5s ease-out both;
+        }
 
-    label {
-        font-size: 13px;
-        color: var(--text-gray);
-        margin-left: 5px;
-        margin-bottom: 5px;
-        display: block;
-        font-weight: 600;
-    }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-    input {
-        width: 100%;
-        padding: 13px 15px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        color: white;
-        font-size: 16px; /* Phone auto-zoom fix */
-        margin-bottom: 15px;
-        outline: none;
-        transition: 0.3s;
-        box-sizing: border-box;
-    }
+        /* ── Header ── */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
 
-    input:focus {
-        border-color: var(--primary);
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 0 10px rgba(116, 201, 71, 0.2);
-    }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: background 0.2s, color 0.2s;
+        }
+        .back-btn:hover { background: rgba(116,201,71,0.12); color: var(--primary); }
 
-    /* Style for File Input */
-    input[type="file"] {
-        padding: 10px;
-        font-size: 14px;
-        background: rgba(116, 201, 71, 0.05);
-    }
+        .card-title {
+            flex: 1;
+        }
+        .card-title h2 {
+            margin: 0;
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .card-title p {
+            margin: 3px 0 0;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
 
-    .update-btn {
-        width: 100%;
-        padding: 15px;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: 0.4s;
-        margin-top: 10px;
-        box-shadow: 0 10px 20px rgba(116, 201, 71, 0.3);
-    }
+        /* ── Current Image Preview ── */
+        .img-preview-wrap {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+        .img-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 2px solid rgba(116,201,71,0.25);
+            background: #1a1a1a;
+        }
+        .img-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
 
-    .update-btn:active {
-        transform: scale(0.97);
-    }
+        /* ── Form ── */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
 
-    .cancel-link {
-        text-align: center;
-        margin-top: 15px;
-        font-size: 14px;
-    }
+        .form-group {
+            margin-bottom: 16px;
+        }
 
-    .cancel-link a {
-        color: var(--text-gray);
-        text-decoration: none;
-        transition: 0.3s;
-    }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
 
-    .cancel-link a:hover {
-        color: #ff4d4d; /* Red on hover for cancel */
-    }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px; /* iOS zoom prevention */
+            font-family: 'Inter', sans-serif;
+            -webkit-appearance: none;
+            transition: border-color 0.25s, background 0.25s;
+        }
 
-    /* Tablet/Phone responsiveness */
-    @media (max-height: 700px) {
-        body { align-items: flex-start; }
-        .container { margin-top: 10px; margin-bottom: 10px; }
-    }
-</style>
+        .form-group input::placeholder { color: #555; }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(116,201,71,0.06);
+        }
+
+        /* File input */
+        .file-input-wrap {
+            position: relative;
+        }
+        .file-input-wrap input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .file-input-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            background: rgba(116,201,71,0.06);
+            border: 1px dashed rgba(116,201,71,0.35);
+            border-radius: 12px;
+            color: var(--text-gray);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .file-input-btn:hover {
+            background: rgba(116,201,71,0.1);
+            border-color: rgba(116,201,71,0.5);
+            color: var(--primary);
+        }
+        .file-input-btn i { color: var(--primary); }
+        #fileNameLabel { font-size: 12px; color: var(--text-gray); margin-top: 6px; }
+
+        /* ── Save Button ── */
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #0a180a;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 8px 24px rgba(116,201,71,0.35);
+        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(116,201,71,0.45); }
+        .btn-save:active { transform: scale(0.97); }
+        .btn-save:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* ── Cancel ── */
+        .cancel-row {
+            text-align: center;
+            margin-top: 14px;
+        }
+        .cancel-row a {
+            color: var(--text-gray);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .cancel-row a:hover { color: var(--danger); }
+
+        /* ── Toast ── */
+        .toast {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-top: 14px;
+        }
+        .toast.success { display: flex; background: rgba(116,201,71,0.12); border: 1px solid rgba(116,201,71,0.3); color: var(--primary); }
+        .toast.error   { display: flex; background: rgba(255,77,77,0.12);  border: 1px solid rgba(255,77,77,0.3);  color: var(--danger); }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .edit-card { padding: 26px 18px; border-radius: 20px; }
+            .form-row  { grid-template-columns: 1fr; gap: 0; }
+        }
+
+        @media (max-width: 360px) {
+            body { padding: 16px 12px; }
+            .edit-card { padding: 22px 14px; border-radius: 16px; }
+        }
+
+        /* Landscape phones: start from top */
+        @media (max-height: 600px) and (max-width: 768px) {
+            body { align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 style="text-align: center;">Edit Product</h2>
+<div class="edit-card">
+    <!-- Header -->
+    <div class="card-header">
+        <a href="admin_dash.html" class="back-btn" aria-label="Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="card-title">
+            <h2>Edit Product</h2>
+            <p>Update your product details below</p>
+        </div>
+    </div>
+
+    <!-- Image Preview -->
+    <div class="img-preview-wrap">
+        <img id="currentImg" class="img-preview"
+             src="https://via.placeholder.com/100x100/1a1a1a/555?text=..."
+             alt="Product Image">
+        <span class="img-label">Current Image</span>
+    </div>
+
+    <!-- Form -->
     <form id="editForm" enctype="multipart/form-data">
         <input type="hidden" id="productId">
-        
-        <label>Product Name</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label>Price (₹)</label>
-        <input type="number" id="price" name="price" required>
-        
-        <label>City</label>
-        <input type="text" id="city" name="city" required>
-        
-        <label>Quantity</label>
-        <input type="number" id="quantity" name="quantity" required>
 
-      
-        <label>Update Photo (Optional)</label>
-        <input type="file" id="image" name="image" accept="image/*">
-        
-        <button type="submit" class="update-btn">Save Changes</button>
-        <p style="text-align: center;"><a href="admin_dash.html" style="color: #666;">Cancel</a></p>
+        <div class="form-group">
+            <label for="inp-name">Product Name</label>
+            <input type="text" id="inp-name" name="name" placeholder="e.g. Fresh Tomatoes" required autocomplete="off">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="inp-price">Price (₹)</label>
+                <input type="number" id="inp-price" name="price" placeholder="0.00" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="inp-qty">Quantity</label>
+                <input type="number" id="inp-qty" name="quantity" placeholder="0" min="0" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inp-city">City / Location</label>
+            <input type="text" id="inp-city" name="city" placeholder="e.g. Mumbai" required autocomplete="address-level2">
+        </div>
+
+        <div class="form-group">
+            <label>Update Photo <span style="color:var(--text-gray); font-weight:400;">(optional)</span></label>
+            <div class="file-input-wrap">
+                <div class="file-input-btn">
+                    <i class="fas fa-camera"></i>
+                    <span>Choose new image</span>
+                </div>
+                <input type="file" id="inp-image" name="image" accept="image/*" onchange="handleFileChange(this)">
+            </div>
+            <div id="fileNameLabel"></div>
+        </div>
+
+        <button type="submit" class="btn-save" id="saveBtn">
+            <i class="fas fa-save"></i>&nbsp; Save Changes
+        </button>
+
+        <div class="toast" id="toastMsg"></div>
     </form>
+
+    <div class="cancel-row">
+        <a href="admin_dash.html"><i class="fas fa-times"></i> Cancel</a>
+    </div>
 </div>
+
 <script>
+    const API = 'https://cityshobackend.onrender.com';
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
-    // Purana data load karne ka function
-    function loadExistingData() {
-        fetch(`https://cityshobackend.onrender.com/get-product/${productId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Product not found");
-            return res.json();
-        })
-        .then(p => {
-            document.getElementById("name").value = p.name;
-            document.getElementById("price").value = p.price;
-            document.getElementById("city").value = p.city;
-            document.getElementById("quantity").value = p.quantity;
-            document.getElementById("productId").value = p.id; 
-        })
-        .catch(err => console.error("Load Error:", err));
+    if (!productId) {
+        showToast('error', 'No product ID found. Redirecting...');
+        setTimeout(() => window.location.href = 'admin_dash.html', 2000);
     }
 
-    // UPDATE Function
+    /* ── Load existing data ── */
+    function loadProduct() {
+        fetch(`${API}/get-product/${productId}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(p => {
+                document.getElementById("inp-name").value     = p.name     || '';
+                document.getElementById("inp-price").value   = p.price    || '';
+                document.getElementById("inp-city").value    = p.city     || '';
+                document.getElementById("inp-qty").value     = p.quantity || '';
+                document.getElementById("productId").value   = p.id;
+
+                // Show current image
+                if (p.image) {
+                    const src = p.image.startsWith('http') ? p.image : `${API}/uploads/${p.image}`;
+                    document.getElementById("currentImg").src = src;
+                }
+            })
+            .catch(err => {
+                showToast('error', 'Failed to load product. ' + err.message);
+            });
+    }
+
+    /* ── File change handler ── */
+    function handleFileChange(input) {
+        const file = input.files[0];
+        if (!file) { document.getElementById("fileNameLabel").textContent = ''; return; }
+        document.getElementById("fileNameLabel").textContent = `📷 ${file.name}`;
+
+        // Preview the new image
+        const reader = new FileReader();
+        reader.onload = e => { document.getElementById("currentImg").src = e.target.result; };
+        reader.readAsDataURL(file);
+    }
+
+    /* ── Submit ── */
     document.getElementById("editForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        
-        const submitBtn = document.querySelector(".update-btn");
-        submitBtn.innerText = "Updating...";
-        submitBtn.disabled = true;
 
-        let formData = new FormData();
-        formData.append("name", document.getElementById("name").value);
-        formData.append("price", document.getElementById("price").value);
-        formData.append("city", document.getElementById("city").value);
-        formData.append("quantity", document.getElementById("quantity").value);
-        
-        const imageFile = document.getElementById("image").files[0];
-        if(imageFile) {
-            formData.append("image", imageFile);
-        }
+        const btn = document.getElementById("saveBtn");
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Saving...';
+        btn.disabled = true;
 
-        // --- BRACKETS FIXED HERE ---
-        fetch(`https://cityshobackend.onrender.com/update-product/${productId}`, {
+        const formData = new FormData();
+        formData.append("name",     document.getElementById("inp-name").value.trim());
+        formData.append("price",    document.getElementById("inp-price").value);
+        formData.append("city",     document.getElementById("inp-city").value.trim());
+        formData.append("quantity", document.getElementById("inp-qty").value);
+
+        const imgFile = document.getElementById("inp-image").files[0];
+        if (imgFile) formData.append("image", imgFile);
+
+        fetch(`${API}/update-product/${productId}`, {
             method: 'PUT',
-            body: formData 
+            body: formData
         })
         .then(async res => {
             const text = await res.text();
-            if (!res.ok) throw new Error(text || "Server Error");
+            if (!res.ok) throw new Error(text || `Server error ${res.status}`);
             return text;
         })
-        .then(msg => {
-            alert("Success: " + msg);
-            window.location.href = "admin_dash.html";
+        .then(() => {
+            showToast('success', 'Product updated successfully!');
+            setTimeout(() => window.location.href = 'admin_dash.html', 1600);
         })
         .catch(err => {
-            console.error("Update Error:", err);
-            alert("Update Failed: " + err.message);
-        })
-        .finally(() => {
-            submitBtn.innerText = "Save Changes";
-            submitBtn.disabled = false;
+            showToast('error', 'Update failed: ' + err.message);
+            btn.innerHTML = '<i class="fas fa-save"></i>&nbsp; Save Changes';
+            btn.disabled = false;
         });
-    }); // Form event listener yahan khatam hota hai
+    });
 
-    if(productId) loadExistingData();
-    else alert("No Product ID found in URL!");
+    /* ── Toast helper ── */
+    function showToast(type, msg) {
+        const el = document.getElementById("toastMsg");
+        el.className = `toast ${type}`;
+        el.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+        setTimeout(() => { el.className = 'toast'; }, 4000);
+    }
+
+    // Init
+    if (productId) loadProduct();
 </script>
+
 </body>
 </html>

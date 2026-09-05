@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Orders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
+    <title>Manage Orders - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -15,17 +16,21 @@
             --cancelled: #ff4d4d;
         }
 
+        *, *::before, *::after { box-sizing: border-box; }
+
         body {
             margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.72)),
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=1400');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
             color: white;
             -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
         }
 
         /* Floating Back Icon (Top Left) */
@@ -48,7 +53,12 @@
             z-index: 1001;
         }
 
-        .container { padding: 80px 15px 30px; max-width: 600px; margin: auto; }
+        .container {
+            padding: 72px 14px 30px;
+            padding-bottom: calc(30px + env(safe-area-inset-bottom));
+            max-width: 640px;
+            margin: auto;
+        }
         
         h2 { 
             font-size: 22px; 
@@ -151,6 +161,19 @@
 
         thead { display: none; }
         table { width: 100%; display: block; }
+
+        @media (max-width: 480px) {
+            .container { padding: 66px 10px 25px; }
+            tr { padding: 16px 14px; border-radius: 18px; }
+            td { font-size: 13px; padding: 6px 0; }
+            .btn { padding: 10px 4px; font-size: 9px; }
+            .status-badge { padding: 4px 8px; font-size: 9px; }
+            h2 { font-size: 18px; }
+        }
+        @media (max-width: 360px) {
+            .container { padding: 62px 8px 20px; }
+            .btn-group { gap: 6px; }
+        }
     </style>
 </head>
 <body>

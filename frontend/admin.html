@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
     <title>Seller Dashboard - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,22 +19,28 @@
         --warning: #ffc107;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        font-family: 'Inter', -apple-system, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         background: var(--dark-bg);
         color: white;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
     }
 
     /* NAVBAR */
     .navbar {
-        background: rgba(9,13,9,0.96);
+        background: rgba(9,13,9,0.97);
         backdrop-filter: blur(20px);
-        padding: 14px 5%;
+        -webkit-backdrop-filter: blur(20px);
+        padding: 0 4%;
+        padding-left: calc(4% + env(safe-area-inset-left));
+        padding-right: calc(4% + env(safe-area-inset-right));
+        height: 60px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -41,6 +48,7 @@
         top: 0;
         z-index: 1000;
         border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
     }
 
     .logo { font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
@@ -264,12 +272,41 @@
     .s-delivered { background: rgba(116,201,71,0.15); color: var(--primary); border: 1px solid rgba(116,201,71,0.3); }
     .s-cancelled { background: rgba(255,77,77,0.15); color: var(--danger); border: 1px solid rgba(255,77,77,0.3); }
 
-    @media (max-width: 600px) {
+    /* Tablet */
+    @media (max-width: 900px) {
+        .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Mobile ≤ 768 */
+    @media (max-width: 768px) {
+        .panel { padding: 20px 4%; }
+        .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-card { padding: 16px 14px; }
+        .stat-card .num { font-size: 24px; }
         .form-grid { grid-template-columns: 1fr; }
         .full { grid-column: span 1; }
-        .stats-row { grid-template-columns: 1fr 1fr; }
-        .prod-details h4 { max-width: 120px; }
-        .order-row { flex-direction: column; align-items: flex-start; }
+        .section-card { padding: 18px 14px; }
+        .prod-details h4 { max-width: 140px; }
+    }
+
+    /* Small phones ≤ 480 */
+    @media (max-width: 480px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .stat-card { padding: 14px; }
+        .prod-details h4 { max-width: 110px; font-size: 13px; }
+        .prod-details .meta { flex-wrap: wrap; gap: 5px; }
+        .btn-edit { padding: 8px 10px; font-size: 11px; }
+        .btn-del  { padding: 8px 10px; font-size: 11px; }
+        .order-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .tab-btn { padding: 14px 14px; font-size: 12px; gap: 5px; }
+        .panel { padding: 16px 3%; }
+    }
+
+    /* iPhone SE */
+    @media (max-width: 375px) {
+        .logo span:not(.role-badge) { display: none; }
+        .tab-btn span { display: none; }
+        .tab-btn { padding: 16px 10px; }
     }
     </style>
 </head>

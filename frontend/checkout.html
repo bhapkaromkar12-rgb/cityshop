@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - City Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
+    <title>Checkout - AgroTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -12,20 +13,29 @@
             --text-gray: #a0a0a0;
         }
 
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000');
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.62)),
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=1400');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
             color: white;
-            padding: 20px;
+            padding: 70px 16px 30px;
+            padding-bottom: calc(30px + env(safe-area-inset-bottom));
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Responsive body layout */
+        @media (min-height: 700px) {
+            body { align-items: center; }
         }
 
         /* Top Left Back Icon */
@@ -47,18 +57,17 @@
             z-index: 1000;
         }
 
-        .payment-box { 
-            background: var(--dark-card); 
+        .payment-box {
+            background: var(--dark-card);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             width: 100%;
-            max-width: 400px; 
-            padding: 30px; 
-            border-radius: 25px; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+            max-width: 420px;
+            padding: 28px 24px;
+            border-radius: 22px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
             text-align: center;
-            box-sizing: border-box;
         }
 
         h2 { color: var(--primary); font-size: 22px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
@@ -85,16 +94,17 @@
         
         .qr-section img { width: 180px; border-radius: 10px; }
 
-        input { 
-            width: 100%; 
-            padding: 14px; 
-            margin: 10px 0; 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; 
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
             color: white;
-            box-sizing: border-box; 
-            font-size: 16px;
+            box-sizing: border-box;
+            font-size: 16px; /* iOS no-zoom */
+            -webkit-appearance: none;
         }
         input:focus { outline: none; border-color: var(--primary); }
 
@@ -127,6 +137,18 @@
         .app-item span { display: block; font-size: 10px; color: var(--text-gray); }
 
         .scan-text { font-weight: bold; color: #333; margin-bottom: 10px; font-size: 14px; }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .payment-box { padding: 22px 18px; border-radius: 18px; }
+            .qr-section img { width: 150px; }
+            .app-item img { width: 36px; height: 36px; }
+            h2 { font-size: 18px; }
+        }
+        @media (max-width: 360px) {
+            .payment-box { padding: 18px 14px; }
+            .btn-pay { padding: 14px; font-size: 14px; }
+        }
     </style>
 </head>
 <body>

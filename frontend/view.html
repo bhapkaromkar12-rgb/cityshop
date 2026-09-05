@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#090d09">
     <title>AgroTech Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -16,20 +17,26 @@
             --border: rgba(255,255,255,0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--dark-bg);
             color: white;
             min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
         }
 
         /* NAVBAR */
         .navbar {
-            background: rgba(9,13,9,0.95);
+            background: rgba(9,13,9,0.96);
             backdrop-filter: blur(20px);
-            padding: 14px 5%;
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0 4%;
+            padding-left: calc(4% + env(safe-area-inset-left));
+            padding-right: calc(4% + env(safe-area-inset-right));
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -37,7 +44,7 @@
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid var(--border);
-            gap: 15px;
+            gap: 10px;
         }
 
         .logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
@@ -284,13 +291,44 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 600px) {
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* Mobile ≤ 768 */
+        @media (max-width: 768px) {
+            .navbar { height: 56px; }
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .card img { height: 145px; }
-            .search-wrap { max-width: 180px; }
+            .card img { height: 148px; }
+            .search-wrap { max-width: 190px; }
+            .main-content { padding: 20px 4%; }
+            .shop-banner { padding: 36px 4%; }
+            .shop-banner h2 { font-size: 20px; }
+            .filters-bar { padding: 12px 4%; }
+        }
+
+        /* Small phones ≤ 420 */
+        @media (max-width: 420px) {
+            .navbar { gap: 6px; }
+            .search-wrap { max-width: 150px; }
+            .search-wrap input { font-size: 13px; padding: 9px 12px 9px 36px; }
             .logo span { display: none; }
-            .shop-banner { padding: 35px 4%; }
-            .shop-banner h2 { font-size: 22px; }
+            .product-grid { gap: 10px; }
+            .card img { height: 130px; }
+            .card-body { padding: 12px; }
+            .card-body h4 { font-size: 13px; }
+            .price { font-size: 18px; }
+            .btn-cart { padding: 10px 8px; font-size: 12px; }
+            .shop-banner { padding: 28px 4% 32px; }
+            .shop-banner h2 { font-size: 18px; }
+            .shop-banner p { font-size: 13px; }
+        }
+
+        /* iPhone SE / very small ≤ 375 */
+        @media (max-width: 375px) {
+            .profile-btn span { display: none; }
+            .profile-btn { padding: 8px 10px; }
         }
     </style>
 </head>
