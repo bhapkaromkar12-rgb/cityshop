@@ -291,6 +291,174 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* ── PRODUCT DETAIL MODAL ── */
+        .pd-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.78);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .pd-overlay.open { display: flex; }
+
+        .pd-modal {
+            background: rgba(16,26,16,0.98);
+            border: 1px solid rgba(116,201,71,0.2);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            animation: pdSlideUp 0.3s ease-out both;
+        }
+        @keyframes pdSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .pd-modal::-webkit-scrollbar { width: 4px; }
+        .pd-modal::-webkit-scrollbar-thumb { background: rgba(116,201,71,0.3); border-radius: 4px; }
+
+        .pd-img-wrap { position: relative; }
+        .pd-img-wrap img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 24px 24px 0 0;
+            display: block;
+        }
+        .pd-close {
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .pd-close:hover { background: rgba(255,77,77,0.7); }
+
+        .pd-badge {
+            position: absolute;
+            bottom: 12px; left: 14px;
+            background: var(--primary);
+            color: #0a180a;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        .pd-body { padding: 22px 22px 26px; }
+
+        .pd-location {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 12px; color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+        .pd-location i { color: var(--primary); font-size: 11px; }
+
+        .pd-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.25;
+        }
+
+        .pd-price {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .pd-price span { font-size: 13px; color: var(--text-gray); font-weight: 400; }
+
+        .pd-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .pd-meta-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 12px;
+            color: var(--text-gray);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .pd-meta-chip i { color: var(--primary); }
+
+        .pd-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.65;
+            margin-bottom: 22px;
+            padding: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+        }
+
+        .pd-actions { display: flex; gap: 12px; }
+
+        .pd-btn-buy {
+            flex: 1;
+            padding: 14px;
+            background: var(--primary);
+            color: #0a180a;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 0 8px 20px rgba(116,201,71,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .pd-btn-buy:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(116,201,71,0.45); }
+        .pd-btn-buy:active { transform: scale(0.97); }
+
+        .pd-btn-close {
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text-gray);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s, color 0.2s;
+        }
+        .pd-btn-close:hover { background: rgba(255,77,77,0.1); color: #ff6b6b; border-color: rgba(255,77,77,0.2); }
+
+        @media (max-width: 480px) {
+            .pd-modal { border-radius: 20px; max-height: 95vh; }
+            .pd-img-wrap img { height: 200px; border-radius: 20px 20px 0 0; }
+            .pd-body { padding: 16px 16px 20px; }
+            .pd-name { font-size: 18px; }
+            .pd-price { font-size: 24px; }
+        }
+        @media (max-width: 360px) {
+            .pd-actions { flex-direction: column; }
+        }
+
         /* Tablet */
         @media (max-width: 1024px) {
             .product-grid { grid-template-columns: repeat(3, 1fr); }
@@ -338,6 +506,37 @@
 <div class="loader-overlay" id="cartLoader">
     <div class="loader-spinner"></div>
     <p style="color: var(--text-gray); font-size: 14px;">Adding to cart...</p>
+</div>
+
+<!-- Product Detail Modal -->
+<div class="pd-overlay" id="pdOverlay" onclick="handleOverlayClick(event)">
+    <div class="pd-modal" id="pdModal">
+        <div class="pd-img-wrap">
+            <img id="pdImg" src="" alt="Product">
+            <button class="pd-close" onclick="closeDetail()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="pd-badge"><i class="fas fa-check-circle"></i> Verified Seller</div>
+        </div>
+        <div class="pd-body">
+            <div class="pd-location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="pdCity">India</span>
+            </div>
+            <div class="pd-name" id="pdName"></div>
+            <div class="pd-price" id="pdPrice"></div>
+            <div class="pd-meta" id="pdMeta"></div>
+            <div class="pd-desc" id="pdDesc"></div>
+            <div class="pd-actions">
+                <button class="pd-btn-buy" id="pdBuyBtn">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </button>
+                <button class="pd-btn-close" onclick="closeDetail()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- NAVBAR -->
@@ -480,7 +679,7 @@
                 ? p.image
                 : `${BASE_URL}/uploads/${p.image}`;
             return `
-                <div class="card" onclick="goToCheckout(${p.id})">
+                <div class="card" onclick="showDetail(${p.id})">
                     <div class="card-img-wrap">
                         <img src="${imgUrl}" onerror="this.src='https://placehold.co/240x185/161e16/74c947?text=AgroTech'" alt="${p.name}">
                         <div class="card-badge"><i class="fas fa-check-circle"></i> Verified</div>
@@ -489,7 +688,7 @@
                         <div class="city-tag"><i class="fas fa-map-marker-alt"></i> ${p.city || 'India'}</div>
                         <h4>${p.name}</h4>
                         <div class="price">₹${parseFloat(p.price).toFixed(2)} <span>per unit</span></div>
-                        <button class="btn-cart" onclick="event.stopPropagation(); addToCart(${p.id})">
+                        <button class="btn-cart" onclick="event.stopPropagation(); goToCheckout(${p.id})">
                             <i class="fas fa-shopping-cart"></i> Add to Cart
                         </button>
                     </div>
@@ -497,13 +696,64 @@
         }).join('');
     }
 
-    function addToCart(id) {
-        localStorage.setItem("selectedProductId", id);
-        window.location.href = "checkout.html";
+    /* ── Product Detail Modal ── */
+    function showDetail(id) {
+        const p = allProducts.find(p => p.id === id);
+        if (!p) return;
+
+        const imgUrl = p.image && p.image.startsWith('http')
+            ? p.image
+            : `${BASE_URL}/uploads/${p.image}`;
+
+        // Populate modal
+        document.getElementById('pdImg').src = imgUrl;
+        document.getElementById('pdImg').onerror = function() {
+            this.src = 'https://placehold.co/480x240/161e16/74c947?text=AgroTech';
+        };
+        document.getElementById('pdCity').textContent   = p.city || 'India';
+        document.getElementById('pdName').textContent   = p.name;
+        document.getElementById('pdPrice').innerHTML    =
+            `₹${parseFloat(p.price).toLocaleString('en-IN', {minimumFractionDigits: 2})} <span>per unit</span>`;
+
+        // Meta chips
+        const metaItems = [];
+        if (p.quantity !== undefined && p.quantity !== null)
+            metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-cubes"></i> Stock: ${p.quantity} units</div>`);
+        if (p.city)
+            metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-map-pin"></i> ${p.city}</div>`);
+        metaItems.push(`<div class="pd-meta-chip"><i class="fas fa-shield-alt"></i> Verified Seller</div>`);
+        document.getElementById('pdMeta').innerHTML = metaItems.join('');
+
+        // Description
+        const desc = p.description || p.desc ||
+            `Fresh, quality ${p.name} sourced directly from verified farmers. Available for immediate delivery across India.`;
+        document.getElementById('pdDesc').textContent = desc;
+
+        // Buy Now button
+        const buyBtn = document.getElementById('pdBuyBtn');
+        buyBtn.onclick = () => goToCheckout(id);
+
+        // Open overlay
+        document.getElementById('pdOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
     }
+
+    function closeDetail() {
+        document.getElementById('pdOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+        // Close if clicking backdrop, not the modal itself
+        if (e.target === document.getElementById('pdOverlay')) closeDetail();
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 
     function goToCheckout(id) {
         localStorage.setItem("selectedProductId", id);
+        closeDetail();
         window.location.href = "checkout.html";
     }
 
