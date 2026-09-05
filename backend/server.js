@@ -588,6 +588,38 @@ app.post('/update-order-status', (req, res) => {
 });
 
 // UPDATE PROFILE
+// --- USER MANAGEMENT (seller dashboard) ---
+
+// GET all farmers + sellers
+app.get('/admin/users', (req, res) => {
+    const sql = `SELECT id, username, email, phone, role, company_name, state, district, status, created_at
+                 FROM users WHERE role IN ('farmer','seller') ORDER BY role, username`;
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        res.json({ success: true, users: results });
+    });
+});
+
+// DELETE a user by id
+app.delete('/admin/user/:id', (req, res) => {
+    db.query("DELETE FROM users WHERE id = ? AND role != 'admin'", [req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "User not found." });
+        res.json({ success: true, message: "User deleted successfully." });
+    });
+});
+
+// EDIT a user's basic info
+app.put('/admin/user/:id', (req, res) => {
+    const { username, email, phone, company_name, status } = req.body;
+    const sql = "UPDATE users SET username=?, email=?, phone=?, company_name=?, status=? WHERE id=? AND role != 'admin'";
+    db.query(sql, [username, email, phone || null, company_name || null, status, req.params.id], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "User not found." });
+        res.json({ success: true, message: "User updated successfully." });
+    });
+});
+
 app.put('/update-profile/:adminid', (req, res) => {
     const userId = req.params.adminid;
     const { username, email, phone, password } = req.body;

@@ -415,6 +415,178 @@
     .s-delivered{ background: rgba(116,201,71,0.15); color: var(--primary); border: 1px solid rgba(116,201,71,0.3); }
     .s-cancelled{ background: rgba(255,77,77,0.15);  color: var(--danger);  border: 1px solid rgba(255,77,77,0.3); }
 
+    /* ── USERS PANEL ── */
+    .users-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+    .users-search-wrap {
+        flex: 1; min-width: 160px; position: relative;
+    }
+    .users-search-wrap i {
+        position: absolute; left: 12px; top: 50%;
+        transform: translateY(-50%); color: var(--text-gray); font-size: 13px;
+    }
+    .users-search-wrap input {
+        width: 100%; padding: 9px 12px 9px 36px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        border-radius: 10px; color: white;
+        font-size: 16px; font-family: inherit;
+        -webkit-appearance: none; outline: none;
+        transition: border-color 0.2s;
+    }
+    .users-search-wrap input:focus { border-color: var(--primary); }
+    .users-search-wrap input::placeholder { color: #555; }
+
+    .filter-role-btn {
+        padding: 8px 16px; border-radius: 20px;
+        border: 1px solid var(--border);
+        background: transparent; color: var(--text-gray);
+        font-size: 12px; font-weight: 600; cursor: pointer;
+        font-family: inherit; transition: 0.2s; white-space: nowrap;
+    }
+    .filter-role-btn.active, .filter-role-btn:hover {
+        background: var(--primary); border-color: var(--primary); color: #0a180a;
+    }
+
+    .btn-print {
+        padding: 8px 16px; border-radius: 10px;
+        background: rgba(116,201,71,0.1); border: 1px solid rgba(116,201,71,0.25);
+        color: var(--primary); font-size: 12px; font-weight: 700;
+        cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px;
+        transition: background 0.2s; white-space: nowrap;
+    }
+    .btn-print:hover { background: rgba(116,201,71,0.2); }
+
+    .user-count-line {
+        font-size: 12px; color: var(--text-gray); margin-bottom: 14px;
+    }
+
+    .user-row {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-left: 4px solid transparent;
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex; align-items: center; gap: 14px;
+        margin-bottom: 10px;
+        transition: border-color 0.2s, transform 0.2s;
+        animation: slideIn 0.3s ease both;
+    }
+    .user-row:hover { border-color: rgba(116,201,71,0.25); transform: translateX(2px); }
+    .user-row.role-farmer { border-left-color: #17a2b8; }
+    .user-row.role-seller { border-left-color: var(--primary); }
+
+    .user-avatar {
+        width: 44px; height: 44px; border-radius: 50%;
+        background: rgba(116,201,71,0.12);
+        border: 1px solid rgba(116,201,71,0.2);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 17px; font-weight: 800; color: var(--primary);
+        flex-shrink: 0; text-transform: uppercase;
+    }
+    .user-avatar.farmer-av { background: rgba(23,162,184,0.12); border-color: rgba(23,162,184,0.2); color: #17a2b8; }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-info .u-name {
+        font-size: 14px; font-weight: 700; color: white;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .user-info .u-email {
+        font-size: 11px; color: var(--text-gray); margin-top: 2px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .user-info .u-meta {
+        display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px;
+    }
+    .u-chip {
+        font-size: 10px; padding: 2px 8px; border-radius: 20px;
+        font-weight: 600; border: 1px solid;
+    }
+    .u-chip.farmer { background: rgba(23,162,184,0.12); color: #17a2b8; border-color: rgba(23,162,184,0.25); }
+    .u-chip.seller { background: rgba(116,201,71,0.12); color: var(--primary); border-color: rgba(116,201,71,0.25); }
+    .u-chip.pending  { background: rgba(255,193,7,0.12); color: var(--warning); border-color: rgba(255,193,7,0.25); }
+    .u-chip.approved { background: rgba(116,201,71,0.12); color: var(--primary); border-color: rgba(116,201,71,0.25); }
+    .u-chip.rejected { background: rgba(255,77,77,0.12); color: var(--danger); border-color: rgba(255,77,77,0.25); }
+
+    .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-usr-edit {
+        padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(255,193,7,0.25);
+        background: rgba(255,193,7,0.1); color: var(--warning);
+        font-size: 12px; font-weight: 700; cursor: pointer;
+        font-family: inherit; display: flex; align-items: center; gap: 5px;
+        transition: background 0.2s;
+    }
+    .btn-usr-edit:hover { background: rgba(255,193,7,0.2); }
+    .btn-usr-del {
+        padding: 7px 10px; border-radius: 9px; border: 1px solid rgba(255,77,77,0.25);
+        background: rgba(255,77,77,0.1); color: var(--danger);
+        font-size: 12px; cursor: pointer; font-family: inherit;
+        display: flex; align-items: center; gap: 5px;
+        transition: background 0.2s;
+    }
+    .btn-usr-del:hover { background: rgba(255,77,77,0.2); }
+
+    /* Edit User Modal */
+    .modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.75); z-index: 3000;
+        align-items: center; justify-content: center; padding: 20px;
+        backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+        background: rgba(16,26,16,0.99);
+        border: 1px solid rgba(116,201,71,0.2);
+        border-radius: 22px; padding: 28px 26px;
+        width: 100%; max-width: 440px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        animation: pdSlideUp 0.3s ease-out both;
+    }
+    @keyframes pdSlideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    .modal-box h3 { font-size: 17px; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .modal-field { margin-bottom: 14px; }
+    .modal-field label { display: block; font-size: 11px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+    .modal-field input, .modal-field select {
+        width: 100%; padding: 11px 14px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border); border-radius: 10px;
+        color: white; font-size: 16px; font-family: inherit;
+        -webkit-appearance: none; outline: none;
+        transition: border-color 0.2s;
+    }
+    .modal-field input:focus, .modal-field select:focus { border-color: var(--primary); }
+    .modal-field select option { background: #1a1a1a; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-actions .btn-save {
+        flex: 1; padding: 12px; border: none; border-radius: 11px;
+        background: var(--primary); color: #0a180a;
+        font-size: 14px; font-weight: 800; cursor: pointer;
+        font-family: inherit; transition: opacity 0.2s;
+    }
+    .modal-actions .btn-save:hover { opacity: 0.88; }
+    .modal-actions .btn-cancel-m {
+        padding: 12px 18px; border: 1px solid var(--border);
+        border-radius: 11px; background: transparent; color: var(--text-gray);
+        font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+
+    /* Print styles */
+    @media print {
+        .navbar, .page-tabs, .users-toolbar, .user-actions, .modal-overlay { display: none !important; }
+        body { background: white !important; color: black !important; }
+        .panel { display: block !important; padding: 0 !important; }
+        .panel:not(#panel-users) { display: none !important; }
+        .section-card { background: white !important; border: 1px solid #ccc !important; }
+        .user-row { border-color: #ccc !important; page-break-inside: avoid; }
+        .user-info .u-name, .user-info .u-email { color: black !important; }
+        .u-chip { border: 1px solid #999 !important; }
+    }
+
     /* ── RESPONSIVE ─────────────────────────────────────── */
     /* Tablet */
     @media (max-width: 900px) {
@@ -490,6 +662,7 @@
     <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus-circle"></i> <span>Add Product</span></button>
     <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-boxes"></i> <span>My Products</span></button>
     <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-clipboard-list"></i> <span>Orders</span></button>
+    <button class="tab-btn" onclick="switchTab('users')"><i class="fas fa-users"></i> <span>Users</span></button>
 </div>
 
 <!-- PANEL: ADD PRODUCT -->
@@ -624,6 +797,70 @@
     </div>
 </div>
 
+<!-- PANEL: USERS -->
+<div class="panel" id="panel-users">
+    <div class="section-card">
+        <div class="section-card-header">
+            <h3><i class="fas fa-users"></i> User Management</h3>
+            <button class="btn-print" onclick="printUsers()">
+                <i class="fas fa-print"></i> Print List
+            </button>
+        </div>
+
+        <!-- Toolbar: search + role filter -->
+        <div class="users-toolbar">
+            <div class="users-search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="search" id="userSearchInput" placeholder="Search by name, email, company…" oninput="filterUsers()">
+            </div>
+            <button class="filter-role-btn active" data-role="all"     onclick="setRoleFilter(this,'all')">All</button>
+            <button class="filter-role-btn"        data-role="farmer"  onclick="setRoleFilter(this,'farmer')"><i class="fas fa-tractor"></i> Farmers</button>
+            <button class="filter-role-btn"        data-role="seller"  onclick="setRoleFilter(this,'seller')"><i class="fas fa-store"></i> Sellers</button>
+        </div>
+
+        <div class="user-count-line" id="userCountLine">Loading users…</div>
+        <div id="usersList">
+            <div class="empty-msg"><i class="fas fa-spinner fa-spin"></i><p>Loading users…</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" id="editUserModal" onclick="handleModalOverlay(event)">
+    <div class="modal-box">
+        <h3><i class="fas fa-user-edit"></i> Edit User</h3>
+        <input type="hidden" id="editUserId">
+        <div class="modal-field">
+            <label>Full Name</label>
+            <input type="text" id="editUsername" placeholder="Full name" autocomplete="off">
+        </div>
+        <div class="modal-field">
+            <label>Email</label>
+            <input type="email" id="editEmail" placeholder="Email address">
+        </div>
+        <div class="modal-field">
+            <label>Phone</label>
+            <input type="tel" id="editPhone" placeholder="Phone number">
+        </div>
+        <div class="modal-field" id="companyField">
+            <label>Company Name <span style="color:var(--text-gray);font-weight:400;">(sellers only)</span></label>
+            <input type="text" id="editCompany" placeholder="Business / company name">
+        </div>
+        <div class="modal-field">
+            <label>Status</label>
+            <select id="editStatus">
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel-m" onclick="closeEditModal()">Cancel</button>
+            <button class="btn-save" onclick="saveUserEdit()"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const BASE_URL = "https://cityshobackend.onrender.com";
 
@@ -650,13 +887,14 @@
 
     function switchTab(tab) {
         document.querySelectorAll('.tab-btn').forEach((b, i) => {
-            const tabs = ['add', 'products', 'orders'];
+            const tabs = ['add', 'products', 'orders', 'users'];
             b.classList.toggle('active', tabs[i] === tab);
         });
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById(`panel-${tab}`).classList.add('active');
         if (tab === 'products') loadProducts();
-        if (tab === 'orders') loadOrders();
+        if (tab === 'orders')   loadOrders();
+        if (tab === 'users')    loadUsers();
     }
 
     function updateFileLabel(input) {
@@ -824,6 +1062,183 @@
             body: JSON.stringify({ orderId: id, status })
         }).then(() => loadOrders());
     }
+
+    // ── USER MANAGEMENT ───────────────────────────────────────────
+    let allUsers = [];
+    let currentRoleFilter = 'all';
+
+    function loadUsers() {
+        const list = document.getElementById("usersList");
+        list.innerHTML = `<div class="empty-msg"><i class="fas fa-spinner fa-spin"></i><p>Loading users…</p></div>`;
+        fetch(`${BASE_URL}/admin/users`)
+            .then(r => r.json())
+            .then(d => {
+                allUsers = d.users || [];
+                renderUsers(allUsers);
+            })
+            .catch(() => {
+                list.innerHTML = `<div class="empty-msg"><i class="fas fa-wifi"></i><p>Failed to load users. Check connection.</p></div>`;
+            });
+    }
+
+    function renderUsers(list) {
+        const q   = (document.getElementById("userSearchInput").value || '').toLowerCase().trim();
+        const rol = currentRoleFilter;
+
+        let filtered = list.filter(u => {
+            const matchRole  = rol === 'all' || u.role === rol;
+            const matchQuery = !q ||
+                (u.username     || '').toLowerCase().includes(q) ||
+                (u.email        || '').toLowerCase().includes(q) ||
+                (u.company_name || '').toLowerCase().includes(q) ||
+                (u.phone        || '').toLowerCase().includes(q);
+            return matchRole && matchQuery;
+        });
+
+        document.getElementById("userCountLine").textContent =
+            `${filtered.length} user${filtered.length !== 1 ? 's' : ''} found`;
+
+        const container = document.getElementById("usersList");
+        if (!filtered.length) {
+            container.innerHTML = `<div class="empty-msg"><i class="fas fa-user-slash"></i><p>No users found.</p></div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map((u, i) => {
+            const isSeller  = u.role === 'seller';
+            const initial   = (u.username || '?')[0].toUpperCase();
+            const roleChip  = isSeller
+                ? `<span class="u-chip seller">Seller</span>`
+                : `<span class="u-chip farmer">Farmer</span>`;
+            const statusChip = u.status
+                ? `<span class="u-chip ${u.status}">${u.status.charAt(0).toUpperCase()+u.status.slice(1)}</span>`
+                : '';
+            const companyChip = isSeller && u.company_name
+                ? `<span class="u-chip seller"><i class="fas fa-store" style="font-size:9px;"></i> ${u.company_name}</span>`
+                : '';
+            const locationChip = u.district
+                ? `<span class="u-chip farmer" style="background:rgba(255,255,255,0.05);color:var(--text-gray);border-color:var(--border);"><i class="fas fa-map-marker-alt" style="font-size:9px;"></i> ${u.district}</span>`
+                : '';
+
+            return `
+                <div class="user-row role-${u.role}" style="animation-delay:${i*0.04}s">
+                    <div class="user-avatar ${isSeller ? '' : 'farmer-av'}">${initial}</div>
+                    <div class="user-info">
+                        <div class="u-name">${u.username || 'Unknown'}</div>
+                        <div class="u-email">${u.email || '—'} ${u.phone ? '· ' + u.phone : ''}</div>
+                        <div class="u-meta">
+                            ${roleChip}${statusChip}${companyChip}${locationChip}
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-usr-edit" onclick="openEditModal(${u.id})">
+                            <i class="fas fa-pen"></i><span class="hide-xs"> Edit</span>
+                        </button>
+                        <button class="btn-usr-del" onclick="deleteUser(${u.id}, '${(u.username||'').replace(/'/g,'\\\'')}')" >
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function filterUsers() { renderUsers(allUsers); }
+
+    function setRoleFilter(btn, role) {
+        document.querySelectorAll('.filter-role-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentRoleFilter = role;
+        renderUsers(allUsers);
+    }
+
+    // ── DELETE USER ──
+    function deleteUser(id, name) {
+        if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+        fetch(`${BASE_URL}/admin/user/${id}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    allUsers = allUsers.filter(u => u.id !== id);
+                    renderUsers(allUsers);
+                } else {
+                    alert(res.message || 'Delete failed.');
+                }
+            })
+            .catch(() => alert('Server error. Try again.'));
+    }
+
+    // ── EDIT USER MODAL ──
+    function openEditModal(id) {
+        const u = allUsers.find(u => u.id === id);
+        if (!u) return;
+        document.getElementById('editUserId').value   = u.id;
+        document.getElementById('editUsername').value = u.username     || '';
+        document.getElementById('editEmail').value    = u.email        || '';
+        document.getElementById('editPhone').value    = u.phone        || '';
+        document.getElementById('editCompany').value  = u.company_name || '';
+        document.getElementById('editStatus').value   = u.status       || 'approved';
+        // show/hide company field
+        document.getElementById('companyField').style.display = u.role === 'seller' ? 'block' : 'none';
+        document.getElementById('editUserModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editUserModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function handleModalOverlay(e) {
+        if (e.target === document.getElementById('editUserModal')) closeEditModal();
+    }
+
+    function saveUserEdit() {
+        const id      = document.getElementById('editUserId').value;
+        const payload = {
+            username:     document.getElementById('editUsername').value.trim(),
+            email:        document.getElementById('editEmail').value.trim(),
+            phone:        document.getElementById('editPhone').value.trim(),
+            company_name: document.getElementById('editCompany').value.trim(),
+            status:       document.getElementById('editStatus').value
+        };
+        const btn = document.querySelector('#editUserModal .btn-save');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+        btn.disabled  = true;
+
+        fetch(`${BASE_URL}/admin/user/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                // update local cache
+                const idx = allUsers.findIndex(u => u.id == id);
+                if (idx !== -1) Object.assign(allUsers[idx], payload);
+                renderUsers(allUsers);
+                closeEditModal();
+            } else {
+                alert(res.message || 'Update failed.');
+            }
+        })
+        .catch(() => alert('Server error. Try again.'))
+        .finally(() => {
+            btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+            btn.disabled  = false;
+        });
+    }
+
+    // ── PRINT ──
+    function printUsers() {
+        // Make users panel visible for print, then trigger print
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-users').classList.add('active');
+        window.print();
+    }
+
+    // Escape key closes modal
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditModal(); });
 
     loadStats();
 </script>
